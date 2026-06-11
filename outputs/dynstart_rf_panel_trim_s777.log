@@ -1,0 +1,379 @@
+============================================================
+  [Local] 月次パネル RF_Dir Phase C 整合 (短 horizon 前方削り)
+  TRAIN_END        = 2022-01-01
+  PREDICTION_TIME  = 2023-01-01
+  DELTA_MONTHS     = 3
+  STEP_MONTHS      = 24 (panel 月数等化目標)
+  MONTH_STEP       = 1
+  HORIZONS (fs)    = 0 3 6 9
+  N_JOBS           = 4
+  OUTBASE          = outputs/dynstart_rf_panel_trim_s777
+============================================================
+
+[fs=0-3m] 月次パネル RF Phase C 評価開始 (train_start=2019-10-01, train_end=2022-01-01)...
+2026-06-04 11:30:57,939 [INFO] __main__: データ読み込み: data/combined_raw_main32.csv
+2026-06-04 11:30:58,151 [INFO] __main__: change_dir_map 構築: 32 JSON files
+2026-06-04 11:30:58,164 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 148 changes (スキップ 0 件), depth=2
+2026-06-04 11:30:58,165 [INFO] review_predictor.IRL.features.path_features:   openstack__adjutant.json: 148 changes
+2026-06-04 11:30:58,240 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 672 changes (スキップ 1 件), depth=2
+2026-06-04 11:30:58,244 [INFO] review_predictor.IRL.features.path_features:   openstack__barbican.json: 672 changes
+2026-06-04 11:30:58,290 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 333 changes (スキップ 0 件), depth=2
+2026-06-04 11:30:58,292 [INFO] review_predictor.IRL.features.path_features:   openstack__blazar.json: 333 changes
+2026-06-04 11:30:58,378 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 782 changes (スキップ 0 件), depth=2
+2026-06-04 11:30:58,384 [INFO] review_predictor.IRL.features.path_features:   openstack__ceilometer.json: 782 changes
+2026-06-04 11:31:02,459 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 4413 changes (スキップ 4 件), depth=2
+2026-06-04 11:31:02,577 [INFO] review_predictor.IRL.features.path_features:   openstack__cinder.json: 4413 changes
+2026-06-04 11:31:02,622 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 387 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:02,625 [INFO] review_predictor.IRL.features.path_features:   openstack__cloudkitty.json: 387 changes
+2026-06-04 11:31:02,666 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 528 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:02,670 [INFO] review_predictor.IRL.features.path_features:   openstack__cyborg.json: 528 changes
+2026-06-04 11:31:02,799 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1190 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:02,807 [INFO] review_predictor.IRL.features.path_features:   openstack__designate.json: 1190 changes
+2026-06-04 11:31:02,820 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 223 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:02,821 [INFO] review_predictor.IRL.features.path_features:   openstack__freezer.json: 223 changes
+2026-06-04 11:31:03,124 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1592 changes (スキップ 1 件), depth=2
+2026-06-04 11:31:03,137 [INFO] review_predictor.IRL.features.path_features:   openstack__glance.json: 1592 changes
+2026-06-04 11:31:03,359 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1416 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:03,368 [INFO] review_predictor.IRL.features.path_features:   openstack__heat.json: 1416 changes
+2026-06-04 11:31:03,756 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1880 changes (スキップ 1 件), depth=2
+2026-06-04 11:31:03,768 [INFO] review_predictor.IRL.features.path_features:   openstack__horizon.json: 1880 changes
+2026-06-04 11:31:04,943 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 4538 changes (スキップ 2 件), depth=2
+2026-06-04 11:31:04,989 [INFO] review_predictor.IRL.features.path_features:   openstack__ironic.json: 4538 changes
+2026-06-04 11:31:05,102 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1192 changes (スキップ 2 件), depth=2
+2026-06-04 11:31:05,109 [INFO] review_predictor.IRL.features.path_features:   openstack__keystone.json: 1192 changes
+2026-06-04 11:31:05,277 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1066 changes (スキップ 1 件), depth=2
+2026-06-04 11:31:05,283 [INFO] review_predictor.IRL.features.path_features:   openstack__magnum.json: 1066 changes
+2026-06-04 11:31:05,909 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 2326 changes (スキップ 9 件), depth=2
+2026-06-04 11:31:05,938 [INFO] review_predictor.IRL.features.path_features:   openstack__manila.json: 2326 changes
+2026-06-04 11:31:05,981 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 461 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:05,984 [INFO] review_predictor.IRL.features.path_features:   openstack__masakari.json: 461 changes
+2026-06-04 11:31:06,041 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 490 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:06,044 [INFO] review_predictor.IRL.features.path_features:   openstack__mistral.json: 490 changes
+2026-06-04 11:31:09,178 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 8858 changes (スキップ 16 件), depth=2
+2026-06-04 11:31:09,292 [INFO] review_predictor.IRL.features.path_features:   openstack__neutron.json: 8858 changes
+2026-06-04 11:31:11,995 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 6995 changes (スキップ 13 件), depth=2
+2026-06-04 11:31:12,110 [INFO] review_predictor.IRL.features.path_features:   openstack__nova.json: 6995 changes
+2026-06-04 11:31:12,575 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 2280 changes (スキップ 1 件), depth=2
+2026-06-04 11:31:12,592 [INFO] review_predictor.IRL.features.path_features:   openstack__octavia.json: 2280 changes
+2026-06-04 11:31:12,610 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 186 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:12,611 [INFO] review_predictor.IRL.features.path_features:   openstack__rally.json: 186 changes
+2026-06-04 11:31:12,667 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 354 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:12,668 [INFO] review_predictor.IRL.features.path_features:   openstack__skyline-apiserver.json: 354 changes
+2026-06-04 11:31:12,690 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 351 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:12,692 [INFO] review_predictor.IRL.features.path_features:   openstack__storlets.json: 351 changes
+2026-06-04 11:31:13,510 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 3334 changes (スキップ 16 件), depth=2
+2026-06-04 11:31:13,535 [INFO] review_predictor.IRL.features.path_features:   openstack__swift.json: 3334 changes
+2026-06-04 11:31:14,003 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1235 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:14,019 [INFO] review_predictor.IRL.features.path_features:   openstack__tacker.json: 1235 changes
+2026-06-04 11:31:14,137 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 869 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:14,142 [INFO] review_predictor.IRL.features.path_features:   openstack__trove.json: 869 changes
+2026-06-04 11:31:14,200 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 520 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:14,202 [INFO] review_predictor.IRL.features.path_features:   openstack__venus.json: 520 changes
+2026-06-04 11:31:14,218 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 271 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:14,219 [INFO] review_predictor.IRL.features.path_features:   openstack__vitrage.json: 271 changes
+2026-06-04 11:31:14,308 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 555 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:14,311 [INFO] review_predictor.IRL.features.path_features:   openstack__watcher.json: 555 changes
+2026-06-04 11:31:14,374 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 336 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:14,376 [INFO] review_predictor.IRL.features.path_features:   openstack__zaqar.json: 336 changes
+2026-06-04 11:31:14,399 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 330 changes (スキップ 5 件), depth=2
+2026-06-04 11:31:14,401 [INFO] review_predictor.IRL.features.path_features:   openstack__zun.json: 330 changes
+2026-06-04 11:31:14,401 [INFO] review_predictor.IRL.features.path_features: load_change_dir_map_multi: 合計 50111 changes (32 files)
+2026-06-04 11:31:14,440 [INFO] review_predictor.IRL.features.path_features: dirs 列を付与: 160802/161111 行にディレクトリ情報あり
+2026-06-04 11:31:14,459 [INFO] __main__: dirs 列付与: 160802/161111 行に dir 情報
+2026-06-04 11:31:14,460 [INFO] __main__: パネルキャッシュ読み込み: outputs/local_rf_panel/_cache/panel_ts2019-10-01_te2022-01-01_fs0_dm3_ms1.pkl
+2026-06-04 11:31:14,493 [INFO] __main__: キャッシュから復元: 235923 行
+2026-06-04 11:31:14,507 [INFO] __main__: 学習: X=(235923, 37), y mean=0.168
+2026-06-04 11:31:20,837 [INFO] __main__: RF 学習完了
+2026-06-04 11:31:20,851 [INFO] __main__: feature importance 保存: outputs/dynstart_rf_panel_trim_s777/fs_0_to_3m/rf_panel_feature_importance.json
+2026-06-04 11:31:20,851 [INFO] __main__: 推論窓: feat [2022-07-05, 2023-01-01), label [2023-01-01, 2023-04-01)
+2026-06-04 11:31:24,430 [INFO] __main__: 推論対象ペア数: 4534
+2026-06-04 11:31:24,430 [INFO] __main__: バッチ化: 23 バッチ × 200 ペア
+[Parallel(n_jobs=4)]: Using backend LokyBackend with 4 concurrent workers.
+[Parallel(n_jobs=4)]: Done   5 tasks      | elapsed:    9.5s
+[Parallel(n_jobs=4)]: Done  10 tasks      | elapsed:   15.1s
+[Parallel(n_jobs=4)]: Done  19 out of  23 | elapsed:   25.1s remaining:    5.3s
+[Parallel(n_jobs=4)]: Done  23 out of  23 | elapsed:   28.0s finished
+2026-06-04 11:31:52,950 [INFO] __main__: 予測 CSV 保存: outputs/dynstart_rf_panel_trim_s777/fs_0_to_3m/rf_panel_predictions.csv
+2026-06-04 11:31:52,975 [INFO] __main__: summary_metrics 保存: outputs/dynstart_rf_panel_trim_s777/fs_0_to_3m/summary_metrics.json
+2026-06-04 11:31:52,975 [INFO] __main__: === 結果: pair_AUC_ROC=0.8325, pair_AUC_PR=0.7016, P=0.6444, R=0.6302, F1=0.6372 @thr=0.2900, base_rate=0.2702, n=4534 (pos=1225) ===
+[fs=0-3m] 完了 → outputs/dynstart_rf_panel_trim_s777/fs_0_to_3m
+
+[fs=3-6m] 月次パネル RF Phase C 評価開始 (train_start=2019-07-01, train_end=2022-01-01)...
+2026-06-04 11:31:54,774 [INFO] __main__: データ読み込み: data/combined_raw_main32.csv
+2026-06-04 11:31:55,032 [INFO] __main__: change_dir_map 構築: 32 JSON files
+2026-06-04 11:31:55,049 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 148 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:55,050 [INFO] review_predictor.IRL.features.path_features:   openstack__adjutant.json: 148 changes
+2026-06-04 11:31:55,148 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 672 changes (スキップ 1 件), depth=2
+2026-06-04 11:31:55,154 [INFO] review_predictor.IRL.features.path_features:   openstack__barbican.json: 672 changes
+2026-06-04 11:31:55,217 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 333 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:55,220 [INFO] review_predictor.IRL.features.path_features:   openstack__blazar.json: 333 changes
+2026-06-04 11:31:55,332 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 782 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:55,338 [INFO] review_predictor.IRL.features.path_features:   openstack__ceilometer.json: 782 changes
+2026-06-04 11:31:59,702 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 4413 changes (スキップ 4 件), depth=2
+2026-06-04 11:31:59,880 [INFO] review_predictor.IRL.features.path_features:   openstack__cinder.json: 4413 changes
+2026-06-04 11:31:59,940 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 387 changes (スキップ 0 件), depth=2
+2026-06-04 11:31:59,943 [INFO] review_predictor.IRL.features.path_features:   openstack__cloudkitty.json: 387 changes
+2026-06-04 11:31:59,999 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 528 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:00,003 [INFO] review_predictor.IRL.features.path_features:   openstack__cyborg.json: 528 changes
+2026-06-04 11:32:00,185 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1190 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:00,198 [INFO] review_predictor.IRL.features.path_features:   openstack__designate.json: 1190 changes
+2026-06-04 11:32:00,216 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 223 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:00,217 [INFO] review_predictor.IRL.features.path_features:   openstack__freezer.json: 223 changes
+2026-06-04 11:32:00,700 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1592 changes (スキップ 1 件), depth=2
+2026-06-04 11:32:00,719 [INFO] review_predictor.IRL.features.path_features:   openstack__glance.json: 1592 changes
+2026-06-04 11:32:01,109 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1416 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:01,122 [INFO] review_predictor.IRL.features.path_features:   openstack__heat.json: 1416 changes
+2026-06-04 11:32:01,701 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1880 changes (スキップ 1 件), depth=2
+2026-06-04 11:32:01,720 [INFO] review_predictor.IRL.features.path_features:   openstack__horizon.json: 1880 changes
+2026-06-04 11:32:03,242 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 4538 changes (スキップ 2 件), depth=2
+2026-06-04 11:32:03,288 [INFO] review_predictor.IRL.features.path_features:   openstack__ironic.json: 4538 changes
+2026-06-04 11:32:03,462 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1192 changes (スキップ 2 件), depth=2
+2026-06-04 11:32:03,470 [INFO] review_predictor.IRL.features.path_features:   openstack__keystone.json: 1192 changes
+2026-06-04 11:32:03,646 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1066 changes (スキップ 1 件), depth=2
+2026-06-04 11:32:03,653 [INFO] review_predictor.IRL.features.path_features:   openstack__magnum.json: 1066 changes
+2026-06-04 11:32:04,342 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 2326 changes (スキップ 9 件), depth=2
+2026-06-04 11:32:04,367 [INFO] review_predictor.IRL.features.path_features:   openstack__manila.json: 2326 changes
+2026-06-04 11:32:04,409 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 461 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:04,412 [INFO] review_predictor.IRL.features.path_features:   openstack__masakari.json: 461 changes
+2026-06-04 11:32:04,466 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 490 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:04,469 [INFO] review_predictor.IRL.features.path_features:   openstack__mistral.json: 490 changes
+2026-06-04 11:32:07,483 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 8858 changes (スキップ 16 件), depth=2
+2026-06-04 11:32:07,614 [INFO] review_predictor.IRL.features.path_features:   openstack__neutron.json: 8858 changes
+2026-06-04 11:32:10,524 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 6995 changes (スキップ 13 件), depth=2
+2026-06-04 11:32:10,627 [INFO] review_predictor.IRL.features.path_features:   openstack__nova.json: 6995 changes
+2026-06-04 11:32:11,160 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 2280 changes (スキップ 1 件), depth=2
+2026-06-04 11:32:11,177 [INFO] review_predictor.IRL.features.path_features:   openstack__octavia.json: 2280 changes
+2026-06-04 11:32:11,196 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 186 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:11,198 [INFO] review_predictor.IRL.features.path_features:   openstack__rally.json: 186 changes
+2026-06-04 11:32:11,266 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 354 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:11,268 [INFO] review_predictor.IRL.features.path_features:   openstack__skyline-apiserver.json: 354 changes
+2026-06-04 11:32:11,293 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 351 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:11,295 [INFO] review_predictor.IRL.features.path_features:   openstack__storlets.json: 351 changes
+2026-06-04 11:32:12,218 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 3334 changes (スキップ 16 件), depth=2
+2026-06-04 11:32:12,246 [INFO] review_predictor.IRL.features.path_features:   openstack__swift.json: 3334 changes
+2026-06-04 11:32:12,812 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1235 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:12,830 [INFO] review_predictor.IRL.features.path_features:   openstack__tacker.json: 1235 changes
+2026-06-04 11:32:12,966 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 869 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:12,972 [INFO] review_predictor.IRL.features.path_features:   openstack__trove.json: 869 changes
+2026-06-04 11:32:13,048 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 520 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:13,050 [INFO] review_predictor.IRL.features.path_features:   openstack__venus.json: 520 changes
+2026-06-04 11:32:13,072 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 271 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:13,073 [INFO] review_predictor.IRL.features.path_features:   openstack__vitrage.json: 271 changes
+2026-06-04 11:32:13,172 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 555 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:13,177 [INFO] review_predictor.IRL.features.path_features:   openstack__watcher.json: 555 changes
+2026-06-04 11:32:13,250 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 336 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:13,253 [INFO] review_predictor.IRL.features.path_features:   openstack__zaqar.json: 336 changes
+2026-06-04 11:32:13,275 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 330 changes (スキップ 5 件), depth=2
+2026-06-04 11:32:13,276 [INFO] review_predictor.IRL.features.path_features:   openstack__zun.json: 330 changes
+2026-06-04 11:32:13,276 [INFO] review_predictor.IRL.features.path_features: load_change_dir_map_multi: 合計 50111 changes (32 files)
+2026-06-04 11:32:13,322 [INFO] review_predictor.IRL.features.path_features: dirs 列を付与: 160802/161111 行にディレクトリ情報あり
+2026-06-04 11:32:13,343 [INFO] __main__: dirs 列付与: 160802/161111 行に dir 情報
+2026-06-04 11:32:13,343 [INFO] __main__: パネルキャッシュ読み込み: outputs/local_rf_panel/_cache/panel_ts2019-07-01_te2022-01-01_fs3_dm3_ms1.pkl
+2026-06-04 11:32:13,374 [INFO] __main__: キャッシュから復元: 214324 行
+2026-06-04 11:32:13,390 [INFO] __main__: 学習: X=(214324, 37), y mean=0.163
+2026-06-04 11:32:20,993 [INFO] __main__: RF 学習完了
+2026-06-04 11:32:21,007 [INFO] __main__: feature importance 保存: outputs/dynstart_rf_panel_trim_s777/fs_3_to_6m/rf_panel_feature_importance.json
+2026-06-04 11:32:21,007 [INFO] __main__: 推論窓: feat [2022-07-05, 2023-01-01), label [2023-04-01, 2023-07-01)
+2026-06-04 11:32:24,552 [INFO] __main__: 推論対象ペア数: 4534
+2026-06-04 11:32:24,553 [INFO] __main__: バッチ化: 23 バッチ × 200 ペア
+[Parallel(n_jobs=4)]: Using backend LokyBackend with 4 concurrent workers.
+[Parallel(n_jobs=4)]: Done   5 tasks      | elapsed:   10.3s
+[Parallel(n_jobs=4)]: Done  10 tasks      | elapsed:   15.0s
+[Parallel(n_jobs=4)]: Done  19 out of  23 | elapsed:   24.4s remaining:    5.1s
+[Parallel(n_jobs=4)]: Done  23 out of  23 | elapsed:   27.3s finished
+2026-06-04 11:32:52,200 [INFO] __main__: 予測 CSV 保存: outputs/dynstart_rf_panel_trim_s777/fs_3_to_6m/rf_panel_predictions.csv
+2026-06-04 11:32:52,219 [INFO] __main__: summary_metrics 保存: outputs/dynstart_rf_panel_trim_s777/fs_3_to_6m/summary_metrics.json
+2026-06-04 11:32:52,219 [INFO] __main__: === 結果: pair_AUC_ROC=0.8533, pair_AUC_PR=0.6847, P=0.6125, R=0.6503, F1=0.6309 @thr=0.3242, base_rate=0.2252, n=4534 (pos=1021) ===
+[fs=3-6m] 完了 → outputs/dynstart_rf_panel_trim_s777/fs_3_to_6m
+
+[fs=6-9m] 月次パネル RF Phase C 評価開始 (train_start=2019-04-01, train_end=2022-01-01)...
+2026-06-04 11:32:53,722 [INFO] __main__: データ読み込み: data/combined_raw_main32.csv
+2026-06-04 11:32:53,943 [INFO] __main__: change_dir_map 構築: 32 JSON files
+2026-06-04 11:32:53,958 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 148 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:53,959 [INFO] review_predictor.IRL.features.path_features:   openstack__adjutant.json: 148 changes
+2026-06-04 11:32:54,037 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 672 changes (スキップ 1 件), depth=2
+2026-06-04 11:32:54,042 [INFO] review_predictor.IRL.features.path_features:   openstack__barbican.json: 672 changes
+2026-06-04 11:32:54,091 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 333 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:54,093 [INFO] review_predictor.IRL.features.path_features:   openstack__blazar.json: 333 changes
+2026-06-04 11:32:54,177 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 782 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:54,181 [INFO] review_predictor.IRL.features.path_features:   openstack__ceilometer.json: 782 changes
+2026-06-04 11:32:57,506 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 4413 changes (スキップ 4 件), depth=2
+2026-06-04 11:32:57,639 [INFO] review_predictor.IRL.features.path_features:   openstack__cinder.json: 4413 changes
+2026-06-04 11:32:57,689 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 387 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:57,691 [INFO] review_predictor.IRL.features.path_features:   openstack__cloudkitty.json: 387 changes
+2026-06-04 11:32:57,738 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 528 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:57,741 [INFO] review_predictor.IRL.features.path_features:   openstack__cyborg.json: 528 changes
+2026-06-04 11:32:57,885 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1190 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:57,894 [INFO] review_predictor.IRL.features.path_features:   openstack__designate.json: 1190 changes
+2026-06-04 11:32:57,909 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 223 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:57,910 [INFO] review_predictor.IRL.features.path_features:   openstack__freezer.json: 223 changes
+2026-06-04 11:32:58,301 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1592 changes (スキップ 1 件), depth=2
+2026-06-04 11:32:58,315 [INFO] review_predictor.IRL.features.path_features:   openstack__glance.json: 1592 changes
+2026-06-04 11:32:58,630 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1416 changes (スキップ 0 件), depth=2
+2026-06-04 11:32:58,642 [INFO] review_predictor.IRL.features.path_features:   openstack__heat.json: 1416 changes
+2026-06-04 11:32:59,121 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1880 changes (スキップ 1 件), depth=2
+2026-06-04 11:32:59,136 [INFO] review_predictor.IRL.features.path_features:   openstack__horizon.json: 1880 changes
+2026-06-04 11:33:00,596 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 4538 changes (スキップ 2 件), depth=2
+2026-06-04 11:33:00,655 [INFO] review_predictor.IRL.features.path_features:   openstack__ironic.json: 4538 changes
+2026-06-04 11:33:00,833 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1192 changes (スキップ 2 件), depth=2
+2026-06-04 11:33:00,842 [INFO] review_predictor.IRL.features.path_features:   openstack__keystone.json: 1192 changes
+2026-06-04 11:33:01,023 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1066 changes (スキップ 1 件), depth=2
+2026-06-04 11:33:01,030 [INFO] review_predictor.IRL.features.path_features:   openstack__magnum.json: 1066 changes
+2026-06-04 11:33:01,770 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 2326 changes (スキップ 9 件), depth=2
+2026-06-04 11:33:01,799 [INFO] review_predictor.IRL.features.path_features:   openstack__manila.json: 2326 changes
+2026-06-04 11:33:01,842 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 461 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:01,844 [INFO] review_predictor.IRL.features.path_features:   openstack__masakari.json: 461 changes
+2026-06-04 11:33:01,901 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 490 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:01,904 [INFO] review_predictor.IRL.features.path_features:   openstack__mistral.json: 490 changes
+2026-06-04 11:33:05,015 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 8858 changes (スキップ 16 件), depth=2
+2026-06-04 11:33:05,140 [INFO] review_predictor.IRL.features.path_features:   openstack__neutron.json: 8858 changes
+2026-06-04 11:33:08,066 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 6995 changes (スキップ 13 件), depth=2
+2026-06-04 11:33:08,185 [INFO] review_predictor.IRL.features.path_features:   openstack__nova.json: 6995 changes
+2026-06-04 11:33:08,741 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 2280 changes (スキップ 1 件), depth=2
+2026-06-04 11:33:08,761 [INFO] review_predictor.IRL.features.path_features:   openstack__octavia.json: 2280 changes
+2026-06-04 11:33:08,782 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 186 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:08,783 [INFO] review_predictor.IRL.features.path_features:   openstack__rally.json: 186 changes
+2026-06-04 11:33:08,849 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 354 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:08,851 [INFO] review_predictor.IRL.features.path_features:   openstack__skyline-apiserver.json: 354 changes
+2026-06-04 11:33:08,878 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 351 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:08,880 [INFO] review_predictor.IRL.features.path_features:   openstack__storlets.json: 351 changes
+2026-06-04 11:33:09,833 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 3334 changes (スキップ 16 件), depth=2
+2026-06-04 11:33:09,862 [INFO] review_predictor.IRL.features.path_features:   openstack__swift.json: 3334 changes
+2026-06-04 11:33:10,399 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1235 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:10,418 [INFO] review_predictor.IRL.features.path_features:   openstack__tacker.json: 1235 changes
+2026-06-04 11:33:10,559 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 869 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:10,565 [INFO] review_predictor.IRL.features.path_features:   openstack__trove.json: 869 changes
+2026-06-04 11:33:10,635 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 520 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:10,638 [INFO] review_predictor.IRL.features.path_features:   openstack__venus.json: 520 changes
+2026-06-04 11:33:10,657 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 271 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:10,659 [INFO] review_predictor.IRL.features.path_features:   openstack__vitrage.json: 271 changes
+2026-06-04 11:33:10,760 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 555 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:10,764 [INFO] review_predictor.IRL.features.path_features:   openstack__watcher.json: 555 changes
+2026-06-04 11:33:10,843 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 336 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:10,846 [INFO] review_predictor.IRL.features.path_features:   openstack__zaqar.json: 336 changes
+2026-06-04 11:33:10,870 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 330 changes (スキップ 5 件), depth=2
+2026-06-04 11:33:10,872 [INFO] review_predictor.IRL.features.path_features:   openstack__zun.json: 330 changes
+2026-06-04 11:33:10,872 [INFO] review_predictor.IRL.features.path_features: load_change_dir_map_multi: 合計 50111 changes (32 files)
+2026-06-04 11:33:10,916 [INFO] review_predictor.IRL.features.path_features: dirs 列を付与: 160802/161111 行にディレクトリ情報あり
+2026-06-04 11:33:10,938 [INFO] __main__: dirs 列付与: 160802/161111 行に dir 情報
+2026-06-04 11:33:10,938 [INFO] __main__: パネルキャッシュ読み込み: outputs/local_rf_panel/_cache/panel_ts2019-04-01_te2022-01-01_fs6_dm3_ms1.pkl
+2026-06-04 11:33:10,968 [INFO] __main__: キャッシュから復元: 197863 行
+2026-06-04 11:33:10,983 [INFO] __main__: 学習: X=(197863, 37), y mean=0.159
+2026-06-04 11:33:18,675 [INFO] __main__: RF 学習完了
+2026-06-04 11:33:18,689 [INFO] __main__: feature importance 保存: outputs/dynstart_rf_panel_trim_s777/fs_6_to_9m/rf_panel_feature_importance.json
+2026-06-04 11:33:18,689 [INFO] __main__: 推論窓: feat [2022-07-05, 2023-01-01), label [2023-07-01, 2023-10-01)
+2026-06-04 11:33:22,257 [INFO] __main__: 推論対象ペア数: 4534
+2026-06-04 11:33:22,257 [INFO] __main__: バッチ化: 23 バッチ × 200 ペア
+[Parallel(n_jobs=4)]: Using backend LokyBackend with 4 concurrent workers.
+[Parallel(n_jobs=4)]: Done   5 tasks      | elapsed:   11.7s
+[Parallel(n_jobs=4)]: Done  10 tasks      | elapsed:   17.7s
+[Parallel(n_jobs=4)]: Done  19 out of  23 | elapsed:   29.4s remaining:    6.2s
+[Parallel(n_jobs=4)]: Done  23 out of  23 | elapsed:   32.8s finished
+2026-06-04 11:33:55,491 [INFO] __main__: 予測 CSV 保存: outputs/dynstart_rf_panel_trim_s777/fs_6_to_9m/rf_panel_predictions.csv
+2026-06-04 11:33:55,511 [INFO] __main__: summary_metrics 保存: outputs/dynstart_rf_panel_trim_s777/fs_6_to_9m/summary_metrics.json
+2026-06-04 11:33:55,511 [INFO] __main__: === 結果: pair_AUC_ROC=0.8213, pair_AUC_PR=0.5846, P=0.5117, R=0.6657, F1=0.5786 @thr=0.3081, base_rate=0.2170, n=4534 (pos=984) ===
+[fs=6-9m] 完了 → outputs/dynstart_rf_panel_trim_s777/fs_6_to_9m
+
+[fs=9-12m] 月次パネル RF Phase C 評価開始 (train_start=2019-01-01, train_end=2022-01-01)...
+2026-06-04 11:33:57,138 [INFO] __main__: データ読み込み: data/combined_raw_main32.csv
+2026-06-04 11:33:57,422 [INFO] __main__: change_dir_map 構築: 32 JSON files
+2026-06-04 11:33:57,439 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 148 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:57,440 [INFO] review_predictor.IRL.features.path_features:   openstack__adjutant.json: 148 changes
+2026-06-04 11:33:57,528 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 672 changes (スキップ 1 件), depth=2
+2026-06-04 11:33:57,533 [INFO] review_predictor.IRL.features.path_features:   openstack__barbican.json: 672 changes
+2026-06-04 11:33:57,592 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 333 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:57,594 [INFO] review_predictor.IRL.features.path_features:   openstack__blazar.json: 333 changes
+2026-06-04 11:33:57,699 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 782 changes (スキップ 0 件), depth=2
+2026-06-04 11:33:57,705 [INFO] review_predictor.IRL.features.path_features:   openstack__ceilometer.json: 782 changes
+2026-06-04 11:34:01,816 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 4413 changes (スキップ 4 件), depth=2
+2026-06-04 11:34:01,970 [INFO] review_predictor.IRL.features.path_features:   openstack__cinder.json: 4413 changes
+2026-06-04 11:34:02,035 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 387 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:02,038 [INFO] review_predictor.IRL.features.path_features:   openstack__cloudkitty.json: 387 changes
+2026-06-04 11:34:02,096 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 528 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:02,101 [INFO] review_predictor.IRL.features.path_features:   openstack__cyborg.json: 528 changes
+2026-06-04 11:34:02,272 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1190 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:02,283 [INFO] review_predictor.IRL.features.path_features:   openstack__designate.json: 1190 changes
+2026-06-04 11:34:02,301 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 223 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:02,302 [INFO] review_predictor.IRL.features.path_features:   openstack__freezer.json: 223 changes
+2026-06-04 11:34:02,748 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1592 changes (スキップ 1 件), depth=2
+2026-06-04 11:34:02,764 [INFO] review_predictor.IRL.features.path_features:   openstack__glance.json: 1592 changes
+2026-06-04 11:34:03,097 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1416 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:03,108 [INFO] review_predictor.IRL.features.path_features:   openstack__heat.json: 1416 changes
+2026-06-04 11:34:03,638 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1880 changes (スキップ 1 件), depth=2
+2026-06-04 11:34:03,655 [INFO] review_predictor.IRL.features.path_features:   openstack__horizon.json: 1880 changes
+2026-06-04 11:34:05,257 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 4538 changes (スキップ 2 件), depth=2
+2026-06-04 11:34:05,317 [INFO] review_predictor.IRL.features.path_features:   openstack__ironic.json: 4538 changes
+2026-06-04 11:34:05,508 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1192 changes (スキップ 2 件), depth=2
+2026-06-04 11:34:05,518 [INFO] review_predictor.IRL.features.path_features:   openstack__keystone.json: 1192 changes
+2026-06-04 11:34:05,737 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1066 changes (スキップ 1 件), depth=2
+2026-06-04 11:34:05,746 [INFO] review_predictor.IRL.features.path_features:   openstack__magnum.json: 1066 changes
+2026-06-04 11:34:06,560 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 2326 changes (スキップ 9 件), depth=2
+2026-06-04 11:34:06,593 [INFO] review_predictor.IRL.features.path_features:   openstack__manila.json: 2326 changes
+2026-06-04 11:34:06,640 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 461 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:06,643 [INFO] review_predictor.IRL.features.path_features:   openstack__masakari.json: 461 changes
+2026-06-04 11:34:06,705 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 490 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:06,709 [INFO] review_predictor.IRL.features.path_features:   openstack__mistral.json: 490 changes
+2026-06-04 11:34:09,970 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 8858 changes (スキップ 16 件), depth=2
+2026-06-04 11:34:10,109 [INFO] review_predictor.IRL.features.path_features:   openstack__neutron.json: 8858 changes
+2026-06-04 11:34:13,283 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 6995 changes (スキップ 13 件), depth=2
+2026-06-04 11:34:13,417 [INFO] review_predictor.IRL.features.path_features:   openstack__nova.json: 6995 changes
+2026-06-04 11:34:14,001 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 2280 changes (スキップ 1 件), depth=2
+2026-06-04 11:34:14,023 [INFO] review_predictor.IRL.features.path_features:   openstack__octavia.json: 2280 changes
+2026-06-04 11:34:14,046 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 186 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:14,047 [INFO] review_predictor.IRL.features.path_features:   openstack__rally.json: 186 changes
+2026-06-04 11:34:14,121 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 354 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:14,124 [INFO] review_predictor.IRL.features.path_features:   openstack__skyline-apiserver.json: 354 changes
+2026-06-04 11:34:14,152 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 351 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:14,154 [INFO] review_predictor.IRL.features.path_features:   openstack__storlets.json: 351 changes
+2026-06-04 11:34:15,169 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 3334 changes (スキップ 16 件), depth=2
+2026-06-04 11:34:15,202 [INFO] review_predictor.IRL.features.path_features:   openstack__swift.json: 3334 changes
+2026-06-04 11:34:15,781 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 1235 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:15,801 [INFO] review_predictor.IRL.features.path_features:   openstack__tacker.json: 1235 changes
+2026-06-04 11:34:15,947 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 869 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:15,953 [INFO] review_predictor.IRL.features.path_features:   openstack__trove.json: 869 changes
+2026-06-04 11:34:16,029 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 520 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:16,031 [INFO] review_predictor.IRL.features.path_features:   openstack__venus.json: 520 changes
+2026-06-04 11:34:16,051 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 271 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:16,053 [INFO] review_predictor.IRL.features.path_features:   openstack__vitrage.json: 271 changes
+2026-06-04 11:34:16,159 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 555 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:16,164 [INFO] review_predictor.IRL.features.path_features:   openstack__watcher.json: 555 changes
+2026-06-04 11:34:16,248 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 336 changes (スキップ 0 件), depth=2
+2026-06-04 11:34:16,251 [INFO] review_predictor.IRL.features.path_features:   openstack__zaqar.json: 336 changes
+2026-06-04 11:34:16,276 [INFO] review_predictor.IRL.features.path_features: change_dir_map 構築完了: 330 changes (スキップ 5 件), depth=2
+2026-06-04 11:34:16,278 [INFO] review_predictor.IRL.features.path_features:   openstack__zun.json: 330 changes
+2026-06-04 11:34:16,278 [INFO] review_predictor.IRL.features.path_features: load_change_dir_map_multi: 合計 50111 changes (32 files)
+2026-06-04 11:34:16,320 [INFO] review_predictor.IRL.features.path_features: dirs 列を付与: 160802/161111 行にディレクトリ情報あり
+2026-06-04 11:34:16,342 [INFO] __main__: dirs 列付与: 160802/161111 行に dir 情報
+2026-06-04 11:34:16,342 [INFO] __main__: パネルキャッシュ読み込み: outputs/local_rf_panel/_cache/panel_ts2019-01-01_te2022-01-01_fs9_dm3_ms1.pkl
+2026-06-04 11:34:16,369 [INFO] __main__: キャッシュから復元: 171387 行
+2026-06-04 11:34:16,382 [INFO] __main__: 学習: X=(171387, 37), y mean=0.163
+2026-06-04 11:34:22,849 [INFO] __main__: RF 学習完了
+2026-06-04 11:34:22,863 [INFO] __main__: feature importance 保存: outputs/dynstart_rf_panel_trim_s777/fs_9_to_12m/rf_panel_feature_importance.json
+2026-06-04 11:34:22,864 [INFO] __main__: 推論窓: feat [2022-07-05, 2023-01-01), label [2023-10-01, 2024-01-01)
+2026-06-04 11:34:26,029 [INFO] __main__: 推論対象ペア数: 4534
+2026-06-04 11:34:26,029 [INFO] __main__: バッチ化: 23 バッチ × 200 ペア
+[Parallel(n_jobs=4)]: Using backend LokyBackend with 4 concurrent workers.
+[Parallel(n_jobs=4)]: Done   5 tasks      | elapsed:   10.8s
+[Parallel(n_jobs=4)]: Done  10 tasks      | elapsed:   15.8s
+[Parallel(n_jobs=4)]: Done  19 out of  23 | elapsed:   26.5s remaining:    5.6s
+[Parallel(n_jobs=4)]: Done  23 out of  23 | elapsed:   29.6s finished
+2026-06-04 11:34:55,969 [INFO] __main__: 予測 CSV 保存: outputs/dynstart_rf_panel_trim_s777/fs_9_to_12m/rf_panel_predictions.csv
+2026-06-04 11:34:55,987 [INFO] __main__: summary_metrics 保存: outputs/dynstart_rf_panel_trim_s777/fs_9_to_12m/summary_metrics.json
+2026-06-04 11:34:55,987 [INFO] __main__: === 結果: pair_AUC_ROC=0.7807, pair_AUC_PR=0.4797, P=0.4608, R=0.5647, F1=0.5075 @thr=0.3200, base_rate=0.1789, n=4534 (pos=811) ===
+[fs=9-12m] 完了 → outputs/dynstart_rf_panel_trim_s777/fs_9_to_12m
+
+============================================================
+  全 horizon 完了。結果一覧:
+
+  outputs/dynstart_rf_panel_trim_s777/fs_0_to_3m/summary_metrics.json:
+    pair_AUC_ROC=0.8325, AUC_PR=0.7016, P=0.6444, R=0.6302, F1=0.6372, thr=0.2900, base=0.2702, n=4534, panel=235923
+
+  outputs/dynstart_rf_panel_trim_s777/fs_3_to_6m/summary_metrics.json:
+    pair_AUC_ROC=0.8533, AUC_PR=0.6847, P=0.6125, R=0.6503, F1=0.6309, thr=0.3242, base=0.2252, n=4534, panel=214324
+
+  outputs/dynstart_rf_panel_trim_s777/fs_6_to_9m/summary_metrics.json:
+    pair_AUC_ROC=0.8213, AUC_PR=0.5846, P=0.5117, R=0.6657, F1=0.5786, thr=0.3081, base=0.2170, n=4534, panel=197863
+
+  outputs/dynstart_rf_panel_trim_s777/fs_9_to_12m/summary_metrics.json:
+    pair_AUC_ROC=0.7807, AUC_PR=0.4797, P=0.4608, R=0.5647, F1=0.5075, thr=0.3200, base=0.1789, n=4534, panel=171387
+============================================================
