@@ -1,0 +1,5 @@
+definition,group,n_active03m,ltc_among_active,ltc_among_all
+tenure_q25,newcomer,145,0.3586,0.0967
+tenure_q25,established,1613,0.5511,0.2563
+archetype_A1,newcomer,88,0.4545,0.1173
+archetype_A1,established,1673,0.5386,0.2433

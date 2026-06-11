@@ -1,0 +1,4 @@
+transition,phase,n_active_prev_total,n_attrited_total,weighted_attrition_rate,n_dirs
+0-3m→3-6m,序盤,1841,633,0.3438,217
+3-6m→6-9m,中盤,1600,536,0.335,180
+6-9m→9-12m,終盤,1476,574,0.3889,196

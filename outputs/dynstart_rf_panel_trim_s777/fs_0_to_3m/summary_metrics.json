@@ -1,0 +1,26 @@
+{
+  "n_pairs": 4534,
+  "positive_count": 1225,
+  "base_rate": 0.2701808557565064,
+  "pair_auc_roc": 0.8325006013284734,
+  "pair_auc_pr": 0.7015743936083019,
+  "clf_threshold": 0.29,
+  "clf_precision": 0.6444073455759599,
+  "clf_recall": 0.6302040816326531,
+  "clf_f1": 0.6372265786215435,
+  "train_panel_size": 235923,
+  "train_positive_count": 39602,
+  "train_unique_devs": 1219,
+  "train_unique_dirs": 737,
+  "train_unique_months": 24,
+  "config": {
+    "train_start": "2019-10-01",
+    "train_end": "2022-01-01",
+    "prediction_time": "2023-01-01",
+    "future_start_months": 0,
+    "delta_months": 3,
+    "window_days": 180,
+    "month_step": 1,
+    "n_estimators": 100
+  }
+}

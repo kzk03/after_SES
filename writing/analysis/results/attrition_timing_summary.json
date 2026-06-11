@@ -1,0 +1,42 @@
+{
+  "overall_weighted": [
+    {
+      "transition": "0-3m→3-6m",
+      "phase": "序盤",
+      "n_active_prev_total": 1841,
+      "n_attrited_total": 633,
+      "weighted_attrition_rate": 0.3438,
+      "n_dirs": 217
+    },
+    {
+      "transition": "3-6m→6-9m",
+      "phase": "中盤",
+      "n_active_prev_total": 1600,
+      "n_attrited_total": 536,
+      "weighted_attrition_rate": 0.335,
+      "n_dirs": 180
+    },
+    {
+      "transition": "6-9m→9-12m",
+      "phase": "終盤",
+      "n_active_prev_total": 1476,
+      "n_attrited_total": 574,
+      "weighted_attrition_rate": 0.3889,
+      "n_dirs": 196
+    }
+  ],
+  "peak_dist_all": {
+    "序盤": 4,
+    "中盤": 12,
+    "終盤": 18
+  },
+  "peak_dist_sig": {
+    "序盤": 0,
+    "中盤": 3,
+    "終盤": 5
+  },
+  "n_sig": 8,
+  "n_timing_dirs": 34,
+  "max_range_pp": 53.3,
+  "max_range_dir": "cinder/backup"
+}

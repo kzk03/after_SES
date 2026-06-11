@@ -1,0 +1,23 @@
+{
+  "spec_reliable": {
+    "n_dir": 46,
+    "r_squared": 0.03424794636857664,
+    "adj_r_squared": -0.14365374772142236,
+    "f_pvalue": 0.9852790755657537
+  },
+  "spec_all_weighted": {
+    "n_dir": 286,
+    "r_squared": 0.2270283286005097,
+    "adj_r_squared": 0.20756501313361597,
+    "f_pvalue": 5.260349538811876e-13
+  },
+  "features": [
+    "log_n_pair_z",
+    "accept_rate_z",
+    "n_devs_z",
+    "dev_A4_ratio_z",
+    "is_test",
+    "is_doc",
+    "is_infra"
+  ]
+}

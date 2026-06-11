@@ -1,0 +1,13 @@
+archetype,n_dev_with_metric,metric,comparison,median_diff,wilcoxon_stat,p_value
+A1,118,acc,acc_cold_vs_rf,0.0,3193.5,0.36880445512859994
+A1,118,acc,acc_warm_vs_rf,0.0,3193.5,0.36880445512859994
+A1,60,auc,auc_cold_vs_rf,0.25,492.5,0.0018293221784072592
+A1,60,auc,auc_warm_vs_rf,0.25,492.5,0.0018293221784072592
+A2,81,acc,acc_cold_vs_rf,0.0,1523.5,0.4899676261911686
+A2,81,acc,acc_warm_vs_rf,0.0,1523.5,0.4899676261911686
+A2,17,auc,auc_cold_vs_rf,0.0,70.0,0.7574551682903932
+A2,17,auc,auc_warm_vs_rf,0.0,70.0,0.7574551682903932
+A3,90,acc,acc_cold_vs_rf,0.0,1944.5,0.659350988397838
+A3,90,acc,acc_warm_vs_rf,0.0,1944.5,0.659350988397838
+A3,26,auc,auc_cold_vs_rf,0.0,142.5,0.3998578769952278
+A3,26,auc,auc_warm_vs_rf,0.0,142.5,0.3998578769952278

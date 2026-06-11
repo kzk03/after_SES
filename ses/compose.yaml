@@ -1,0 +1,20 @@
+name: ses
+services:
+  app:
+    container_name: ses
+    image: ses
+    deploy:
+      resources:
+        limits:
+          cpus: '35'
+    build:
+      context: .
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        USERNAME: ${USERNAME}
+    volumes:
+      - ./:/app/
+      - /home/kazuki-h/Master_research_v2/data:/app/data
+    stdin_open: true
+    tty: true

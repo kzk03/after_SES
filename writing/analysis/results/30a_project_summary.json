@@ -1,0 +1,138 @@
+{
+  "n_reliable": 28,
+  "ens_auc_top": [
+    {
+      "top_dir": "octavia",
+      "ens_auc": 0.8920823082084546
+    },
+    {
+      "top_dir": "zuul.d",
+      "ens_auc": 0.8726987857422639
+    },
+    {
+      "top_dir": "designate",
+      "ens_auc": 0.8620291528359071
+    }
+  ],
+  "ens_auc_bottom": [
+    {
+      "top_dir": "playbooks",
+      "ens_auc": 0.672362685265911
+    },
+    {
+      "top_dir": "mistral",
+      "ens_auc": 0.6695577330508473
+    },
+    {
+      "top_dir": "magnum",
+      "ens_auc": 0.6069364161849711
+    }
+  ],
+  "irl_favored": [
+    "devstack",
+    "keystone",
+    "etc",
+    "magnum",
+    "designate",
+    "heat",
+    "ironic",
+    "octavia",
+    "manila"
+  ],
+  "rf_favored": [
+    "swift",
+    "openstack_dashboard",
+    "nova",
+    "zuul.d",
+    "test",
+    "doc",
+    "tools",
+    "glance",
+    "mistral",
+    "neutron",
+    "releasenotes",
+    "api-ref",
+    "playbooks",
+    "cinder",
+    "ceilometer",
+    "skyline_apiserver",
+    "roles",
+    "venus",
+    "tacker"
+  ],
+  "correlations": [
+    {
+      "x": "pair_P1_share",
+      "y": "delta_auc",
+      "n": 28,
+      "spearman_rho": 0.231,
+      "spearman_p": 0.237,
+      "partial_rho_ctrl": 0.428,
+      "partial_p": 0.0292
+    },
+    {
+      "x": "pair_P2_share",
+      "y": "delta_auc",
+      "n": 28,
+      "spearman_rho": 0.188,
+      "spearman_p": 0.338,
+      "partial_rho_ctrl": 0.1548,
+      "partial_p": 0.4503
+    },
+    {
+      "x": "dev_A4_share",
+      "y": "delta_auc",
+      "n": 28,
+      "spearman_rho": 0.3346,
+      "spearman_p": 0.0818,
+      "partial_rho_ctrl": 0.3867,
+      "partial_p": 0.051
+    },
+    {
+      "x": "pair_P1_share",
+      "y": "ens_auc",
+      "n": 28,
+      "spearman_rho": -0.2737,
+      "spearman_p": 0.1588,
+      "partial_rho_ctrl": 0.0463,
+      "partial_p": 0.8224
+    },
+    {
+      "x": "pair_P2_share",
+      "y": "ens_auc",
+      "n": 28,
+      "spearman_rho": 0.1176,
+      "spearman_p": 0.5512,
+      "partial_rho_ctrl": -0.1587,
+      "partial_p": 0.4387
+    },
+    {
+      "x": "dev_A4_share",
+      "y": "ens_auc",
+      "n": 28,
+      "spearman_rho": -0.0498,
+      "spearman_p": 0.8012,
+      "partial_rho_ctrl": -0.0034,
+      "partial_p": 0.9869
+    },
+    {
+      "x": "pair_P1_share",
+      "y": "delta_auc",
+      "n": 27,
+      "spearman_rho": 0.1484,
+      "spearman_p": 0.4602,
+      "partial_rho_ctrl": "outlier_drop(tacker)",
+      "partial_p": ""
+    }
+  ],
+  "attrition_peak_counts": {
+    "終盤": 12,
+    "序盤": 9,
+    "中盤": 7
+  },
+  "attrition_by_transition_mean": {
+    "序盤": 0.4398,
+    "中盤": 0.4126,
+    "終盤": 0.4399
+  }
+}

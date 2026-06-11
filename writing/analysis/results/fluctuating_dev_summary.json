@@ -1,0 +1,25 @@
+{
+  "n_devs_total": 436,
+  "n_devs_fluctuating": 152,
+  "decomp_counts": {
+    "biorhythm_dominant": 152
+  },
+  "decomp_ratios": {
+    "biorhythm_dominant": 1.0
+  },
+  "flip_ratio_quartiles": {
+    "p25": 0.3961538461538462,
+    "p50": 0.6666666666666666,
+    "p75": 1.0,
+    "mean": 0.6380323096658378
+  },
+  "n_fluct_with_flip_pair": 152,
+  "n_fluct_zero_flip_pair": 0,
+  "jaccard": {
+    "n_with_jaccard": 94,
+    "mean": 0.41774689553944877,
+    "median": 0.3333333333333333,
+    "n_rotation_jac_lt_0p5": 55,
+    "n_same_pair_jac_ge_0p5": 39
+  }
+}

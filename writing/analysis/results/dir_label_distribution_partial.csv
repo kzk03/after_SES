@@ -1,0 +1,5 @@
+x,desc,y,covar,partial_r,p,n
+base_rate,正例率,ens_auc,log_npair,0.2016,0.0006,286
+dist_half,0.5からの距離,ens_auc,log_npair,-0.1127,0.0575,286
+br_extreme,"不均衡度min(br,1-br)",ens_auc,log_npair,0.1127,0.0575,286
+regr_dist_half_coef,ens_auc~br+dist_half+lognpair の dist_half 係数,ens_auc,base_rate+log_npair,0.1739,,286

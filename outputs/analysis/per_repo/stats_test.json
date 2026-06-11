@@ -1,0 +1,41 @@
+{
+  "n_used": 27,
+  "n_total": 69,
+  "filter": "reliable (n_pos>=30 & n_neg>=30)",
+  "spearman_logn_vs_auc_ens": {
+    "rho": 0.24851168050182593,
+    "p": 0.2113278885905666
+  },
+  "spearman_logn_vs_gain": {
+    "rho": 0.18867348716231994,
+    "p": 0.3459426455564469
+  },
+  "mannwhitney_category_auc_ens": {
+    "U": 83.0,
+    "p": 0.9399645113416611,
+    "n_project_specific": 17,
+    "n_cross_cutting": 10,
+    "median_project_specific": 0.809891522286772,
+    "median_cross_cutting": 0.7656557276302852
+  },
+  "mannwhitney_category_gain": {
+    "U": 54.0,
+    "p": 0.12567200705500448,
+    "median_project_specific": 0.0011904761904760752,
+    "median_cross_cutting": 0.014713699340041131
+  },
+  "wilcoxon_ens_vs_irl": {
+    "W": 36.0,
+    "p": 7.289648056030273e-05,
+    "p_bonferroni": 0.00014579296112060547,
+    "r_rank_biserial": 0.6296296296296295,
+    "n": 27
+  },
+  "wilcoxon_ens_vs_rf": {
+    "W": 47.0,
+    "p": 0.0003008991479873657,
+    "p_bonferroni": 0.0006017982959747314,
+    "r_rank_biserial": 0.7037037037037037,
+    "n": 27
+  }
+}

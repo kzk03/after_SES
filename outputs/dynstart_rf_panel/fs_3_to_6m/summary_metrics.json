@@ -1,0 +1,22 @@
+{
+  "n_pairs": 4534,
+  "positive_count": 1021,
+  "base_rate": 0.22518747243052492,
+  "pair_auc_roc": 0.8523774713370487,
+  "pair_auc_pr": 0.6918386736299085,
+  "train_panel_size": 289312,
+  "train_positive_count": 42252,
+  "train_unique_devs": 1363,
+  "train_unique_dirs": 744,
+  "train_unique_months": 33,
+  "config": {
+    "train_start": "2018-10-01",
+    "train_end": "2022-01-01",
+    "prediction_time": "2023-01-01",
+    "future_start_months": 3,
+    "delta_months": 3,
+    "window_days": 180,
+    "month_step": 1,
+    "n_estimators": 100
+  }
+}

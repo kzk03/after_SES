@@ -1,0 +1,17 @@
+horizon,group,n
+0-3m,both_correct,2523
+0-3m,both_wrong,999
+0-3m,RF_only,275
+0-3m,IRL_only,210
+3-6m,both_correct,2685
+3-6m,both_wrong,830
+3-6m,RF_only,265
+3-6m,IRL_only,227
+6-9m,both_correct,2695
+6-9m,both_wrong,924
+6-9m,IRL_only,199
+6-9m,RF_only,189
+9-12m,both_correct,2805
+9-12m,both_wrong,726
+9-12m,IRL_only,287
+9-12m,RF_only,189

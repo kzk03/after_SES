@@ -1,0 +1,249 @@
+bot_filter,horizon,feature,label_jp,group,lasso_coef,alpha,r2
+with_bots,0-3m,window_tenure_days,在籍日数 (期間内),dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,total_changes,総PR数 (期間内),dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,total_reviews,総レビュー数 (期間内),dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,recent_activity_frequency,直近活動頻度,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,avg_activity_gap,平均活動間隔,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,activity_trend,活動トレンド,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,unique_collaborator_count,独立協働者数,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,overall_acceptance_rate,全期承諾率,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,recent_acceptance_rate,直近承諾率,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,recent_load_ratio_30d_all,直近負荷比 30d,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,days_since_last_activity,最終活動から日数,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,acceptance_trend,承諾トレンド,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,reciprocity_score,相互依頼性,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,recent_load_ratio_7d_30d,直近負荷比 7/30d,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,core_reviewer_ratio,コアレビュー率,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,recent_rejection_streak,直近拒否連続,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,acceptance_rate_last10,直近10件承諾率,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,active_months_ratio,活動月比,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,response_time_trend,応答時間トレンド,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,complex_pr_bias,複雑PRバイアス,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,avg_action_intensity,平均行動強度,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,avg_change_lines,平均変更行数,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,avg_response_time,平均応答時間,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,avg_review_size,平均レビュー規模,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,repeat_collaboration_rate,反復協働率,dev_state,0.0,0.023248150955376152,0.0
+with_bots,0-3m,historical_tenure_days,累積在籍日数,dev_history,0.0,0.023248150955376152,0.0
+with_bots,0-3m,historical_review_count_all,累積レビュー数,dev_history,0.0,0.023248150955376152,0.0
+with_bots,0-3m,historical_n_unique_repos,累積活動 repo 数,dev_history,0.0,0.023248150955376152,0.0
+with_bots,0-3m,dir_log_n_pair,[dir] log(ペア数),dir,0.0,0.023248150955376152,0.0
+with_bots,0-3m,dir_accept_rate,[dir] 承諾率,dir,0.0,0.023248150955376152,0.0
+with_bots,0-3m,dir_dev_diversity,[dir] 関与dev数,dir,0.0,0.023248150955376152,0.0
+with_bots,3-6m,window_tenure_days,在籍日数 (期間内),dev_state,0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,total_changes,総PR数 (期間内),dev_state,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,total_reviews,総レビュー数 (期間内),dev_state,-0.03096532666890238,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,recent_activity_frequency,直近活動頻度,dev_state,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,avg_activity_gap,平均活動間隔,dev_state,0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,activity_trend,活動トレンド,dev_state,0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,unique_collaborator_count,独立協働者数,dev_state,0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,overall_acceptance_rate,全期承諾率,dev_state,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,recent_acceptance_rate,直近承諾率,dev_state,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,recent_load_ratio_30d_all,直近負荷比 30d,dev_state,0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,days_since_last_activity,最終活動から日数,dev_state,0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,acceptance_trend,承諾トレンド,dev_state,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,reciprocity_score,相互依頼性,dev_state,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,recent_load_ratio_7d_30d,直近負荷比 7/30d,dev_state,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,core_reviewer_ratio,コアレビュー率,dev_state,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,recent_rejection_streak,直近拒否連続,dev_state,0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,acceptance_rate_last10,直近10件承諾率,dev_state,0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,active_months_ratio,活動月比,dev_state,0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,response_time_trend,応答時間トレンド,dev_state,0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,complex_pr_bias,複雑PRバイアス,dev_state,0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,avg_action_intensity,平均行動強度,dev_state,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,avg_change_lines,平均変更行数,dev_state,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,avg_response_time,平均応答時間,dev_state,-0.00870182136851959,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,avg_review_size,平均レビュー規模,dev_state,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,repeat_collaboration_rate,反復協働率,dev_state,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,historical_tenure_days,累積在籍日数,dev_history,0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,historical_review_count_all,累積レビュー数,dev_history,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,historical_n_unique_repos,累積活動 repo 数,dev_history,-0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,dir_log_n_pair,[dir] log(ペア数),dir,0.0,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,dir_accept_rate,[dir] 承諾率,dir,0.0001466413165174536,0.01369160275001955,0.05059205150513302
+with_bots,3-6m,dir_dev_diversity,[dir] 関与dev数,dir,0.0,0.01369160275001955,0.05059205150513302
+with_bots,6-9m,window_tenure_days,在籍日数 (期間内),dev_state,0.0,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,total_changes,総PR数 (期間内),dev_state,0.01140632607954989,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,total_reviews,総レビュー数 (期間内),dev_state,0.0,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,recent_activity_frequency,直近活動頻度,dev_state,-0.046046024719647555,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,avg_activity_gap,平均活動間隔,dev_state,0.009248356789616037,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,activity_trend,活動トレンド,dev_state,0.010492992390836505,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,unique_collaborator_count,独立協働者数,dev_state,-0.028524102852279874,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,overall_acceptance_rate,全期承諾率,dev_state,-0.003913134050503846,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,recent_acceptance_rate,直近承諾率,dev_state,-0.0,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,recent_load_ratio_30d_all,直近負荷比 30d,dev_state,0.012952242106316436,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,days_since_last_activity,最終活動から日数,dev_state,0.010608027752934936,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,acceptance_trend,承諾トレンド,dev_state,-0.0,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,reciprocity_score,相互依頼性,dev_state,-0.00151248655471729,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,recent_load_ratio_7d_30d,直近負荷比 7/30d,dev_state,-0.0007966559707954131,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,core_reviewer_ratio,コアレビュー率,dev_state,0.0,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,recent_rejection_streak,直近拒否連続,dev_state,-0.0018825624330710525,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,acceptance_rate_last10,直近10件承諾率,dev_state,-0.0,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,active_months_ratio,活動月比,dev_state,0.03757693324738293,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,response_time_trend,応答時間トレンド,dev_state,-0.0007842291788706775,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,complex_pr_bias,複雑PRバイアス,dev_state,-0.005478007904793996,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,avg_action_intensity,平均行動強度,dev_state,-0.011217401049931755,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,avg_change_lines,平均変更行数,dev_state,-0.016495539493987212,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,avg_response_time,平均応答時間,dev_state,-0.019593105999261468,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,avg_review_size,平均レビュー規模,dev_state,0.0,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,repeat_collaboration_rate,反復協働率,dev_state,0.0,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,historical_tenure_days,累積在籍日数,dev_history,0.003753396807135761,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,historical_review_count_all,累積レビュー数,dev_history,-0.00853115373154403,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,historical_n_unique_repos,累積活動 repo 数,dev_history,-0.0,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,dir_log_n_pair,[dir] log(ペア数),dir,0.013017412837030206,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,dir_accept_rate,[dir] 承諾率,dir,0.008795197712119335,0.0020881582473662105,0.14250466384218896
+with_bots,6-9m,dir_dev_diversity,[dir] 関与dev数,dir,5.002505684029893e-06,0.0020881582473662105,0.14250466384218896
+with_bots,9-12m,window_tenure_days,在籍日数 (期間内),dev_state,-0.005873825385722023,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,total_changes,総PR数 (期間内),dev_state,0.0028678003451129,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,total_reviews,総レビュー数 (期間内),dev_state,0.0002521474734339091,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,recent_activity_frequency,直近活動頻度,dev_state,-0.08228418783540888,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,avg_activity_gap,平均活動間隔,dev_state,0.04141878213119225,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,activity_trend,活動トレンド,dev_state,-0.009815420177039473,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,unique_collaborator_count,独立協働者数,dev_state,0.0,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,overall_acceptance_rate,全期承諾率,dev_state,0.008709827329594876,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,recent_acceptance_rate,直近承諾率,dev_state,0.003781837230682824,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,recent_load_ratio_30d_all,直近負荷比 30d,dev_state,0.019147924558392718,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,days_since_last_activity,最終活動から日数,dev_state,0.02640979075580157,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,acceptance_trend,承諾トレンド,dev_state,0.0,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,reciprocity_score,相互依頼性,dev_state,0.01546274023214448,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,recent_load_ratio_7d_30d,直近負荷比 7/30d,dev_state,-9.381002364861736e-05,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,core_reviewer_ratio,コアレビュー率,dev_state,0.05177447418218773,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,recent_rejection_streak,直近拒否連続,dev_state,-0.00088197530556471,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,acceptance_rate_last10,直近10件承諾率,dev_state,-0.0,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,active_months_ratio,活動月比,dev_state,0.07383318154369567,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,response_time_trend,応答時間トレンド,dev_state,-0.02446762155830699,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,complex_pr_bias,複雑PRバイアス,dev_state,0.013941360077798906,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,avg_action_intensity,平均行動強度,dev_state,-0.0,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,avg_change_lines,平均変更行数,dev_state,0.0012333116544975024,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,avg_response_time,平均応答時間,dev_state,-0.022012292049706336,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,avg_review_size,平均レビュー規模,dev_state,-0.0,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,repeat_collaboration_rate,反復協働率,dev_state,0.011058916573941868,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,historical_tenure_days,累積在籍日数,dev_history,0.01932361003212416,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,historical_review_count_all,累積レビュー数,dev_history,0.01724301540731522,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,historical_n_unique_repos,累積活動 repo 数,dev_history,-0.01492863149325417,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,dir_log_n_pair,[dir] log(ペア数),dir,0.029045792088535152,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,dir_accept_rate,[dir] 承諾率,dir,0.021863724905065513,0.0010554754503954303,0.18440130975802527
+with_bots,9-12m,dir_dev_diversity,[dir] 関与dev数,dir,0.00011282745967331437,0.0010554754503954303,0.18440130975802527
+without_bots,0-3m,window_tenure_days,在籍日数 (期間内),dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,total_changes,総PR数 (期間内),dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,total_reviews,総レビュー数 (期間内),dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,recent_activity_frequency,直近活動頻度,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,avg_activity_gap,平均活動間隔,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,activity_trend,活動トレンド,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,unique_collaborator_count,独立協働者数,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,overall_acceptance_rate,全期承諾率,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,recent_acceptance_rate,直近承諾率,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,recent_load_ratio_30d_all,直近負荷比 30d,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,days_since_last_activity,最終活動から日数,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,acceptance_trend,承諾トレンド,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,reciprocity_score,相互依頼性,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,recent_load_ratio_7d_30d,直近負荷比 7/30d,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,core_reviewer_ratio,コアレビュー率,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,recent_rejection_streak,直近拒否連続,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,acceptance_rate_last10,直近10件承諾率,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,active_months_ratio,活動月比,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,response_time_trend,応答時間トレンド,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,complex_pr_bias,複雑PRバイアス,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,avg_action_intensity,平均行動強度,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,avg_change_lines,平均変更行数,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,avg_response_time,平均応答時間,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,avg_review_size,平均レビュー規模,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,repeat_collaboration_rate,反復協働率,dev_state,0.0,0.024275496281355117,0.0
+without_bots,0-3m,historical_tenure_days,累積在籍日数,dev_history,0.0,0.024275496281355117,0.0
+without_bots,0-3m,historical_review_count_all,累積レビュー数,dev_history,0.0,0.024275496281355117,0.0
+without_bots,0-3m,historical_n_unique_repos,累積活動 repo 数,dev_history,0.0,0.024275496281355117,0.0
+without_bots,0-3m,dir_log_n_pair,[dir] log(ペア数),dir,0.0,0.024275496281355117,0.0
+without_bots,0-3m,dir_accept_rate,[dir] 承諾率,dir,0.0,0.024275496281355117,0.0
+without_bots,0-3m,dir_dev_diversity,[dir] 関与dev数,dir,0.0,0.024275496281355117,0.0
+without_bots,3-6m,window_tenure_days,在籍日数 (期間内),dev_state,0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,total_changes,総PR数 (期間内),dev_state,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,total_reviews,総レビュー数 (期間内),dev_state,-0.03416394647290924,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,recent_activity_frequency,直近活動頻度,dev_state,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,avg_activity_gap,平均活動間隔,dev_state,0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,activity_trend,活動トレンド,dev_state,0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,unique_collaborator_count,独立協働者数,dev_state,0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,overall_acceptance_rate,全期承諾率,dev_state,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,recent_acceptance_rate,直近承諾率,dev_state,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,recent_load_ratio_30d_all,直近負荷比 30d,dev_state,0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,days_since_last_activity,最終活動から日数,dev_state,0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,acceptance_trend,承諾トレンド,dev_state,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,reciprocity_score,相互依頼性,dev_state,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,recent_load_ratio_7d_30d,直近負荷比 7/30d,dev_state,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,core_reviewer_ratio,コアレビュー率,dev_state,-1.1903174714165448e-16,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,recent_rejection_streak,直近拒否連続,dev_state,0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,acceptance_rate_last10,直近10件承諾率,dev_state,0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,active_months_ratio,活動月比,dev_state,0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,response_time_trend,応答時間トレンド,dev_state,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,complex_pr_bias,複雑PRバイアス,dev_state,0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,avg_action_intensity,平均行動強度,dev_state,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,avg_change_lines,平均変更行数,dev_state,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,avg_response_time,平均応答時間,dev_state,-0.012155342575656577,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,avg_review_size,平均レビュー規模,dev_state,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,repeat_collaboration_rate,反復協働率,dev_state,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,historical_tenure_days,累積在籍日数,dev_history,0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,historical_review_count_all,累積レビュー数,dev_history,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,historical_n_unique_repos,累積活動 repo 数,dev_history,-0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,dir_log_n_pair,[dir] log(ペア数),dir,0.0,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,dir_accept_rate,[dir] 承諾率,dir,0.001248897474273647,0.01255268152726872,0.0584802384468146
+without_bots,3-6m,dir_dev_diversity,[dir] 関与dev数,dir,0.0,0.01255268152726872,0.0584802384468146
+without_bots,6-9m,window_tenure_days,在籍日数 (期間内),dev_state,0.0,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,total_changes,総PR数 (期間内),dev_state,0.008060432922215045,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,total_reviews,総レビュー数 (期間内),dev_state,0.0,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,recent_activity_frequency,直近活動頻度,dev_state,-0.039101273818419116,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,avg_activity_gap,平均活動間隔,dev_state,0.010978242439081921,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,activity_trend,活動トレンド,dev_state,0.010601657974388666,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,unique_collaborator_count,独立協働者数,dev_state,-0.02577045095159884,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,overall_acceptance_rate,全期承諾率,dev_state,-0.003582008010667493,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,recent_acceptance_rate,直近承諾率,dev_state,-0.0,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,recent_load_ratio_30d_all,直近負荷比 30d,dev_state,0.011631223976641444,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,days_since_last_activity,最終活動から日数,dev_state,0.008541985287490375,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,acceptance_trend,承諾トレンド,dev_state,0.0,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,reciprocity_score,相互依頼性,dev_state,-0.0,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,recent_load_ratio_7d_30d,直近負荷比 7/30d,dev_state,-0.00182357572974654,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,core_reviewer_ratio,コアレビュー率,dev_state,0.0,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,recent_rejection_streak,直近拒否連続,dev_state,-0.001771232194985635,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,acceptance_rate_last10,直近10件承諾率,dev_state,-0.0,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,active_months_ratio,活動月比,dev_state,0.03813692092975531,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,response_time_trend,応答時間トレンド,dev_state,0.0005111254904507089,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,complex_pr_bias,複雑PRバイアス,dev_state,-0.004635975999098247,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,avg_action_intensity,平均行動強度,dev_state,-0.010634458781469338,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,avg_change_lines,平均変更行数,dev_state,-0.01749904821242094,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,avg_response_time,平均応答時間,dev_state,-0.013249305987569494,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,avg_review_size,平均レビュー規模,dev_state,0.0,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,repeat_collaboration_rate,反復協働率,dev_state,0.0,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,historical_tenure_days,累積在籍日数,dev_history,0.0056302936362438655,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,historical_review_count_all,累積レビュー数,dev_history,-0.010952941678891038,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,historical_n_unique_repos,累積活動 repo 数,dev_history,-0.0,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,dir_log_n_pair,[dir] log(ペア数),dir,0.012992130460576594,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,dir_accept_rate,[dir] 承諾率,dir,0.00978049011883136,0.0020281693259984962,0.12674671582256958
+without_bots,6-9m,dir_dev_diversity,[dir] 関与dev数,dir,5.7117467791425695e-06,0.0020281693259984962,0.12674671582256958
+without_bots,9-12m,window_tenure_days,在籍日数 (期間内),dev_state,-0.003668305493740282,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,total_changes,総PR数 (期間内),dev_state,0.0010764148425467742,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,total_reviews,総レビュー数 (期間内),dev_state,0.0003080223872707598,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,recent_activity_frequency,直近活動頻度,dev_state,-0.07542054341840247,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,avg_activity_gap,平均活動間隔,dev_state,0.03993782937259203,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,activity_trend,活動トレンド,dev_state,-0.009800922165551274,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,unique_collaborator_count,独立協働者数,dev_state,0.0,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,overall_acceptance_rate,全期承諾率,dev_state,0.009316292485297572,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,recent_acceptance_rate,直近承諾率,dev_state,0.0032230152411925677,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,recent_load_ratio_30d_all,直近負荷比 30d,dev_state,0.017224961988428385,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,days_since_last_activity,最終活動から日数,dev_state,0.025493428942510405,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,acceptance_trend,承諾トレンド,dev_state,0.0,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,reciprocity_score,相互依頼性,dev_state,0.016377878326752103,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,recent_load_ratio_7d_30d,直近負荷比 7/30d,dev_state,-8.294236944816312e-05,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,core_reviewer_ratio,コアレビュー率,dev_state,0.04939880755241719,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,recent_rejection_streak,直近拒否連続,dev_state,-0.000575179634261778,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,acceptance_rate_last10,直近10件承諾率,dev_state,-0.0,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,active_months_ratio,活動月比,dev_state,0.07262359260037929,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,response_time_trend,応答時間トレンド,dev_state,-0.021436266189029482,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,complex_pr_bias,複雑PRバイアス,dev_state,0.014030799954957039,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,avg_action_intensity,平均行動強度,dev_state,-0.0,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,avg_change_lines,平均変更行数,dev_state,0.0006282052853798636,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,avg_response_time,平均応答時間,dev_state,-0.018748146297101982,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,avg_review_size,平均レビュー規模,dev_state,-0.0,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,repeat_collaboration_rate,反復協働率,dev_state,0.009170982741197849,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,historical_tenure_days,累積在籍日数,dev_history,0.01997084448247497,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,historical_review_count_all,累積レビュー数,dev_history,0.016043401073790868,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,historical_n_unique_repos,累積活動 repo 数,dev_history,-0.014766208053158517,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,dir_log_n_pair,[dir] log(ペア数),dir,0.028758168465641748,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,dir_accept_rate,[dir] 承諾率,dir,0.022967736105690435,0.0012188512457605679,0.18400475723083054
+without_bots,9-12m,dir_dev_diversity,[dir] 関与dev数,dir,0.000159922264286589,0.0012188512457605679,0.18400475723083054

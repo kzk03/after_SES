@@ -1,0 +1,14 @@
+{
+  "P1_delta_auc_pooled": 0.0264,
+  "P2_delta_auc_pooled": -0.0586,
+  "P3_delta_auc_pooled": -0.0638,
+  "P4_delta_auc_pooled": -0.0037,
+  "P1_rf_std": 0.1198,
+  "P3_rf_std": 0.2727,
+  "P1_rf_frac_near_base": 0.1772,
+  "P3_rf_frac_near_base": 0.0765,
+  "A1_delta_auc_pooled": -0.0853,
+  "A2_delta_auc_pooled": 0.0238,
+  "A3_delta_auc_pooled": -0.0192,
+  "A4_delta_auc_pooled": -0.0226
+}

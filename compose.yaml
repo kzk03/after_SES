@@ -1,0 +1,18 @@
+services:
+  app:
+    container_name: run
+    image: run
+    deploy:
+      resources:
+        limits:
+          cpus: '38.0'
+    build:
+      context: .
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        USERNAME: ${USERNAME}
+    volumes:
+      - ./:/app/
+    stdin_open: true
+    tty: true

@@ -1,0 +1,28 @@
+{
+  "part_a_mechanism_shift": {
+    "recency_share_obs": {
+      "0-3m": 0.4834,
+      "3-6m": 0.4765,
+      "6-9m": 0.4854,
+      "9-12m": 0.4133
+    },
+    "shift_0_3m_minus_9_12m": 0.0701,
+    "shift_ci": [
+      -0.0379,
+      0.1669
+    ],
+    "shift_p": 0.31,
+    "sig": false,
+    "n_boot": 200
+  },
+  "part_b_attrition_timing": {
+    "n_dirs_3trans": 34,
+    "n_sig_montecarlo": 8,
+    "n_sig_chi2": 7,
+    "frac_sig_mc": 0.235,
+    "median_attr_range": 0.208,
+    "n_range_ge_0.3": 12,
+    "min_n_active_prev": 10,
+    "n_montecarlo": 5000
+  }
+}
