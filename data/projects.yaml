@@ -1,0 +1,2615 @@
+---
+adjutant:
+  ptl:
+    name: Callum Dickinson
+    irc: Callum027
+    email: callum.dickinson@catalystcloud.nz
+  appointed:
+    - victoria
+    - yoga
+    - zed
+    - '2023.1'
+    - '2026.2'
+  irc-channel: openstack-adjutant
+  service: Operations Processes automation
+  mission: >
+    To provide an extensible API framework for exposing to users an
+    organization's automated business processes relating to account management
+    across OpenStack and external systems, that can be adapted to the unique
+    requirements of an organization's processes.
+  url: http://adjutant.readthedocs.io/
+  deliverables:
+    adjutant:
+      repos:
+        - openstack/adjutant
+    adjutant-ui:
+      repos:
+        - openstack/adjutant-ui
+    python-adjutantclient:
+      repos:
+        - openstack/python-adjutantclient
+barbican:
+  ptl:
+    name: Mauricio Harley
+    irc: mharley
+    email: mharley@redhat.com
+  appointed:
+    - victoria
+    - xena
+    - '2025.2'
+  irc-channel: openstack-barbican
+  service: Key Manager service
+  mission: >
+    To produce a secret storage and generation system capable of providing key
+    management for services wishing to enable encryption features.
+  url: https://wiki.openstack.org/wiki/Barbican
+  deliverables:
+    barbican:
+      repos:
+        - openstack/barbican
+    ansible-role-atos-hsm:
+      repos:
+        - openstack/ansible-role-atos-hsm
+    ansible-role-lunasa-hsm:
+      repos:
+        - openstack/ansible-role-lunasa-hsm
+    ansible-role-thales-hsm:
+      repos:
+        - openstack/ansible-role-thales-hsm
+    barbican-specs:
+      release-management: none
+      repos:
+        - openstack/barbican-specs
+    barbican-tempest-plugin:
+      repos:
+        - openstack/barbican-tempest-plugin
+    barbican-ui:
+      release-management: none
+      repos:
+        - openstack/barbican-ui
+    python-barbicanclient:
+      repos:
+        - openstack/python-barbicanclient
+blazar:
+  ptl:
+    name: Matt Crees
+    irc: No nick supplied
+    email: mattc@stackhpc.com
+  irc-channel: openstack-blazar
+  service: Resource reservation service
+  mission: >
+    Blazar's goal is to provide resource reservations in
+    OpenStack clouds for different resource types, both
+    virtual (instances, volumes, etc) and physical (hosts,
+    storage, etc.).
+  url: https://wiki.openstack.org/wiki/Blazar
+  deliverables:
+    blazar:
+      repos:
+        - openstack/blazar
+    blazar-dashboard:
+      repos:
+        - openstack/blazar-dashboard
+    blazar-nova:
+      repos:
+        - openstack/blazar-nova
+    blazar-specs:
+      release-management: none
+      repos:
+        - openstack/blazar-specs
+    blazar-tempest-plugin:
+      repos:
+        - openstack/blazar-tempest-plugin
+    python-blazarclient:
+      repos:
+        - openstack/python-blazarclient
+cinder:
+  ptl:
+    name: Jon Bernard
+    irc: jbernard
+    email: jobernar@redhat.com
+  irc-channel: openstack-cinder
+  service: Block Storage service
+  mission: >
+    To implement services and libraries to provide on-demand, self-service
+    access to Block Storage resources via abstraction and automation on top of
+    other block storage devices.
+  url: https://wiki.openstack.org/wiki/Cinder
+  deliverables:
+    cinder:
+      repos:
+        - openstack/cinder
+    cinder-specs:
+      release-management: none
+      repos:
+        - openstack/cinder-specs
+    cinder-tempest-plugin:
+      repos:
+        - openstack/cinder-tempest-plugin
+    cinderlib:
+      deprecated: '2024.1'
+      release-management: deprecated
+      repos:
+        - openstack/cinderlib
+    os-brick:
+      repos:
+        - openstack/os-brick
+    python-brick-cinderclient-ext:
+      repos:
+        - openstack/python-brick-cinderclient-ext
+    python-cinderclient:
+      repos:
+        - openstack/python-cinderclient
+    rbd-iscsi-client:
+      release-management: none
+      repos:
+        - openstack/rbd-iscsi-client
+cloudkitty:
+  ptl:
+    name: Rafael Weingartner
+    irc: No nick supplied
+    email: rafael@apache.org
+  appointed:
+    - victoria
+    - wallaby
+  irc-channel: cloudkitty
+  service: Rating service
+  mission: >
+    CloudKitty is a rating component for OpenStack. Its goal is to process data
+    from different metric backends and implement rating rule creation. Its role
+    is to fit in-between the raw metrics from OpenStack and the billing system
+    of a provider for chargeback purposes.
+  url: https://wiki.openstack.org/wiki/CloudKitty
+  deliverables:
+    cloudkitty:
+      repos:
+        - openstack/cloudkitty
+    python-cloudkittyclient:
+      repos:
+        - openstack/python-cloudkittyclient
+    cloudkitty-dashboard:
+      repos:
+        - openstack/cloudkitty-dashboard
+    cloudkitty-specs:
+      release-management: none
+      repos:
+        - openstack/cloudkitty-specs
+    cloudkitty-tempest-plugin:
+      repos:
+        - openstack/cloudkitty-tempest-plugin
+cyborg:
+  ptl:
+    name: Sean Mooney
+    irc: sean-k-mooney
+    email: smooney@redhat.com
+  appointed:
+    - ussuri
+    - xena
+    - '2024.1'
+  irc-channel: openstack-cyborg
+  service: Accelerator Life Cycle Management
+  mission: >
+    To provide a general management framework for accelerators (FPGA,GPU,SoC,
+    NVMe SSD,DPDK/SPDK,eBPF/XDP ...)
+  url: https://wiki.openstack.org/wiki/Cyborg
+  deliverables:
+    cyborg:
+      repos:
+        - openstack/cyborg
+    cyborg-specs:
+      release-management: none
+      repos:
+        - openstack/cyborg-specs
+    python-cyborgclient:
+      repos:
+        - openstack/python-cyborgclient
+    cyborg-tempest-plugin:
+      repos:
+        - openstack/cyborg-tempest-plugin
+designate:
+  ptl:
+    name: Omer Schwartz
+    irc: oschwart
+    email: oschwart@redhat.com
+  appointed:
+    - ussuri
+  service: DNS service
+  irc-channel: openstack-dns
+  mission: >
+    To provide scalable, on demand, self service access to authoritative DNS
+    services, in technology-agnostic manner.
+  url: https://wiki.openstack.org/wiki/Designate
+  deliverables:
+    designate:
+      repos:
+        - openstack/designate
+    designate-dashboard:
+      repos:
+        - openstack/designate-dashboard
+    designate-specs:
+      release-management: none
+      repos:
+        - openstack/designate-specs
+    designate-tempest-plugin:
+      repos:
+        - openstack/designate-tempest-plugin
+    python-designateclient:
+      repos:
+        - openstack/python-designateclient
+freezer:
+  leadership_type: distributed
+  liaisons:
+    release:
+      - name: Dmitriy Rabotyagov
+        irc: noonedeadpunk
+        email: noonedeadpunk@gmail.com
+    tact-sig:
+      - name: Dmitriy Rabotyagov
+        irc: noonedeadpunk
+        email: noonedeadpunk@gmail.com
+    security:
+      - name: Alvaro Soto
+        irc: khyr0n
+        email: alsotoes@gmail.com
+    tc-liaison:
+      - name: Dmitriy Rabotyagov
+        irc: noonedeadpunk
+        email: noonedeadpunk@gmail.com
+  appointed:
+    - stein
+    - zed
+  irc-channel: openstack-freezer
+  service: Backup and Restore service
+  mission: >
+    To provide integrated tools for backing up and restoring cloud data in
+    multiple use cases. These resources include file systems, server
+    instances, volumes, and databases.
+  url: https://wiki.openstack.org/wiki/Freezer
+  deliverables:
+    freezer:
+      repos:
+        - openstack/freezer
+    freezer-api:
+      repos:
+        - openstack/freezer-api
+    freezer-specs:
+      release-management: none
+      repos:
+        - openstack/freezer-specs
+    freezer-tempest-plugin:
+      repos:
+        - openstack/freezer-tempest-plugin
+    freezer-web-ui:
+      repos:
+        - openstack/freezer-web-ui
+    python-freezerclient:
+      repos:
+        - openstack/python-freezerclient
+glance:
+  ptl:
+    name: Cyril Roelandt
+    irc: No nick supplied
+    email: cyril@redhat.com
+  irc-channel: openstack-glance
+  service: Image service
+  mission: >
+    To provide services and associated libraries to store, browse, share,
+    distribute and manage bootable disk images, other data closely associated
+    with initializing compute resources, and metadata definitions.
+  url: https://wiki.openstack.org/wiki/Glance
+  deliverables:
+    glance:
+      repos:
+        - openstack/glance
+    glance-specs:
+      release-management: none
+      repos:
+        - openstack/glance-specs
+    glance-tempest-plugin:
+      repos:
+        - openstack/glance-tempest-plugin
+    glance-store:
+      repos:
+        - openstack/glance_store
+    os-test-images:
+      release-management: none
+      repos:
+        - openstack/os-test-images
+    python-glanceclient:
+      repos:
+        - openstack/python-glanceclient
+heat:
+  ptl:
+    name: Takashi Kajinami
+    irc: tkajinam
+    email: kajinamit@oss.nttdata.com
+  appointed:
+    - yoga
+    - zed
+  irc-channel: heat
+  service: Orchestration service
+  mission: >
+    To orchestrate composite cloud applications using a declarative
+    template format through an OpenStack-native REST API.
+  url: https://wiki.openstack.org/wiki/Heat
+  deliverables:
+    heat:
+      repos:
+        - openstack/heat
+    heat-agents:
+      repos:
+        - openstack/heat-agents
+    heat-cfntools:
+      repos:
+        - openstack/heat-cfntools
+    heat-dashboard:
+      repos:
+        - openstack/heat-dashboard
+    heat-specs:
+      release-management: none
+      repos:
+        - openstack/heat-specs
+    heat-tempest-plugin:
+      repos:
+        - openstack/heat-tempest-plugin
+    heat-templates:
+      release-management: none
+      repos:
+        - openstack/heat-templates
+    python-heatclient:
+      repos:
+        - openstack/python-heatclient
+    os-apply-config:
+      repos:
+        - openstack/os-apply-config
+    os-collect-config:
+      repos:
+        - openstack/os-collect-config
+    os-refresh-config:
+      repos:
+        - openstack/os-refresh-config
+    yaql:
+      repos:
+        - openstack/yaql
+horizon:
+  ptl:
+    name: Tatiana Ovchinnikova
+    irc: tmazur
+    email: t.v.ovtchinnikova@gmail.com
+  irc-channel: openstack-horizon
+  service: Dashboard
+  mission: >
+    To provide an extensible unified web based user interface for all
+    OpenStack services.
+  url: https://wiki.openstack.org/wiki/Horizon
+  deliverables:
+    horizon:
+      repos:
+        - openstack/horizon
+    ui-cookiecutter:
+      release-management: none
+      repos:
+        - openstack/ui-cookiecutter
+    xstatic-angular:
+      repos:
+        - openstack/xstatic-angular
+    xstatic-angular-bootstrap:
+      repos:
+        - openstack/xstatic-angular-bootstrap
+    xstatic-angular-fileupload:
+      repos:
+        - openstack/xstatic-angular-fileupload
+    xstatic-angular-gettext:
+      repos:
+        - openstack/xstatic-angular-gettext
+    xstatic-angular-lrdragndrop:
+      repos:
+        - openstack/xstatic-angular-lrdragndrop
+    xstatic-angular-material:
+      repos:
+        - openstack/xstatic-angular-material
+    xstatic-angular-notify:
+      repos:
+        - openstack/xstatic-angular-notify
+    xstatic-angular-schema-form:
+      repos:
+        - openstack/xstatic-angular-schema-form
+    xstatic-angular-smart-table:
+      repos:
+        - openstack/xstatic-angular-smart-table
+    xstatic-angular-uuid:
+      repos:
+        - openstack/xstatic-angular-uuid
+    xstatic-angular-vis:
+      repos:
+        - openstack/xstatic-angular-vis
+    xstatic-bootstrap-datepicker:
+      repos:
+        - openstack/xstatic-bootstrap-datepicker
+    xstatic-bootstrap-scss:
+      repos:
+        - openstack/xstatic-bootstrap-scss
+    xstatic-bootswatch:
+      repos:
+        - openstack/xstatic-bootswatch
+    xstatic-d3:
+      repos:
+        - openstack/xstatic-d3
+    xstatic-hogan:
+      repos:
+        - openstack/xstatic-hogan
+    xstatic-filesaver:
+      repos:
+        - openstack/xstatic-filesaver
+    xstatic-jasmine:
+      repos:
+        - openstack/xstatic-jasmine
+    xstatic-jquery-migrate:
+      repos:
+        - openstack/xstatic-jquery-migrate
+    xstatic-jquery.quicksearch:
+      repos:
+        - openstack/xstatic-jquery.quicksearch
+    xstatic-jquery.tablesorter:
+      repos:
+        - openstack/xstatic-jquery.tablesorter
+    xstatic-js-yaml:
+      repos:
+        - openstack/xstatic-js-yaml
+    xstatic-jsencrypt:
+      repos:
+        - openstack/xstatic-jsencrypt
+    xstatic-json2yaml:
+      repos:
+        - openstack/xstatic-json2yaml
+    xstatic-magic-search:
+      repos:
+        - openstack/xstatic-magic-search
+    xstatic-mdi:
+      repos:
+        - openstack/xstatic-mdi
+    xstatic-objectpath:
+      repos:
+        - openstack/xstatic-objectpath
+    xstatic-rickshaw:
+      repos:
+        - openstack/xstatic-rickshaw
+    xstatic-roboto-fontface:
+      repos:
+        - openstack/xstatic-roboto-fontface
+    xstatic-spin:
+      repos:
+        - openstack/xstatic-spin
+    xstatic-tv4:
+      repos:
+        - openstack/xstatic-tv4
+ironic:
+  leadership_type: distributed
+  irc-channel: openstack-ironic
+  service: Bare Metal service
+  mission: >
+    To produce an OpenStack service and associated libraries capable of
+    managing and provisioning physical machines, and to do this in a
+    security-aware and fault-tolerant manner.
+  url: https://wiki.openstack.org/wiki/Ironic
+  deliverables:
+    bifrost:
+      repos:
+        - openstack/bifrost
+    ironic:
+      repos:
+        - openstack/ironic
+    ironic-inspector:
+      repos:
+        - openstack/ironic-inspector
+      deprecated: '2026.1'
+      release-management: deprecated
+    ironic-lib:
+      repos:
+        - openstack/ironic-lib
+      deprecated: '2025.1'
+      release-management: deprecated
+    ironic-prometheus-exporter:
+      repos:
+        - openstack/ironic-prometheus-exporter
+    ironic-python-agent:
+      repos:
+        - openstack/ironic-python-agent
+    ironic-python-agent-builder:
+      repos:
+        - openstack/ironic-python-agent-builder
+    ironic-specs:
+      release-management: none
+      repos:
+        - openstack/ironic-specs
+    ironic-tempest-plugin:
+      repos:
+        - openstack/ironic-tempest-plugin
+    ironic-ui:
+      repos:
+        - openstack/ironic-ui
+    molteniron:
+      release-management: none
+      repos:
+        - openstack/molteniron
+    networking-baremetal:
+      repos:
+        - openstack/networking-baremetal
+    networking-generic-switch:
+      repos:
+        - openstack/networking-generic-switch
+    python-ironicclient:
+      repos:
+        - openstack/python-ironicclient
+    sushy:
+      repos:
+        - openstack/sushy
+    sushy-tools:
+      repos:
+        - openstack/sushy-tools
+    tenks:
+      repos:
+        - openstack/tenks
+    virtualbmc:
+      repos:
+        - openstack/virtualbmc
+    virtualpdu:
+      repos:
+        - openstack/virtualpdu
+  liaisons:
+    release:
+      - name: Riccardo Pittau
+        irc: rpittau
+        email: elfosardo@gmail.com
+    tact-sig:
+      - name: Dmitry Tantsur
+        irc: dtantsur
+        email: dtantsur@protonmail.com
+    security:
+      - name: Jay Faulkner
+        irc: JayF
+        email: jay@jvf.cc
+    tc-liaison:
+      - name: Doug Goldstein
+        irc: cardoe
+        email: cardoe@cardoe.com
+    events-liaison:
+      - name: Iury Gregory Melo Ferreira
+        irc: iurygregory
+        email: iurygregory@gmail.com
+keystone:
+  ptl:
+    name: Artem Goncharov
+    irc: gtema
+    email: artem.goncharov@gmail.com
+  appointed:
+    - '2023.1'
+  irc-channel: openstack-keystone
+  service: Identity service
+  mission: >
+    To facilitate API client authentication, service discovery, distributed
+    multi-tenant authorization, and auditing.
+  url: https://wiki.openstack.org/wiki/Keystone
+  deliverables:
+    keystone:
+      repos:
+        - openstack/keystone
+    keystone-specs:
+      release-management: none
+      repos:
+        - openstack/keystone-specs
+    keystone-tempest-plugin:
+      repos:
+        - openstack/keystone-tempest-plugin
+    keystonemiddleware:
+      repos:
+        - openstack/keystonemiddleware
+    pycadf:
+      repos:
+        - openstack/pycadf
+    python-keystoneclient:
+      repos:
+        - openstack/python-keystoneclient
+    ldappool:
+      repos:
+        - openstack/ldappool
+kolla:
+  ptl:
+    name: Michal Nasiadka
+    irc: mnasiadka
+    email: mnasiadka@gmail.com
+  irc-channel: openstack-kolla
+  service: Containerised deployment of OpenStack
+  mission: >
+    To provide tools to create production-ready containers and to
+    provide deployment tools for operating OpenStack clouds.
+  url: https://wiki.openstack.org/wiki/Kolla
+  deliverables:
+    ansible-collection-kolla:
+      repos:
+        - openstack/ansible-collection-kolla
+    kolla:
+      repos:
+        - openstack/kolla
+    kolla-ansible:
+      repos:
+        - openstack/kolla-ansible
+    kayobe:
+      repos:
+        - openstack/kayobe
+        - openstack/kayobe-config
+        - openstack/kayobe-config-dev
+magnum:
+  ptl:
+    name: Michal Nasiadka
+    irc: mnasiadka
+    email: mnasiadka@gmail.com
+  appointed:
+    - zed
+  irc-channel: openstack-containers
+  service: Container Infrastructure Management service
+  mission: >
+    To provide a set of services for provisioning, scaling, and managing
+    container orchestration engines.
+  url: https://wiki.openstack.org/wiki/Magnum
+  deliverables:
+    magnum:
+      repos:
+        - openstack/magnum
+    magnum-capi-helm:
+      repos:
+        - openstack/magnum-capi-helm
+    magnum-capi-helm-charts:
+      repos:
+        - openstack/magnum-capi-helm-charts
+    magnum-specs:
+      release-management: none
+      repos:
+        - openstack/magnum-specs
+    magnum-tempest-plugin:
+      repos:
+        - openstack/magnum-tempest-plugin
+    magnum-ui:
+      repos:
+        - openstack/magnum-ui
+    python-magnumclient:
+      repos:
+        - openstack/python-magnumclient
+manila:
+  ptl:
+    name: Carlos Silva
+    irc: carloss
+    email: ces.eduardo98@gmail.com
+  irc-channel: openstack-manila
+  service: Shared File Systems service
+  mission: >
+    To provide a set of services for management of shared file systems
+    in a multitenant cloud environment, similar to how OpenStack provides
+    for block-based storage management through the Cinder project.
+  url: https://wiki.openstack.org/wiki/Manila
+  deliverables:
+    manila:
+      repos:
+        - openstack/manila
+    manila-image-elements:
+      repos:
+        - openstack/manila-image-elements
+    manila-specs:
+      release-management: none
+      repos:
+        - openstack/manila-specs
+    manila-tempest-plugin:
+      repos:
+        - openstack/manila-tempest-plugin
+    manila-test-image:
+      release-management: none
+      repos:
+        - openstack/manila-test-image
+    manila-ui:
+      repos:
+        - openstack/manila-ui
+    python-manilaclient:
+      repos:
+        - openstack/python-manilaclient
+masakari:
+  ptl:
+    name: Masahito Muroi
+    irc: masahito
+    email: masahito.muroi@linecorp.com
+  appointed:
+    - yoga
+    - zed
+    - '2023.1'
+    - '2025.2'
+    - '2026.2'
+  irc-channel: openstack-masakari
+  service: Instances High Availability service
+  mission: >
+    Provide instances high availability service for OpenStack
+    clouds by automatically recovering the instances from failures.
+  url: https://wiki.openstack.org/wiki/Masakari
+  deliverables:
+    masakari:
+      repos:
+        - openstack/masakari
+    masakari-monitors:
+      repos:
+        - openstack/masakari-monitors
+    masakari-specs:
+      release-management: none
+      repos:
+        - openstack/masakari-specs
+    python-masakariclient:
+      repos:
+        - openstack/python-masakariclient
+    masakari-dashboard:
+      repos:
+        - openstack/masakari-dashboard
+mistral:
+  ptl:
+    name: Arnaud Morin
+    irc: amorin
+    email: arnaud.morin@gmail.com
+  appointed:
+    - '2024.1'
+    - '2025.1'
+    - '2026.2'
+  irc-channel: openstack-mistral
+  service: Workflow service
+  mission: >
+    Provide a simple YAML-based language to write workflows (tasks and
+    transition rules) and a service that allows to upload them, modify, run
+    them at scale and in a highly available manner, manage and monitor
+    workflow execution state and state of individual tasks.
+  url: https://wiki.openstack.org/wiki/Mistral
+  deliverables:
+    mistral:
+      repos:
+        - openstack/mistral
+    mistral-dashboard:
+      repos:
+        - openstack/mistral-dashboard
+    mistral-specs:
+      release-management: none
+      repos:
+        - openstack/mistral-specs
+    mistral-tempest-plugin:
+      repos:
+        - openstack/mistral-tempest-plugin
+    python-mistralclient:
+      repos:
+        - openstack/python-mistralclient
+    mistral-lib:
+      repos:
+        - openstack/mistral-lib
+    mistral-extra:
+      repos:
+        - openstack/mistral-extra
+
+neutron:
+  ptl:
+    name: Brian Haley
+    irc: haleyb
+    email: haleyb.dev@gmail.com
+  irc-channel: openstack-neutron
+  service: Networking service
+  mission: >
+    To implement services and associated libraries to provide on-demand,
+    scalable, and technology-agnostic network abstraction.
+  url: https://wiki.openstack.org/wiki/Neutron
+  deliverables:
+    networking-bagpipe:
+      repos:
+        - openstack/networking-bagpipe
+    networking-bgpvpn:
+      repos:
+        - openstack/networking-bgpvpn
+    networking-odl:
+      deprecated: '2023.2'
+      release-management: deprecated
+      repos:
+        - openstack/networking-odl
+    networking-sfc:
+      repos:
+        - openstack/networking-sfc
+    neutron-fwaas:
+      repos:
+        - openstack/neutron-fwaas
+    neutron:
+      repos:
+        - openstack/neutron
+    neutron-dynamic-routing:
+      repos:
+        - openstack/neutron-dynamic-routing
+    neutron-lib:
+      repos:
+        - openstack/neutron-lib
+    neutron-specs:
+      release-management: none
+      repos:
+        - openstack/neutron-specs
+    neutron-tempest-plugin:
+      repos:
+        - openstack/neutron-tempest-plugin
+    ovn-octavia-provider:
+      repos:
+        - openstack/ovn-octavia-provider
+    ovsdbapp:
+      repos:
+        - openstack/ovsdbapp
+    python-neutronclient:
+      repos:
+        - openstack/python-neutronclient
+    neutron-fwaas-dashboard:
+      repos:
+        - openstack/neutron-fwaas-dashboard
+    neutron-vpnaas:
+      repos:
+        - openstack/neutron-vpnaas
+    neutron-vpnaas-dashboard:
+      repos:
+        - openstack/neutron-vpnaas-dashboard
+    os-ken:
+      repos:
+        - openstack/os-ken
+    tap-as-a-service:
+      repos:
+        - openstack/tap-as-a-service
+    ovn-bgp-agent:
+      repos:
+        - openstack/ovn-bgp-agent
+nova:
+  ptl:
+    name: René Ribaud
+    irc: Uggla
+    email: rene.ribaud@gmail.com
+  irc-channel: openstack-nova
+  service: Compute service
+  mission: >
+    To implement services and associated libraries to provide massively
+    scalable, on demand, self service access to compute resources, including
+    bare metal, virtual machines, and containers.
+  url: https://wiki.openstack.org/wiki/Nova
+  deliverables:
+    nova:
+      repos:
+        - openstack/nova
+    nova-specs:
+      release-management: none
+      repos:
+        - openstack/nova-specs
+    nova-contrib:
+      release-management: none
+      repos:
+        - openstack/nova-contrib
+    python-novaclient:
+      repos:
+        - openstack/python-novaclient
+    os-vif:
+      repos:
+        - openstack/os-vif
+    placement:
+      repos:
+        - openstack/placement
+    os-traits:
+      repos:
+        - openstack/os-traits
+    osc-placement:
+      repos:
+        - openstack/osc-placement
+    os-resource-classes:
+      repos:
+        - openstack/os-resource-classes
+octavia:
+  ptl:
+    name: Gregory Thiemonge
+    irc: No nick supplied
+    email: gthiemon@redhat.com
+  appointed:
+    - wallaby
+  irc-channel: openstack-lbaas
+  service: Load-balancer service
+  mission: >
+    To provide scalable, on demand, self service access to load-balancer
+    services, in technology-agnostic manner.
+  url: https://wiki.openstack.org/wiki/Octavia
+  deliverables:
+    octavia:
+      repos:
+        - openstack/octavia
+    octavia-dashboard:
+      repos:
+        - openstack/octavia-dashboard
+    octavia-tempest-plugin:
+      repos:
+        - openstack/octavia-tempest-plugin
+    python-octaviaclient:
+      repos:
+        - openstack/python-octaviaclient
+    octavia-lib:
+      repos:
+        - openstack/octavia-lib
+OpenStack Charms:
+  ptl:
+    name: Felipe Reyes
+    irc: freyes
+    email: felipe.reyes@canonical.com
+  appointed:
+    - wallaby
+    - zed
+    - '2023.1'
+    - '2023.2'
+    - '2024.2'
+    - '2025.2'
+    - '2026.1'
+  irc-channel: openstack-charms
+  service: Juju Charms for deployment of OpenStack
+  mission: >
+    Develop and maintain Juju Charms for deploying and managing
+    OpenStack services.
+  url: https://docs.openstack.org/charm-guide/latest/
+  deliverables:
+    charms.ceph:
+      release-management: external
+      repos:
+        - openstack/charms.ceph
+    charms.openstack:
+      release-management: external
+      repos:
+        - openstack/charms.openstack
+    charm-aodh:
+      release-management: external
+      repos:
+        - openstack/charm-aodh
+    charm-barbican:
+      release-management: external
+      repos:
+        - openstack/charm-barbican
+    charm-barbican-softhsm:
+      release-management: external
+      repos:
+        - openstack/charm-barbican-softhsm
+    charm-barbican-vault:
+      release-management: external
+      repos:
+        - openstack/charm-barbican-vault
+    charm-ceilometer:
+      release-management: external
+      repos:
+        - openstack/charm-ceilometer
+    charm-ceilometer-agent:
+      release-management: external
+      repos:
+        - openstack/charm-ceilometer-agent
+    charm-ceph-dashboard:
+      release-management: external
+      repos:
+        - openstack/charm-ceph-dashboard
+    charm-ceph-iscsi:
+      release-management: external
+      repos:
+        - openstack/charm-ceph-iscsi
+    charm-ceph-mon:
+      release-management: external
+      repos:
+        - openstack/charm-ceph-mon
+    charm-ceph-nfs:
+      release-management: external
+      repos:
+        - openstack/charm-ceph-nfs
+    charm-ceph-osd:
+      release-management: external
+      repos:
+        - openstack/charm-ceph-osd
+    charm-ceph-fs:
+      release-management: external
+      repos:
+        - openstack/charm-ceph-fs
+    charm-ceph-radosgw:
+      release-management: external
+      repos:
+        - openstack/charm-ceph-radosgw
+    charm-ceph-rbd-mirror:
+      release-management: external
+      repos:
+        - openstack/charm-ceph-rbd-mirror
+    charm-ceph-proxy:
+      release-management: external
+      repos:
+        - openstack/charm-ceph-proxy
+    charm-cinder:
+      release-management: external
+      repos:
+        - openstack/charm-cinder
+    charm-cinder-backup:
+      release-management: external
+      repos:
+        - openstack/charm-cinder-backup
+    charm-cinder-backup-swift-proxy:
+      release-management: external
+      repos:
+        - openstack/charm-cinder-backup-swift-proxy
+    charm-cinder-ceph:
+      release-management: external
+      repos:
+        - openstack/charm-cinder-ceph
+    charm-cinder-lvm:
+      release-management: external
+      repos:
+        - openstack/charm-cinder-lvm
+    charm-cinder-netapp:
+      release-management: external
+      repos:
+        - openstack/charm-cinder-netapp
+    charm-cinder-nfs:
+      release-management: external
+      repos:
+        - openstack/charm-cinder-nfs
+    charm-cinder-nimblestorage:
+      release-management: external
+      repos:
+        - openstack/charm-cinder-nimblestorage
+    charm-cinder-purestorage:
+      release-management: external
+      repos:
+        - openstack/charm-cinder-purestorage
+    charm-cinder-solidfire:
+      release-management: external
+      repos:
+        - openstack/charm-cinder-solidfire
+    charm-cinder-three-par:
+      release-management: external
+      repos:
+        - openstack/charm-cinder-three-par
+    charm-cinder-dell-emc-powerstore:
+      release-management: external
+      repos:
+        - openstack/charm-cinder-dell-emc-powerstore
+    charm-cinder-ibm-storwize-svc:
+      release-management: external
+      repos:
+        - openstack/charm-cinder-ibm-storwize-svc
+    charm-cinder-infinidat:
+      release-management: external
+      repos:
+        - openstack/charm-cinder-infinidat
+    charm-cloudkitty:
+      release-management: external
+      repos:
+        - openstack/charm-cloudkitty
+    charm-deployment-guide:
+      release-management: external
+      repos:
+        - openstack/charm-deployment-guide
+    charm-designate:
+      release-management: external
+      repos:
+        - openstack/charm-designate
+    charm-designate-bind:
+      release-management: external
+      repos:
+        - openstack/charm-designate-bind
+    charm-gnocchi:
+      release-management: external
+      repos:
+        - openstack/charm-gnocchi
+    charm-placement:
+      release-management: external
+      repos:
+        - openstack/charm-placement
+    charm-glance:
+      release-management: external
+      repos:
+        - openstack/charm-glance
+    charm-glance-simplestreams-sync:
+      release-management: external
+      repos:
+        - openstack/charm-glance-simplestreams-sync
+    charm-guide:
+      release-management: none
+      repos:
+        - openstack/charm-guide
+    charm-hacluster:
+      release-management: external
+      repos:
+        - openstack/charm-hacluster
+    charm-heat:
+      release-management: external
+      repos:
+        - openstack/charm-heat
+    charm-infinidat-tools:
+      release-management: external
+      repos:
+        - openstack/charm-infinidat-tools
+    charm-interface-barbican-secrets:
+      release-management: external
+      repos:
+        - openstack/charm-interface-barbican-secrets
+    charm-interface-bgp:
+      release-management: external
+      repos:
+        - openstack/charm-interface-bgp
+    charm-interface-bind-rndc:
+      release-management: external
+      repos:
+        - openstack/charm-interface-bind-rndc
+    charm-interface-ceph-client:
+      release-management: external
+      repos:
+        - openstack/charm-interface-ceph-client
+    charm-interface-ceph-mds:
+      release-management: external
+      repos:
+        - openstack/charm-interface-ceph-mds
+    charm-interface-ceph-rbd-mirror:
+      release-management: external
+      repos:
+        - openstack/charm-interface-ceph-rbd-mirror
+    charm-interface-cinder-backend:
+      release-management: external
+      repos:
+        - openstack/charm-interface-cinder-backend
+    charm-interface-cinder-backup:
+      release-management: external
+      repos:
+        - openstack/charm-interface-cinder-backup
+    charm-interface-dashboard-plugin:
+      release-management: external
+      repos:
+        - openstack/charm-interface-dashboard-plugin
+    charm-interface-designate:
+      release-management: external
+      repos:
+        - openstack/charm-interface-designate
+    charm-interface-gnocchi:
+      release-management: external
+      repos:
+        - openstack/charm-interface-gnocchi
+    charm-interface-hacluster:
+      release-management: external
+      repos:
+        - openstack/charm-interface-hacluster
+    charm-interface-ironic-api:
+      release-management: external
+      repos:
+        - openstack/charm-interface-ironic-api
+    charm-interface-keystone:
+      release-management: external
+      repos:
+        - openstack/charm-interface-keystone
+    charm-interface-keystone-admin:
+      release-management: external
+      repos:
+        - openstack/charm-interface-keystone-admin
+    charm-interface-keystone-credentials:
+      release-management: external
+      repos:
+        - openstack/charm-interface-keystone-credentials
+    charm-interface-keystone-domain-backend:
+      release-management: external
+      repos:
+        - openstack/charm-interface-keystone-domain-backend
+    charm-interface-keystone-fid-service-provider:
+      release-management: external
+      repos:
+        - openstack/charm-interface-keystone-fid-service-provider
+    charm-interface-keystone-notifications:
+      release-management: external
+      repos:
+        - openstack/charm-interface-keystone-notifications
+    charm-interface-magpie:
+      release-management: external
+      repos:
+        - openstack/charm-interface-magpie
+    charm-interface-manila-plugin:
+      release-management: external
+      repos:
+        - openstack/charm-interface-manila-plugin
+    charm-interface-mysql-innodb-cluster:
+      release-management: external
+      repos:
+        - openstack/charm-interface-mysql-innodb-cluster
+    charm-interface-mysql-router:
+      release-management: external
+      repos:
+        - openstack/charm-interface-mysql-router
+    charm-interface-mysql-shared:
+      release-management: external
+      repos:
+        - openstack/charm-interface-mysql-shared
+    charm-interface-neutron-load-balancer:
+      release-management: external
+      repos:
+        - openstack/charm-interface-neutron-load-balancer
+    charm-interface-nova-cell:
+      release-management: external
+      repos:
+        - openstack/charm-interface-nova-cell
+    charm-interface-nova-compute:
+      release-management: external
+      repos:
+        - openstack/charm-interface-nova-compute
+    charm-interface-neutron-plugin:
+      release-management: external
+      repos:
+        - openstack/charm-interface-neutron-plugin
+    charm-interface-neutron-plugin-api-subordinate:
+      release-management: external
+      repos:
+        - openstack/charm-interface-neutron-plugin-api-subordinate
+    charm-interface-odl-controller-api:
+      release-management: external
+      repos:
+        - openstack/charm-interface-odl-controller-api
+    charm-interface-openstack-ha:
+      release-management: external
+      repos:
+        - openstack/charm-interface-openstack-ha
+    charm-interface-ovsdb-manager:
+      release-management: external
+      repos:
+        - openstack/charm-interface-ovsdb-manager
+    charm-interface-pacemaker-remote:
+      release-management: external
+      repos:
+        - openstack/charm-interface-pacemaker-remote
+    charm-interface-placement:
+      release-management: external
+      repos:
+        - openstack/charm-interface-placement
+    charm-interface-rabbitmq:
+      release-management: external
+      repos:
+        - openstack/charm-interface-rabbitmq
+    charm-interface-service-control:
+      release-management: external
+      repos:
+        - openstack/charm-interface-service-control
+    charm-interface-websso-fid-service-provider:
+      release-management: external
+      repos:
+        - openstack/charm-interface-websso-fid-service-provider
+    charm-ironic:
+      release-management: external
+      repos:
+        - openstack/charm-ironic
+    charm-ironic-api:
+      release-management: external
+      repos:
+        - openstack/charm-ironic-api
+    charm-ironic-conductor:
+      release-management: external
+      repos:
+        - openstack/charm-ironic-conductor
+    charm-ironic-dashboard:
+      release-management: external
+      repos:
+        - openstack/charm-ironic-dashboard
+    charm-keystone:
+      release-management: external
+      repos:
+        - openstack/charm-keystone
+    charm-keystone-kerberos:
+      release-management: external
+      repos:
+        - openstack/charm-keystone-kerberos
+    charm-keystone-ldap:
+      release-management: external
+      repos:
+        - openstack/charm-keystone-ldap
+    charm-keystone-openidc:
+      release-management: external
+      repos:
+        - openstack/charm-keystone-openidc
+    charm-keystone-saml-mellon:
+      release-management: external
+      repos:
+        - openstack/charm-keystone-saml-mellon
+    charm-layer-ceph:
+      release-management: external
+      repos:
+        - openstack/charm-layer-ceph
+    charm-layer-ceph-base:
+      release-management: external
+      repos:
+        - openstack/charm-layer-ceph-base
+    charm-layer-openstack:
+      release-management: external
+      repos:
+        - openstack/charm-layer-openstack
+    charm-layer-openstack-api:
+      release-management: external
+      repos:
+        - openstack/charm-layer-openstack-api
+    charm-layer-openstack-principle:
+      release-management: external
+      repos:
+        - openstack/charm-layer-openstack-principle
+    charm-magnum:
+      release-management: external
+      repos:
+        - openstack/charm-magnum
+    charm-magnum-dashboard:
+      release-management: external
+      repos:
+        - openstack/charm-magnum-dashboard
+    charm-magpie:
+      release-management: external
+      repos:
+        - openstack/charm-magpie
+    charm-manila:
+      release-management: external
+      repos:
+        - openstack/charm-manila
+    charm-manila-dashboard:
+      release-management: external
+      repos:
+        - openstack/charm-manila-dashboard
+    charm-manila-flashblade:
+      release-management: external
+      repos:
+        - openstack/charm-manila-flashblade
+    charm-manila-ganesha:
+      release-management: external
+      repos:
+        - openstack/charm-manila-ganesha
+    charm-manila-generic:
+      release-management: external
+      repos:
+        - openstack/charm-manila-generic
+    charm-manila-netapp:
+      release-management: external
+      repos:
+        - openstack/charm-manila-netapp
+    charm-manila-infinidat:
+      release-management: external
+      repos:
+        - openstack/charm-manila-infinidat
+    charm-masakari:
+      release-management: external
+      repos:
+        - openstack/charm-masakari
+    charm-masakari-monitors:
+      release-management: external
+      repos:
+        - openstack/charm-masakari-monitors
+    charm-mysql-innodb-cluster:
+      release-management: external
+      repos:
+        - openstack/charm-mysql-innodb-cluster
+    charm-mysql-router:
+      release-management: external
+      repos:
+        - openstack/charm-mysql-router
+    charm-neutron-api:
+      release-management: external
+      repos:
+        - openstack/charm-neutron-api
+    charm-neutron-api-plugin-arista:
+      release-management: external
+      repos:
+        - openstack/charm-neutron-api-plugin-arista
+    charm-neutron-api-plugin-ironic:
+      release-management: external
+      repos:
+        - openstack/charm-neutron-api-plugin-ironic
+    charm-neutron-api-plugin-ovn:
+      release-management: external
+      repos:
+        - openstack/charm-neutron-api-plugin-ovn
+    charm-neutron-dynamic-routing:
+      release-management: external
+      repos:
+        - openstack/charm-neutron-dynamic-routing
+    charm-neutron-gateway:
+      release-management: external
+      repos:
+        - openstack/charm-neutron-gateway
+    charm-neutron-openvswitch:
+      release-management: external
+      repos:
+        - openstack/charm-neutron-openvswitch
+    charm-nova-cell-controller:
+      release-management: external
+      repos:
+        - openstack/charm-nova-cell-controller
+    charm-nova-cloud-controller:
+      release-management: external
+      repos:
+        - openstack/charm-nova-cloud-controller
+    charm-nova-compute:
+      release-management: external
+      repos:
+        - openstack/charm-nova-compute
+    charm-nova-compute-nvidia-vgpu:
+      release-management: external
+      repos:
+        - openstack/charm-nova-compute-nvidia-vgpu
+    charm-nova-compute-proxy:
+      release-management: external
+      repos:
+        - openstack/charm-nova-compute-proxy
+    charm-octavia:
+      release-management: external
+      repos:
+        - openstack/charm-octavia
+    charm-octavia-dashboard:
+      release-management: external
+      repos:
+        - openstack/charm-octavia-dashboard
+    charm-octavia-diskimage-retrofit:
+      release-management: external
+      repos:
+        - openstack/charm-octavia-diskimage-retrofit
+    charm-openstack-dashboard:
+      release-management: external
+      repos:
+        - openstack/charm-openstack-dashboard
+    charm-openstack-loadbalancer:
+      release-management: external
+      repos:
+        - openstack/charm-openstack-loadbalancer
+    charm-ops-interface-ceph-client:
+      release-management: external
+      repos:
+        - openstack/charm-ops-interface-ceph-client
+    charm-ops-interface-ceph-iscsi-admin-access:
+      release-management: external
+      repos:
+        - openstack/charm-ops-interface-ceph-iscsi-admin-access
+    charm-ops-interface-openstack-loadbalancer:
+      release-management: external
+      repos:
+        - openstack/charm-ops-interface-openstack-loadbalancer
+    charm-ops-interface-tls-certificates:
+      release-management: external
+      repos:
+        - openstack/charm-ops-interface-tls-certificates
+    charm-ops-openstack:
+      release-management: external
+      repos:
+        - openstack/charm-ops-openstack
+    charm-pacemaker-remote:
+      release-management: external
+      repos:
+        - openstack/charm-pacemaker-remote
+    charm-percona-cluster:
+      release-management: external
+      repos:
+        - openstack/charm-percona-cluster
+    charm-rabbitmq-server:
+      release-management: external
+      repos:
+        - openstack/charm-rabbitmq-server
+    charm-specs:
+      release-management: none
+      repos:
+        - openstack/charm-specs
+    charm-swift-proxy:
+      release-management: external
+      repos:
+        - openstack/charm-swift-proxy
+    charm-swift-storage:
+      release-management: external
+      repos:
+        - openstack/charm-swift-storage
+    charm-tempest:
+      release-management: external
+      repos:
+        - openstack/charm-tempest
+    charm-trilio-data-mover:
+      release-management: external
+      repos:
+        - openstack/charm-trilio-data-mover
+    charm-trilio-dm-api:
+      release-management: external
+      repos:
+        - openstack/charm-trilio-dm-api
+    charm-trilio-horizon-plugin:
+      release-management: external
+      repos:
+        - openstack/charm-trilio-horizon-plugin
+    charm-trilio-wlm:
+      release-management: external
+      repos:
+        - openstack/charm-trilio-wlm
+    charm-vault:
+      release-management: external
+      repos:
+        - openstack/charm-vault
+    charm-watcher:
+      release-management: external
+      repos:
+        - openstack/charm-watcher
+    charm-watcher-dashboard:
+      release-management: external
+      repos:
+        - openstack/charm-watcher-dashboard
+    charm-zuul-jobs:
+      release-management: external
+      repos:
+        - openstack/charm-zuul-jobs
+OpenStack-Helm:
+  ptl:
+    name: Vladimir Kozhukalov
+    irc: kozhukalov
+    email: kozhukalov@gmail.com
+  service: Helm charts for OpenStack services
+  irc-channel: openstack-helm
+  mission: >
+    To provide a collection of Helm charts that simply, resiliently,
+    and flexibly deploy OpenStack and related services on Kubernetes.
+    OpenStack-Helm also produces lighweight OCI container images agnostic of
+    the deployment tooling for OpenStack.
+  url: https://wiki.openstack.org/wiki/Openstack-helm
+  deliverables:
+    openstack-helm:
+      release-management: external
+      repos:
+        - openstack/openstack-helm
+    openstack-helm-images:
+      release-management: external
+      repos:
+        - openstack/openstack-helm-images
+    openstack-helm-plugin:
+      release-management: external
+      repos:
+        - openstack/openstack-helm-plugin
+    loci:
+      release-management: none
+      repos:
+        - openstack/loci
+OpenStackAnsible:
+  ptl:
+    name: Dmitriy Rabotyagov
+    irc: noonedeadpunk
+    email: noonedeadpunk@gmail.com
+  service: Ansible playbooks and roles for deployment
+  irc-channel: openstack-ansible
+  mission: >
+    Deploying OpenStack from source in a way that makes it scalable
+    while also being simple to operate, upgrade, and grow.
+  url: https://wiki.openstack.org/wiki/OpenStackAnsible
+  deliverables:
+    ansible-config_template:
+      repos:
+        - openstack/ansible-config_template
+    openstack-ansible:
+      repos:
+        - openstack/openstack-ansible
+    openstack-ansible-roles:
+      repos:
+        - openstack/ansible-role-frrouting
+        - openstack/ansible-role-httpd
+        - openstack/ansible-role-pki
+        - openstack/ansible-role-proxysql
+        - openstack/ansible-role-python_venv_build
+        - openstack/ansible-role-systemd_mount
+        - openstack/ansible-role-systemd_networkd
+        - openstack/ansible-role-systemd_service
+        - openstack/ansible-role-uwsgi
+        - openstack/ansible-role-vault
+        - openstack/ansible-role-zookeeper
+        - openstack/ansible-hardening
+        - openstack/openstack-ansible-apt_package_pinning
+        - openstack/openstack-ansible-ceph_client
+        - openstack/openstack-ansible-galera_server
+        - openstack/openstack-ansible-haproxy_server
+        - openstack/openstack-ansible-lxc_container_create
+        - openstack/openstack-ansible-lxc_hosts
+        - openstack/openstack-ansible-memcached_server
+        - openstack/openstack-ansible-openstack_hosts
+        - openstack/openstack-ansible-openstack_openrc
+        - openstack/openstack-ansible-ops
+        - openstack/openstack-ansible-os_adjutant
+        - openstack/openstack-ansible-os_aodh
+        - openstack/openstack-ansible-os_barbican
+        - openstack/openstack-ansible-os_blazar
+        - openstack/openstack-ansible-os_ceilometer
+        - openstack/openstack-ansible-os_cinder
+        - openstack/openstack-ansible-os_cloudkitty
+        - openstack/openstack-ansible-os_designate
+        - openstack/openstack-ansible-os_freezer
+        - openstack/openstack-ansible-os_glance
+        - openstack/openstack-ansible-os_gnocchi
+        - openstack/openstack-ansible-os_heat
+        - openstack/openstack-ansible-os_horizon
+        - openstack/openstack-ansible-os_ironic
+        - openstack/openstack-ansible-os_keystone
+        - openstack/openstack-ansible-os_magnum
+        - openstack/openstack-ansible-os_manila
+        - openstack/openstack-ansible-os_masakari
+        - openstack/openstack-ansible-os_mistral
+        - openstack/openstack-ansible-os_neutron
+        - openstack/openstack-ansible-os_nova
+        - openstack/openstack-ansible-os_octavia
+        - openstack/openstack-ansible-os_placement
+        - openstack/openstack-ansible-os_rally
+        - openstack/openstack-ansible-os_skyline
+        - openstack/openstack-ansible-os_swift
+        - openstack/openstack-ansible-os_tacker
+        - openstack/openstack-ansible-os_tempest
+        - openstack/openstack-ansible-os_trove
+        - openstack/openstack-ansible-os_watcher
+        - openstack/openstack-ansible-os_zun
+        - openstack/openstack-ansible-plugins
+        - openstack/openstack-ansible-rabbitmq_server
+        - openstack/openstack-ansible-repo_server
+    openstack-ansible-nspawn_containers:
+      deprecated: wallaby
+      release-management: deprecated
+      repos:
+        - openstack/openstack-ansible-nspawn_container_create
+        - openstack/openstack-ansible-nspawn_hosts
+    openstack-ansible-galera_client:
+      deprecated: victoria
+      release-management: deprecated
+      repos:
+        - openstack/openstack-ansible-galera_client
+    openstack-ansible-os_congress:
+      deprecated: victoria
+      release-management: deprecated
+      repos:
+        - openstack/openstack-ansible-os_congress
+    openstack-ansible-os_karbor:
+      release-management: deprecated
+      repos:
+        - openstack/openstack-ansible-os_karbor
+    openstack-ansible-os_panko:
+      deprecated: Xena
+      release-management: deprecated
+      repos:
+        - openstack/openstack-ansible-os_panko
+    openstack-ansible-rsyslog:
+      deprecated: Zed
+      release-management: deprecated
+      repos:
+        - openstack/openstack-ansible-rsyslog_server
+        - openstack/openstack-ansible-rsyslog_client
+    openstack-ansible-specs:
+      release-management: none
+      repos:
+        - openstack/openstack-ansible-specs
+    openstack-ansible-tests:
+      repos:
+        - openstack/openstack-ansible-tests
+      deprecated: Epoxy
+      release-management: deprecated
+OpenStackSDK:
+  ptl:
+    name: Artem Goncharov
+    irc: gtema
+    email: artem.goncharov@gmail.com
+  appointed:
+    - ussuri
+  irc-channel: openstack-sdks
+  service: Multi-cloud Python SDK and CLI for End Users
+  mission: >
+    To provide a unified multi-cloud aware SDK and CLI for the OpenStack
+    REST API exposing both the full set of low-level APIs as well as curated higher
+    level business logic. Ensure end user is having necessary tools to work
+    with OpenStack based clouds.
+  url: https://docs.openstack.org/openstacksdk/latest/
+  deliverables:
+    cliff:
+      repos:
+        - openstack/cliff
+    codegenerator:
+      repos:
+        - openstack/codegenerator
+    keystoneauth:
+      repos:
+        - openstack/keystoneauth
+    openapi:
+      repos:
+        - openstack/openapi
+    openstackclient:
+      repos:
+        - openstack/openstackclient
+    openstacksdk:
+      repos:
+        - openstack/openstacksdk
+    os-client-config:
+      repos:
+        - openstack/os-client-config
+      deprecated: '2025.2'
+      release-management: deprecated
+    os-service-types:
+      repos:
+        - openstack/os-service-types
+    osc-lib:
+      repos:
+        - openstack/osc-lib
+    python-openstackclient:
+      repos:
+        - openstack/python-openstackclient
+oslo:
+  leadership_type: distributed
+  irc-channel: openstack-oslo
+  service: Common libraries
+  mission: >
+    To produce a set of python libraries containing code shared by OpenStack
+    projects. The APIs provided by these libraries should be high quality,
+    stable, consistent, documented and generally applicable.
+  url: https://wiki.openstack.org/wiki/Oslo
+  deliverables:
+    automaton:
+      repos:
+        - openstack/automaton
+    castellan:
+      repos:
+        - openstack/castellan
+    cookiecutter:
+      release-management: none
+      repos:
+        - openstack/cookiecutter
+    debtcollector:
+      repos:
+        - openstack/debtcollector
+    devstack-plugin-amqp1:
+      release-management: none
+      repos:
+        - openstack/devstack-plugin-amqp1
+    devstack-plugin-kafka:
+      release-management: none
+      repos:
+        - openstack/devstack-plugin-kafka
+    etcd3gw:
+      repos:
+        - openstack/etcd3gw
+    futurist:
+      repos:
+        - openstack/futurist
+    microversion-parse:
+      repos:
+        - openstack/microversion-parse
+    openstack-doc-tools:
+      repos:
+        - openstack/openstack-doc-tools
+    openstackdocstheme:
+      repos:
+        - openstack/openstackdocstheme
+    os-api-ref:
+      repos:
+        - openstack/os-api-ref
+    oslo-cookiecutter:
+      release-management: none
+      repos:
+        - openstack/oslo-cookiecutter
+    oslo-specs:
+      release-management: none
+      repos:
+        - openstack/oslo-specs
+    oslo.cache:
+      repos:
+        - openstack/oslo.cache
+    oslo.concurrency:
+      repos:
+        - openstack/oslo.concurrency
+    oslo.config:
+      repos:
+        - openstack/oslo.config
+    oslo.context:
+      repos:
+        - openstack/oslo.context
+    oslo.db:
+      repos:
+        - openstack/oslo.db
+    oslo.i18n:
+      repos:
+        - openstack/oslo.i18n
+    oslo.limit:
+      repos:
+        - openstack/oslo.limit
+    oslo.log:
+      repos:
+        - openstack/oslo.log
+    oslo.messaging:
+      repos:
+        - openstack/oslo.messaging
+    oslo.metrics:
+      repos:
+        - openstack/oslo.metrics
+    oslo.middleware:
+      repos:
+        - openstack/oslo.middleware
+    oslo.policy:
+      repos:
+        - openstack/oslo.policy
+    oslo.privsep:
+      repos:
+        - openstack/oslo.privsep
+    oslo.reports:
+      repos:
+        - openstack/oslo.reports
+    oslo.rootwrap:
+      repos:
+        - openstack/oslo.rootwrap
+    oslo.serialization:
+      repos:
+        - openstack/oslo.serialization
+    oslo.service:
+      repos:
+        - openstack/oslo.service
+    oslo.tools:
+      release-management: none
+      repos:
+        - openstack/oslo.tools
+    oslo.upgradecheck:
+      repos:
+        - openstack/oslo.upgradecheck
+    oslo.utils:
+      repos:
+        - openstack/oslo.utils
+    oslo.versionedobjects:
+      repos:
+        - openstack/oslo.versionedobjects
+    oslo.vmware:
+      repos:
+        - openstack/oslo.vmware
+    oslotest:
+      repos:
+        - openstack/oslotest
+    osprofiler:
+      repos:
+        - openstack/osprofiler
+    pbr:
+      repos:
+        - openstack/pbr
+    sphinx-feature-classification:
+      repos:
+        - openstack/sphinx-feature-classification
+    stevedore:
+      repos:
+        - openstack/stevedore
+    taskflow:
+      repos:
+        - openstack/taskflow
+    tooz:
+      repos:
+        - openstack/tooz
+    whereto:
+      repos:
+        - openstack/whereto
+
+  liaisons:
+    release:
+      - name: Daniel Bengtsson
+        irc: damani
+        email: dbengt@redhat.com
+      - name: Takashi Kajinami
+        irc: tkajinam
+        email: kajinamit@oss.nttdata.com
+    tact-sig:
+      - name: Ghanshyam Maan
+        irc: gmaan
+        email: gmaan.os14@gmail.com
+    security:
+      - name: Daniel Bengtsson
+        irc: damani
+        email: dbengt@redhat.com
+    tc-liaison:
+      - name: Goutham Pacha Ravi
+        irc: gouthamr
+        email: gouthampravi@gmail.com
+Puppet OpenStack:
+  ptl:
+    name: Takashi Kajinami
+    irc: tkajinam
+    email: kajinamit@oss.nttdata.com
+  appointed:
+    - yoga
+  irc-channel: puppet-openstack
+  service: Puppet modules for deployment
+  mission: >
+    The Puppet modules for OpenStack bring scalable and reliable IT automation
+    to OpenStack cloud deployments.
+  url: https://docs.openstack.org/puppet-openstack-guide/latest/
+  deliverables:
+    puppet-aodh:
+      repos:
+        - openstack/puppet-aodh
+    puppet-barbican:
+      repos:
+        - openstack/puppet-barbican
+    puppet-ceilometer:
+      repos:
+        - openstack/puppet-ceilometer
+    puppet-ceph:
+      repos:
+        - openstack/puppet-ceph
+    puppet-cinder:
+      repos:
+        - openstack/puppet-cinder
+    puppet-cloudkitty:
+      repos:
+        - openstack/puppet-cloudkitty
+    puppet-designate:
+      repos:
+        - openstack/puppet-designate
+    puppet-glance:
+      repos:
+        - openstack/puppet-glance
+    puppet-gnocchi:
+      repos:
+        - openstack/puppet-gnocchi
+    puppet-heat:
+      repos:
+        - openstack/puppet-heat
+    puppet-horizon:
+      repos:
+        - openstack/puppet-horizon
+    puppet-ironic:
+      repos:
+        - openstack/puppet-ironic
+    puppet-keystone:
+      repos:
+        - openstack/puppet-keystone
+    puppet-magnum:
+      repos:
+        - openstack/puppet-magnum
+    puppet-manila:
+      repos:
+        - openstack/puppet-manila
+    puppet-mistral:
+      repos:
+        - openstack/puppet-mistral
+    puppet-neutron:
+      repos:
+        - openstack/puppet-neutron
+    puppet-nova:
+      repos:
+        - openstack/puppet-nova
+    puppet-octavia:
+      repos:
+        - openstack/puppet-octavia
+    puppet-openstack-cookiecutter:
+      release-management: none
+      repos:
+        - openstack/puppet-openstack-cookiecutter
+    puppet-openstack-guide:
+      release-management: none
+      repos:
+        - openstack/puppet-openstack-guide
+    puppet-openstack-integration:
+      repos:
+        - openstack/puppet-openstack-integration
+    puppet-openstack_extras:
+      repos:
+        - openstack/puppet-openstack_extras
+    puppet-openstack_spec_helper:
+      repos:
+        - openstack/puppet-openstack_spec_helper
+    puppet-openstacklib:
+      repos:
+        - openstack/puppet-openstacklib
+    puppet-oslo:
+      repos:
+        - openstack/puppet-oslo
+    puppet-ovn:
+      repos:
+        - openstack/puppet-ovn
+    puppet-placement:
+      repos:
+        - openstack/puppet-placement
+    puppet-swift:
+      repos:
+        - openstack/puppet-swift
+    puppet-tempest:
+      repos:
+        - openstack/puppet-tempest
+    puppet-trove:
+      repos:
+        - openstack/puppet-trove
+    puppet-vitrage:
+      repos:
+        - openstack/puppet-vitrage
+    puppet-vswitch:
+      repos:
+        - openstack/puppet-vswitch
+    puppet-watcher:
+      repos:
+        - openstack/puppet-watcher
+    puppet-zaqar:
+      repos:
+        - openstack/puppet-zaqar
+Quality Assurance:
+  ptl:
+    name: Ghanshyam Maan
+    irc: gmaan
+    email: gmaan.os14@gmail.com
+  irc-channel: openstack-qa
+  mission: >
+    Develop, maintain, and initiate tools and plans to ensure the upstream
+    stability and quality of OpenStack, and its release readiness at any point
+    during the release cycle.
+  url: https://wiki.openstack.org/wiki/QA
+  deliverables:
+    bashate:
+      repos:
+        - openstack/bashate
+    coverage2sql:
+      release-management: none
+      repos:
+        - openstack/coverage2sql
+    devstack:
+      repos:
+        - openstack/devstack
+    devstack-plugin-ceph:
+      repos:
+        - openstack/devstack-plugin-ceph
+    devstack-plugin-cookiecutter:
+      release-management: none
+      repos:
+        - openstack/devstack-plugin-cookiecutter
+    devstack-plugin-open-cas:
+      release-management: none
+      repos:
+        - openstack/devstack-plugin-open-cas
+    devstack-plugin-prometheus:
+      release-management: none
+      repos:
+        - openstack/devstack-plugin-prometheus
+    devstack-tools:
+      repos:
+        - openstack/devstack-tools
+    devstack-vagrant:
+      release-management: none
+      repos:
+        - openstack/devstack-vagrant
+    eslint-config-openstack:
+      repos:
+        - openstack/eslint-config-openstack
+    grenade:
+      repos:
+        - openstack/grenade
+    hacking:
+      repos:
+        - openstack/hacking
+    karma-subunit-reporter:
+      repos:
+        - openstack/karma-subunit-reporter
+    os-performance-tools:
+      release-management: none
+      repos:
+        - openstack/os-performance-tools
+    os-testr:
+      repos:
+        - openstack/os-testr
+    qa-specs:
+      release-management: none
+      repos:
+        - openstack/qa-specs
+    stackviz:
+      release-management: none
+      repos:
+        - openstack/stackviz
+    tempest:
+      repos:
+        - openstack/tempest
+    tempest-plugin-cookiecutter:
+      release-management: none
+      repos:
+        - openstack/tempest-plugin-cookiecutter
+    tempest-stress:
+      release-management: none
+      repos:
+        - openstack/tempest-stress
+    devstack-plugin-container:
+      repos:
+        - openstack/devstack-plugin-container
+    devstack-plugin-nfs:
+      release-management: none
+      repos:
+        - openstack/devstack-plugin-nfs
+    whitebox-tempest-plugin:
+      repos:
+        - openstack/whitebox-tempest-plugin
+rally:
+  ptl:
+    name: Andrey Kurilin
+    irc: andreykurilin
+    email: andr.kurilin@gmail.com
+  appointed:
+    - victoria
+    - '2023.2'
+    - '2024.1'
+  irc-channel: openstack-rally
+  service: Benchmark service
+  mission: >
+    To provide a framework for performance analysis and benchmarking of
+    individual OpenStack components as well as full production OpenStack
+    cloud deployments.
+  url: https://wiki.openstack.org/wiki/Rally
+  deliverables:
+    rally:
+      repos:
+        - openstack/rally
+    rally-openstack:
+      repos:
+        - openstack/rally-openstack
+    performance-docs:
+      release-management: none
+      repos:
+        - openstack/performance-docs
+Release Management:
+  leadership_type: distributed
+  irc-channel: openstack-release
+  mission: >
+    Coordinating the release of OpenStack deliverables, by defining the
+    overall development cycle, release models, publication processes,
+    versioning rules and tools, then enabling project teams to produce
+    their own releases.
+  url: https://wiki.openstack.org/wiki/Release_Management
+  deliverables:
+    release-test:
+      repos:
+        - openstack/release-test
+    releases:
+      release-management: none
+      repos:
+        - openstack/releases
+    reno:
+      repos:
+        - openstack/reno
+    specs-cookiecutter:
+      release-management: none
+      repos:
+        - openstack/specs-cookiecutter
+  liaisons:
+    release:
+      - name: Thierry Carrez
+        irc: ttx
+        email: thierry@openstack.org
+      - name: Elod Illes
+        irc: elodilles
+        email: elod.illes@est.tech
+      - name: Jens Harbott
+        irc: frickler
+        email: frickler@offenerstapel.de
+    tact-sig:
+      - name: Jeremy Stanley
+        irc: fungi
+        email: fungi@yuggoth.org
+    security:
+      - name: Thierry Carrez
+        irc: ttx
+        email: thierry@openstack.org
+    tc-liaison:
+      - name: Michal Nasiadka
+        irc: mnasiadka
+        email: mnasiadka@gmail.com
+requirements:
+  leadership_type: distributed
+  irc-channel: openstack-requirements
+  service: Common dependency management
+  mission: >
+    Coordinating and converging the libraries used by OpenStack projects,
+    while ensuring that all libraries are compatible both technically and
+    from a licensing standpoint.
+  url: https://wiki.openstack.org/wiki/Requirements
+  deliverables:
+    requirements:
+      repos:
+        - openstack/requirements
+  liaisons:
+    release:
+      - name: Jens Harbott
+        irc: frickler
+        email: frickler@offenerstapel.de
+      - name: Michal Nasiadka
+        irc: mnasiadka
+        email: mnasiadka@gmail.com
+    tact-sig:
+      - name: Jens Harbott
+        irc: frickler
+        email: frickler@offenerstapel.de
+      - name: Michal Nasiadka
+        irc: mnasiadka
+        email: mnasiadka@gmail.com
+    security:
+      - name: Jens Harbott
+        irc: frickler
+        email: frickler@offenerstapel.de
+      - name: Michal Nasiadka
+        irc: mnasiadka
+        email: mnasiadka@gmail.com
+    tc-liaison:
+      - name: Michal Nasiadka
+        irc: mnasiadka
+        email: mnasiadka@gmail.com
+skyline:
+  ptl:
+    name: Wenxiang Wu
+    irc: wu_wenxiang
+    email: wu.wenxiang@algoblu.com
+  appointed:
+    - zed
+    - '2024.1'
+    - '2024.2'
+    - '2026.2'
+  irc-channel: openstack-skyline
+  service: Dashboard
+  mission: >
+    Skyline is an OpenStack dashboard optimized by UI and UX.
+    It has a modern technology stack and ecosystem, is easier for
+    developers to maintain and operate by users, and has higher
+    concurrency performance.
+  url: https://wiki.openstack.org/wiki/Skyline
+  deliverables:
+    skyline-apiserver:
+      repos:
+        - openstack/skyline-apiserver
+    skyline-console:
+      repos:
+        - openstack/skyline-console
+storlets:
+  ptl:
+    name: Takashi Kajinami
+    irc: tkajinam
+    email: kajinamit@oss.nttdata.com
+  irc-channel: openstack-storlets
+  service: Compute inside Object Storage service
+  mission: >
+    To enable a user friendly, cost effective scalable and secure way for
+    executing storage centric user defined functions near the data within
+    OpenStack Swift
+  url: https://wiki.openstack.org/wiki/Storlets
+  deliverables:
+    storlets:
+      repos:
+        - openstack/storlets
+sunbeam:
+  ptl:
+    name: Guillaume Boutry
+    irc: gboutry
+    email: guillaume.boutry@canonical.com
+  appointed:
+    - '2024.1'
+  irc-channel: openstack-sunbeam
+  service: Deployment and operational tooling for OpenStack
+  mission: >
+    To enable deployment and operation of OpenStack at any scale - from a
+    single node to small scale edge deployments and large scale clouds
+    containing many 1000's of hypervisors - leveraging a hybrid deployment
+    model using Juju to manage both Kubernetes components and machine based
+    components through the use of charms.
+  url: 
+    https://opendev.org/openstack/sunbeam-charms/src/branch/main/ops-sunbeam/README.rst
+  deliverables:
+    sunbeam-charms:
+      release-management: external
+      repos:
+        - openstack/sunbeam-charms
+swift:
+  ptl:
+    name: Tim Burke
+    irc: timburke
+    email: tburke@nvidia.com
+  appointed:
+    - victoria
+    - '2023.1'
+    - '2023.2'
+    - '2025.1'
+  irc-channel: openstack-swift
+  service: Object Storage service
+  mission: >
+    Provide software for storing and retrieving lots of data
+    with a simple API. Built for scale and optimized for durability,
+    availability, and concurrency across the entire data set.
+  url: https://wiki.openstack.org/wiki/Swift
+  deliverables:
+    liberasurecode:
+      release-management: none
+      repos:
+        - openstack/liberasurecode
+    pyeclib:
+      release-management: none
+      repos:
+        - openstack/pyeclib
+    python-swiftclient:
+      repos:
+        - openstack/python-swiftclient
+    swift:
+      repos:
+        - openstack/swift
+    swift-bench:
+      repos:
+        - openstack/swift-bench
+tacker:
+  ptl:
+    name: Yasufumi Ogawa
+    irc: yasufum
+    email: yasufum.o@gmail.com
+  appointed:
+    - victoria
+  irc-channel: tacker
+  service: NFV Orchestration service
+  mission: >
+    To implement Network Function Virtualization (NFV) Orchestration services
+    and libraries for end-to-end life-cycle management of Network Services
+    and Virtual Network Functions (VNFs).
+  url: https://wiki.openstack.org/wiki/Tacker
+  deliverables:
+    tacker:
+      repos:
+        - openstack/tacker
+    tacker-horizon:
+      repos:
+        - openstack/tacker-horizon
+    python-tackerclient:
+      repos:
+        - openstack/python-tackerclient
+    tacker-specs:
+      release-management: none
+      repos:
+        - openstack/tacker-specs
+    heat-translator:
+      repos:
+        - openstack/heat-translator
+    tosca-parser:
+      repos:
+        - openstack/tosca-parser
+Telemetry:
+  ptl:
+    name: Juan Larriba
+    irc: No nick supplied
+    email: jlarriba@redhat.com
+  appointed:
+    - train
+  irc-channel: openstack-telemetry
+  service: Telemetry service
+  mission: >
+    To reliably collect measurements of the utilization of the physical and
+    virtual resources comprising deployed clouds, persist these data for
+    subsequent retrieval and analysis, and trigger actions when defined
+    criteria are met.
+  url: https://wiki.openstack.org/wiki/Telemetry
+  deliverables:
+    aodh:
+      repos:
+        - openstack/aodh
+    aetos:
+      repos:
+        - openstack/aetos
+    ceilometer:
+      repos:
+        - openstack/ceilometer
+    telemetry-specs:
+      release-management: none
+      repos:
+        - openstack/telemetry-specs
+    ceilometermiddleware:
+      repos:
+        - openstack/ceilometermiddleware
+    python-aodhclient:
+      repos:
+        - openstack/python-aodhclient
+    python-observabilityclient:
+      repos:
+        - openstack/python-observabilityclient
+    telemetry-tempest-plugin:
+      repos:
+        - openstack/telemetry-tempest-plugin
+    grian-ui:
+      repos:
+        - openstack/grian-ui
+trove:
+  ptl:
+    name: Erkin Mussurmankulov
+    irc: No nick supplied
+    email: mangust404@gmail.com
+  appointed:
+    - stein
+    - zed
+    - '2024.1'
+    - '2024.2'
+  irc-channel: openstack-trove
+  service: Database service
+  mission: >
+    To provide scalable and reliable Cloud Database as a Service functionality
+    for both relational and non-relational database engines, and to continue to
+    improve its fully-featured and extensible open source framework.
+  url: https://wiki.openstack.org/wiki/Trove
+  deliverables:
+    python-troveclient:
+      repos:
+        - openstack/python-troveclient
+    trove:
+      repos:
+        - openstack/trove
+    trove-dashboard:
+      repos:
+        - openstack/trove-dashboard
+    trove-specs:
+      release-management: none
+      repos:
+        - openstack/trove-specs
+    trove-tempest-plugin:
+      repos:
+        - openstack/trove-tempest-plugin
+venus:
+  ptl:
+    name: APPOINTMENT NEEDED
+    irc: No nick supplied
+    email: example@example.org
+  appointed:
+    - zed
+    - '2023.1'
+    - '2024.1'
+  irc-channel: openstack-venus
+  service: Log management service
+  mission: >
+    Venus is a unified log management module, according to the key
+    requirements of OpenStack in log storage, retrieval, analysis
+    and so on. This module can provide a one-stop solution to log
+    collection, cleaning, indexing, analysis, alarm, visualization,
+    report generation etc..
+  url: https://wiki.openstack.org/wiki/Venus
+  status: inactive
+  deliverables:
+    venus:
+      repos:
+        - openstack/venus
+    venus-specs:
+      release-management: none
+      repos:
+        - openstack/venus-specs
+    venus-dashboard:
+      repos:
+        - openstack/venus-dashboard
+    python-venusclient:
+      repos:
+        - openstack/python-venusclient
+    venus-tempest-plugin:
+      repos:
+        - openstack/venus-tempest-plugin
+vitrage:
+  ptl:
+    name: APPOINTMENT NEEDED
+    irc: No nick supplied
+    email: example@example.org
+  appointed:
+    - '2023.2'
+  irc-channel: openstack-vitrage
+  service: RCA (Root Cause Analysis) service
+  mission: >
+    To organize, analyze and visualize OpenStack alarms & events, yield
+    insights regarding the root cause of problems and deduce their existence
+    before they are directly detected.
+  url: https://wiki.openstack.org/wiki/Vitrage
+  status: inactive
+  deliverables:
+    vitrage:
+      repos:
+        - openstack/vitrage
+    vitrage-specs:
+      release-management: none
+      repos:
+        - openstack/vitrage-specs
+    vitrage-tempest-plugin:
+      repos:
+        - openstack/vitrage-tempest-plugin
+    python-vitrageclient:
+      repos:
+        - openstack/python-vitrageclient
+    vitrage-dashboard:
+      repos:
+        - openstack/vitrage-dashboard
+    xstatic-dagre:
+      repos:
+        - openstack/xstatic-dagre
+    xstatic-dagre-d3:
+      repos:
+        - openstack/xstatic-dagre-d3
+    xstatic-graphlib:
+      repos:
+        - openstack/xstatic-graphlib
+    xstatic-lodash:
+      repos:
+        - openstack/xstatic-lodash
+    xstatic-moment:
+      repos:
+        - openstack/xstatic-moment
+    xstatic-moment-timezone:
+      repos:
+        - openstack/xstatic-moment-timezone
+watcher:
+  ptl:
+    name: Douglas Viroel
+    irc: dviroel
+    email: viroel@gmail.com
+  irc-channel: openstack-watcher
+  service: Infrastructure Optimization service
+  mission: >
+    Watcher's goal is to provide a flexible and scalable resource optimization
+    service for multi-tenant OpenStack-based clouds.
+  url: https://wiki.openstack.org/wiki/Watcher
+  deliverables:
+    watcher:
+      repos:
+        - openstack/watcher
+    watcher-specs:
+      release-management: none
+      repos:
+        - openstack/watcher-specs
+    watcher-tempest-plugin:
+      repos:
+        - openstack/watcher-tempest-plugin
+    python-watcherclient:
+      repos:
+        - openstack/python-watcherclient
+    watcher-dashboard:
+      repos:
+        - openstack/watcher-dashboard
+zaqar:
+  ptl:
+    name: Hao Wang
+    irc: wanghao
+    email: sxmatch1986@gmail.com
+  appointed:
+    - train
+    - victoria
+    - xena
+    - zed
+    - '2025.2'
+  irc-channel: openstack-zaqar
+  service: Message service
+  mission: >
+    To produce an OpenStack messaging service that affords a
+    variety of distributed application patterns in an efficient,
+    scalable and highly-available manner, and to create and maintain
+    associated Python libraries and documentation.
+  url: https://wiki.openstack.org/wiki/Zaqar
+  deliverables:
+    python-zaqarclient:
+      repos:
+        - openstack/python-zaqarclient
+    zaqar:
+      repos:
+        - openstack/zaqar
+    zaqar-specs:
+      release-management: none
+      repos:
+        - openstack/zaqar-specs
+    zaqar-tempest-plugin:
+      repos:
+        - openstack/zaqar-tempest-plugin
+    zaqar-ui:
+      repos:
+        - openstack/zaqar-ui
+zun:
+  ptl:
+    name: Hongbin Lu
+    irc: No nick supplied
+    email: hongbin034@gmail.com
+  appointed:
+    - xena
+    - yoga
+    - zed
+    - '2023.1'
+  irc-channel: openstack-zun
+  service: Containers service
+  mission: >
+    To provide an OpenStack containers service that integrates with various
+    container technologies for managing application containers on OpenStack.
+  url: https://wiki.openstack.org/wiki/Zun
+  deliverables:
+    python-zunclient:
+      repos:
+        - openstack/python-zunclient
+    zun:
+      repos:
+        - openstack/zun
+    zun-tempest-plugin:
+      repos:
+        - openstack/zun-tempest-plugin
+    zun-ui:
+      repos:
+        - openstack/zun-ui
+    kuryr:
+      repos:
+        - openstack/kuryr
+    kuryr-libnetwork:
+      repos:
+        - openstack/kuryr-libnetwork
