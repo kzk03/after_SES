@@ -1,7 +1,0 @@
-split_col,bucket,n_obs,n_pos,base_rate,irl_auc,rf_auc,ens_auc,delta_auc,ens_lift_auc
-active_months_ratio,低 (Q1),1064,180,0.169,0.653,0.62,0.655,0.033,0.036
-active_months_ratio,中 (Q2),544,150,0.276,0.676,0.694,0.698,-0.018,0.004
-active_months_ratio,高 (Q3),608,119,0.196,0.824,0.776,0.844,0.048,0.068
-avg_activity_gap,低 (Q1),748,120,0.16,0.75,0.722,0.752,0.028,0.03
-avg_activity_gap,中 (Q2),1260,259,0.206,0.646,0.638,0.665,0.009,0.027
-avg_activity_gap,高 (Q3),208,70,0.337,0.818,0.799,0.827,0.02,0.029

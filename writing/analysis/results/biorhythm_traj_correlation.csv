@@ -1,4 +1,0 @@
-model,n_pairs_fluctuating,pooled_switches,pooled_matches,pooled_rate,per_pair_mean_rate,per_pair_median_rate
-IRL,1885,2886,1509,0.5228690228690228,0.5302387267904509,0.5
-RF,1885,2886,1443,0.5,0.5104332449160036,0.5
-AVG,1885,2886,1522,0.5273735273735274,0.5368700265251989,0.5
