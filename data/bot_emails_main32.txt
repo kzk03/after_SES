@@ -1,6 +1,0 @@
-arista-openstack-test@aristanetworks.com
-openstack-ci-external@quobyte.com
-open-e-ci-joviandss@open-e.com
-openstack-ci-team@hgst.com
-trivial-rebase@review.openstack.org
-oc-neutron-test@oneconvergence.com
