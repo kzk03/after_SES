@@ -44,6 +44,11 @@ BASE_TRAIN_START="${BASE_TRAIN_START:-2019-01-01}"
 POOL_WINDOW_DAYS="${POOL_WINDOW_DAYS:-180}"
 DELTA_MONTHS="${DELTA_MONTHS:-3}"
 HORIZONS="${HORIZONS:-0 3 6 9}"
+# [align系列] 指定時、学習窓を全 horizon 共通に等化する:
+#   rf_train_end(h)   = BASE_TRAIN_END  - LABEL_TAIL_MONTHS   （全 horizon 同一）
+#   rf_train_start(h) = BASE_TRAIN_START                       （FS シフトなし）
+# → IRL align の feature 月次集合 [BASE_TRAIN_START, BASE_TRAIN_END-12] と一致。
+LABEL_TAIL_MONTHS="${LABEL_TAIL_MONTHS:-}"
 OUTBASE="${OUTBASE:-outputs/dynstart_rf_1snap}"
 DEVICE="${DEVICE:-cpu}"
 N_JOBS="${N_JOBS:-4}"
@@ -73,26 +78,32 @@ read -r -a RAW_JSON <<< "$(cat "$RAW_JSON_LIST_FILE")"
 DUMMY_IRL_MODEL="/dev/null/no_irl_model.pt"
 
 # rf_train_start(h) = BASE_TRAIN_START - FS(h) months
+# align (LABEL_TAIL_MONTHS 指定時): 全 horizon 同一 BASE_TRAIN_START（FS シフトなし）
 compute_train_start() {
     local fs=$1
+    local shift=$fs
+    [ -n "$LABEL_TAIL_MONTHS" ] && shift=0
     uv run python -c "
 from datetime import date
 from dateutil.relativedelta import relativedelta
 base = date.fromisoformat('$BASE_TRAIN_START')
-print((base - relativedelta(months=$fs)).isoformat())
+print((base - relativedelta(months=$shift)).isoformat())
 "
 }
 
 # rf_train_end(h) = BASE_TRAIN_END - (FS + delta)(h) months
 # = IRL dynstartB の最終 m_end と同じ。これで学習窓 33 月で完全等化。
+# align (LABEL_TAIL_MONTHS 指定時): 全 horizon 共通 BASE_TRAIN_END - LABEL_TAIL_MONTHS
 compute_train_end() {
     local fs=$1
     local delta=$2
+    local back=$(( fs + delta ))
+    [ -n "$LABEL_TAIL_MONTHS" ] && back="$LABEL_TAIL_MONTHS"
     uv run python -c "
 from datetime import date
 from dateutil.relativedelta import relativedelta
 base = date.fromisoformat('$BASE_TRAIN_END')
-print((base - relativedelta(months=$fs + $delta)).isoformat())
+print((base - relativedelta(months=$back)).isoformat())
 "
 }
 

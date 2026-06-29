@@ -1,0 +1,11 @@
+archetype,rank,developer,alpha,auc_cold_irl,auc_rf_dir,auc_ens
+A1,1,ltomasbo@redhat.com,1.0,1.0,0.16666666666666669,0.33333333333333337
+A1,2,ralonsoh@redhat.com,1.0,,,
+A1,3,bcafarel@redhat.com,1.0,,,
+A1,4,oschwart@redhat.com,1.0,,,
+A1,5,openstack@lightbitslabs.com,1.0,,,
+A2,1,zhangtj03@inspur.com,1.0,,,
+A2,2,gsteinmuller@vexxhost.com,1.0,,,
+A2,3,travisholton@catalystcloud.nz,1.0,,,
+A2,4,ksuresh@purestorage.com,1.0,,,
+A2,5,bloodeagle40234@gmail.com,1.0,,,

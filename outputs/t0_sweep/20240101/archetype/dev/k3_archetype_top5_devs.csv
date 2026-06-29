@@ -1,0 +1,16 @@
+archetype,rank,developer,alpha,auc_cold_irl,auc_rf_dir,auc_ens
+A1,1,raghavendra.tilay@capgemini.com,1.0,,,
+A1,2,dekehn@gmail.com,1.0,,,
+A1,3,dienste@weinimo.de,1.0,,,
+A1,4,ykarel@redhat.com,1.0,,,
+A1,5,bcafarel@redhat.com,1.0,,,
+A2,1,andrei.perepiolkin@open-e.com,0.9641766836074902,,,
+A2,2,andrewbogott@gmail.com,0.9641516467044161,,,
+A2,3,gsteinmuller@vexxhost.com,0.964071564438893,,,
+A2,4,shanyunfan@inspur.com,0.9640445271105224,,,
+A2,5,davidchill@hotmail.com,0.963989626703,,,
+A3,1,avanzaghi.osf@axellink.fr,1.0,0.75,0.0,0.0
+A3,2,kenta.fukaya.xv@hco.ntt.co.jp,1.0,0.5,0.5,0.5
+A3,3,galkindmitrii@gmail.com,0.993208967039259,0.6666666666666667,0.6666666666666667,0.6666666666666667
+A3,4,will@stackhpc.com,0.9910252892484842,,,
+A3,5,nasaito@nec.com,0.9770635647369034,,,

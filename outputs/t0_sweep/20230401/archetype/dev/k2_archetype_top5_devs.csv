@@ -1,0 +1,11 @@
+archetype,rank,developer,alpha,auc_cold_irl,auc_rf_dir,auc_ens
+A1,1,kvmpower@linux.vnet.ibm.com,1.0,0.0,1.0,0.6666666666666667
+A1,2,open-e-ci-joviandss@open-e.com,1.0,,,
+A1,3,egarciar@redhat.com,1.0,1.0,1.0,1.0
+A1,4,sbaker@redhat.com,1.0,,,
+A1,5,arista-openstack-test@aristanetworks.com,1.0,,,
+A2,1,billy.olsen@canonical.com,1.0,,,
+A2,2,xuq.fnstxz@fujitsu.com,1.0,0.25,0.25,0.25
+A2,3,i.pchelintsev@yadro.com,1.0,0.0,0.3333333333333333,0.3333333333333333
+A2,4,doug@stackhpc.com,1.0,,,
+A2,5,bloodeagle40234@gmail.com,1.0,,,
