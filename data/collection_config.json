@@ -1,0 +1,14 @@
+{
+  "gerrit_url": "https://review.opendev.org",
+  "projects": [
+    "openstack/octavia"
+  ],
+  "start_date": "2020-01-01",
+  "end_date": "2026-01-01",
+  "response_window": 14,
+  "output": "data/octavia_raw.csv",
+  "n_rows": 5667,
+  "n_positive": 3117,
+  "n_negative": 2550,
+  "collected_at": "2026-04-18T02:50:00.910269"
+}

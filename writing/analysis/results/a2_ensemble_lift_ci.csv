@@ -1,7 +1,0 @@
-group,metric,metric_jp,value_pp,ci_lo_pp,ci_hi_pp,boot_p,sig
-A2 全体 (n=554),delta_auc,Δ AUC (IRL−RF),3.2,-1.95,7.72,0.237,False
-A2 全体 (n=554),ens_lift_auc,Ens lift AUC,3.44,1.0,5.77,0.006,True
-A2 全体 (n=554),ens_lift_ap,Ens lift AP,11.37,5.83,16.3,0.0,True
-A2×P4 (n=530),delta_auc,Δ AUC (IRL−RF),2.63,-2.62,7.28,0.339,False
-A2×P4 (n=530),ens_lift_auc,Ens lift AUC,3.18,0.76,5.43,0.009,True
-A2×P4 (n=530),ens_lift_ap,Ens lift AP,10.83,5.5,15.73,0.0,True

@@ -1,9 +1,0 @@
-granularity,archetype,archetype_name,delta_pp,ci_lo_pp,ci_hi_pp,boot_p,sig
-dev,A1,A1 低活動の新人,-9.02,-19.0,0.26,0.056,False
-dev,A2,A2 レビュー専念型,3.2,-2.1,7.79,0.237,False
-dev,A3,A3 高承諾のベテラン,-1.76,-4.95,1.34,0.286,False
-dev,A4,A4 常時活動型,-1.93,-4.61,0.55,0.132,False
-pair,P1,P1 ディレクトリ未経験,2.49,-0.84,5.25,0.146,False
-pair,P2,P2 経験あり低承諾,-5.56,-8.64,-2.43,0.0,True
-pair,P3,P3 経験あり高承諾,-4.53,-8.49,-0.77,0.024,True
-pair,P4,P4 中程度関与,0.18,-4.97,4.82,0.941,False

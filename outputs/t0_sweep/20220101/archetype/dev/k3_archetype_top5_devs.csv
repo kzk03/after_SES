@@ -1,0 +1,16 @@
+archetype,rank,developer,alpha,auc_cold_irl,auc_rf_dir,auc_ens
+A1,1,amar.rajeev.singuluri@ibm.com,1.0,,,
+A1,2,rsafrono@redhat.com,1.0,0.5,0.0,0.0
+A1,3,hemanth.nakkina@canonical.com,1.0,0.0,0.33333333333333337,0.0
+A1,4,ihrachys@redhat.com,1.0,1.0,0.25,1.0
+A1,5,billy.olsen@canonical.com,1.0,,,
+A2,1,dinas27@outlook.com,1.0,,,
+A2,2,nairashwin952013@gmail.com,1.0,0.33333333333333337,1.0,1.0
+A2,3,liijuun@163.com,1.0,0.33333333333333337,0.33333333333333337,0.33333333333333337
+A2,4,sdmitriev1@gmail.com,1.0,,,
+A2,5,victor.coutellier@gmail.com,1.0,,,
+A3,1,katonalala@gmail.com,1.0,,,
+A3,2,bcafarel@redhat.com,1.0,,,
+A3,3,gibizer@gmail.com,1.0,,,
+A3,4,open-e-ci-joviandss@open-e.com,1.0,,,
+A3,5,wushiming@yovole.com,1.0,0.33333333333333337,1.0,1.0

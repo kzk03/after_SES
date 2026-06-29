@@ -1,0 +1,7 @@
+archetype,n_dev_with_auc,comparison,median_auc_diff,wilcoxon_stat,p_value
+A1,21,cold_irl_vs_rf,0.0,110.5,0.8617110621799895
+A2,4,cold_irl_vs_rf,,,
+A3,13,cold_irl_vs_rf,0.0,33.5,0.4140625
+A4,26,cold_irl_vs_rf,0.0,170.0,0.8883273016562471
+A5,21,cold_irl_vs_rf,0.0,113.0,0.9304353324755861
+A6,10,cold_irl_vs_rf,0.0625,22.5,0.6328125

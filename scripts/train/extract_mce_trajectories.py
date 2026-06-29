@@ -53,6 +53,12 @@ def main():
     parser.add_argument("--train-end", type=str, default="2022-01-01")
     parser.add_argument("--future-window-start", type=int, required=True)
     parser.add_argument("--future-window-end", type=int, required=True)
+    # [align系列] 全 horizon 共通の label 観測 tail（月）。指定時は month_end+tail<=train_end
+    # の月のみ採用し、最新 month_end=train_end-tail で全 horizon を等化（Phase B 不要）。
+    # 未指定なら従来通り（FS 基準 skip + future_end クリップ）。
+    parser.add_argument("--label-tail-months", type=int, default=None)
+    parser.add_argument("--responded-in-window", action="store_true",
+                        help="label==1(14日以内)の代わりに first_response_time notna で正例判定")
     parser.add_argument("--multitask", action="store_true")
     parser.add_argument("--n-jobs", type=int, default=-1,
                         help="joblib 並列数（-1=全コア）")
@@ -115,6 +121,8 @@ def main():
         future_window_end_months=args.future_window_end,
         multitask=args.multitask,
         n_jobs=args.n_jobs,
+        label_tail_months=args.label_tail_months,
+        responded_in_window=args.responded_in_window,
     )
 
     if not trajectories:

@@ -38,9 +38,17 @@ set -u
 # 設定
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 GERRIT_URL="https://review.opendev.org"
-START_DATE="2020-01-01"
-END_DATE="2026-01-01"
-RESPONSE_WINDOW=14
+START_DATE="${START_DATE:-2020-01-01}"
+END_DATE="${END_DATE:-2026-01-01}"
+RESPONSE_WINDOW="${RESPONSE_WINDOW:-14}"
+
+# [SES 再収集] 出力先を env で差し替え可能に（既定は従来パス＝非破壊）。
+# 既存データを保護したまま別ディレクトリへ再収集する場合に指定する:
+#   RAW_JSON_DIR=data/refetch_20260615/raw_json \
+#   RAW_CSV_DIR=data/refetch_20260615/raw_csv \
+#   bash scripts/pipeline/collect_service_teams.sh "" 4 data/service_teams_main_repos.csv
+RAW_JSON_DIR="${RAW_JSON_DIR:-data/raw_json}"
+RAW_CSV_DIR="${RAW_CSV_DIR:-data/raw_csv}"
 
 # レート制限対策（Gerrit API への配慮）
 STAGGER_DELAY=3        # 並列 worker の起動間隔（秒）。最初に N 並列を一斉起動しないため
@@ -55,7 +63,8 @@ INPUT_CSV="${3:-data/service_teams_repos.csv}"
 # 出力ディレクトリとログ
 LOG_DIR="logs/collect_service_teams"
 SUMMARY_LOG="${LOG_DIR}/_summary_$(date +%Y%m%d_%H%M%S).log"
-mkdir -p data/raw_json data/raw_csv "$LOG_DIR"
+mkdir -p "$RAW_JSON_DIR" "$RAW_CSV_DIR" "$LOG_DIR"
+echo "[INFO] RAW_JSON_DIR=$RAW_JSON_DIR  RAW_CSV_DIR=$RAW_CSV_DIR  (START=$START_DATE END=$END_DATE RW=$RESPONSE_WINDOW)"
 
 # stdout & summary ログの両方に流す
 exec > >(tee -a "$SUMMARY_LOG") 2>&1
@@ -119,7 +128,7 @@ EXISTING=0
 for line in "${REPOS[@]}"; do
     repo="${line##*|}"
     safe="${repo//\//__}"
-    if [ -f "data/raw_json/${safe}.json" ] && [ -f "data/raw_csv/${safe}.csv" ]; then
+    if [ -f "${RAW_JSON_DIR}/${safe}.json" ] && [ -f "${RAW_CSV_DIR}/${safe}.csv" ]; then
         ((EXISTING++))
     fi
 done
@@ -145,8 +154,8 @@ fetch_one() {
     local team="${rest%%|*}"
     local repo="${rest##*|}"
     local repo_safe="${repo//\//__}"
-    local json_path="data/raw_json/${repo_safe}.json"
-    local csv_path="data/raw_csv/${repo_safe}.csv"
+    local json_path="${RAW_JSON_DIR}/${repo_safe}.json"
+    local csv_path="${RAW_CSV_DIR}/${repo_safe}.csv"
     local log_path="${LOG_DIR}/${repo_safe}.log"
 
     if [ -f "$json_path" ] && [ -f "$csv_path" ]; then
@@ -185,6 +194,7 @@ fetch_one() {
 export -f fetch_one
 export GERRIT_URL START_DATE END_DATE RESPONSE_WINDOW LOG_DIR
 export SLEEP_PER_REPO SLEEP_ON_ERROR STAGGER_DELAY
+export RAW_JSON_DIR RAW_CSV_DIR
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # 並列実行
@@ -220,7 +230,7 @@ HOUR=$((ELAPSED / 3600))
 MIN=$((ELAPSED % 3600 / 60))
 SEC=$((ELAPSED % 60))
 
-ACTUAL=$(ls data/raw_json/ 2>/dev/null | wc -l)
+ACTUAL=$(ls "$RAW_JSON_DIR"/ 2>/dev/null | wc -l)
 
 echo ""
 echo "============================================================================"

@@ -1,0 +1,11 @@
+archetype,rank,developer,alpha,auc_cold_irl,auc_rf_dir,auc_ens
+A1,1,elfosardo@gmail.com,1.0,,,
+A1,2,open-e-ci-joviandss@open-e.com,1.0,,,
+A1,3,proliantutils@gmail.com,1.0,,,
+A1,4,juliaashleykreger@gmail.com,1.0,,,
+A1,5,arista-openstack-test@aristanetworks.com,1.0,,,
+A2,1,li.xuehai@99cloud.net,1.0,,,
+A2,2,vgvoleg@gmail.com,1.0,0.5,0.75,0.25
+A2,3,billy.olsen@canonical.com,1.0,,,
+A2,4,biser.milanov@storpool.com,1.0,,,
+A2,5,sreeram.mounika@ibm.com,1.0,0.0,0.6666666666666666,0.3333333333333333

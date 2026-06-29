@@ -1,7 +1,7 @@
 services:
   app:
-    container_name: run
-    image: run
+    container_name: lann
+    image: lann
     deploy:
       resources:
         limits:

@@ -1,0 +1,16 @@
+archetype,rank,developer,alpha,auc_cold_irl,auc_rf_dir,auc_ens
+A1,1,open-e-ci-joviandss@open-e.com,1.0,,,
+A1,2,ralonsoh@redhat.com,1.0,,,
+A1,3,cinder+hpmsa@tristero.net,1.0,0.0,0.3333333333333333,0.0
+A1,4,cinder+lenovo@tristero.net,1.0,0.0,0.3333333333333333,0.0
+A1,5,cinder+seagate@tristero.net,1.0,0.25,0.5,0.25
+A2,1,victor.coutellier@gmail.com,1.0,,,
+A2,2,cinder@tristero.net,0.921623663830121,,,
+A2,3,bdobreli@redhat.com,0.8968631181386953,,,
+A2,4,zhouhao@fujitsu.com,0.8902030052805386,,,
+A2,5,pierre-samuel.le-stang@ovhcloud.com,0.8901732502143151,,,
+A3,1,tarun.mathur@dell.com,1.0,,,
+A3,2,billy.olsen@canonical.com,1.0,,,
+A3,3,jichenjc@cn.ibm.com,1.0,,,
+A3,4,jzpcoming@163.com,1.0,,,
+A3,5,atsushi.kawai.bu@hitachi.com,1.0,0.0,0.6666666666666666,0.0

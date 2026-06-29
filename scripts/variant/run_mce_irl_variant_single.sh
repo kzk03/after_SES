@@ -66,9 +66,14 @@ if [ ! -f "$RAW_JSON_LIST_FILE" ]; then
     exit 1
 fi
 read -r -a RAW_JSON <<< "$(cat "$RAW_JSON_LIST_FILE")"
-TRAIN_START="2019-01-01"
-TRAIN_END="2022-01-01"
-EVAL_CUTOFF="2023-01-01"
+# [SES t0掃引] t0=EVAL_CUTOFF を変えると訓練窓も t0 相対で平行移動する。
+#   EVAL_CUTOFF (=t0)        : 予測基準時点          (default 2023-01-01)
+#   TRAIN_END                : 訓練終了 (=t0-12ヶ月)  (default 2022-01-01)
+#   TRAIN_START (FS=0 base)  : 訓練開始 (=t0-48ヶ月)  (default 2019-01-01)
+# いずれも env で上書き可。未指定なら論文の既定値（t0=2023-01）。
+TRAIN_START="${TRAIN_START:-2019-01-01}"
+TRAIN_END="${TRAIN_END:-2022-01-01}"
+EVAL_CUTOFF="${EVAL_CUTOFF:-2023-01-01}"
 EPOCHS="${EPOCHS:-150}"
 PATIENCE="${PATIENCE:-15}"
 
@@ -89,11 +94,39 @@ TRAIN_FE=(3 6 9 12)
 #   全 horizon の学習データが 2019-10 以降に揃い、古いデータ混入を回避（B の逆方向の等化）
 #
 # DYNAMIC_START=0 (既定) は従来通り全horizon 2019-01-01 (=Phase A 再現、ステップ数 33/30/27/24 とズレる)。
+# TRAIN_STARTS は TRAIN_START / TRAIN_END からの相対月数で算出する
+# （t0 を動かしても同じシフト規則が効くようにするため。従来の絶対日付ベタ書きを廃止）
+_shift_months() {  # _shift_months <base_iso> <months_back>
+    uv run python -c "
+from datetime import date
+from dateutil.relativedelta import relativedelta
+print((date.fromisoformat('$1') - relativedelta(months=$2)).isoformat())
+"
+}
+# [align系列] LABEL_TAIL_MONTHS を指定すると、後方クリップを「全 horizon 共通 tail」に
+# 統一する（extract に --label-tail-months を渡す）。tail 統一で step 数が自動等化される
+# ため、Phase B/C の train_start シフトは行わず全 horizon 同一 train_start にする。
+LABEL_TAIL_MONTHS="${LABEL_TAIL_MONTHS:-}"
 DYNAMIC_START="${DYNAMIC_START:-0}"
-if [ "$DYNAMIC_START" = "1" ]; then
-    TRAIN_STARTS=("2019-01-01" "2018-10-01" "2018-07-01" "2018-04-01")
+if [ -n "$LABEL_TAIL_MONTHS" ]; then
+    # align: 後方延長/前方削りは使わない（tail 統一で等化）
+    TRAIN_STARTS=("$TRAIN_START" "$TRAIN_START" "$TRAIN_START" "$TRAIN_START")
+elif [ "$DYNAMIC_START" = "1" ]; then
+    # Phase B (後方延長): train_start(h) = TRAIN_START − FS(h)ヶ月（全 horizon 33 ステップ）
+    TRAIN_STARTS=(
+        "$(_shift_months "$TRAIN_START" 0)"
+        "$(_shift_months "$TRAIN_START" 3)"
+        "$(_shift_months "$TRAIN_START" 6)"
+        "$(_shift_months "$TRAIN_START" 9)"
+    )
 elif [ "$DYNAMIC_START" = "2" ]; then
-    TRAIN_STARTS=("2019-10-01" "2019-07-01" "2019-04-01" "2019-01-01")
+    # Phase C (前方削り): train_start(h) = (TRAIN_END − FE(h)) − 24ヶ月（全 horizon 24 ステップ）
+    TRAIN_STARTS=(
+        "$(_shift_months "$(_shift_months "$TRAIN_END" 3)" 24)"
+        "$(_shift_months "$(_shift_months "$TRAIN_END" 6)" 24)"
+        "$(_shift_months "$(_shift_months "$TRAIN_END" 9)" 24)"
+        "$(_shift_months "$(_shift_months "$TRAIN_END" 12)" 24)"
+    )
 else
     TRAIN_STARTS=("$TRAIN_START" "$TRAIN_START" "$TRAIN_START" "$TRAIN_START")
 fi
@@ -101,7 +134,15 @@ fi
 EVAL_DIR_HISTORY_MONTHS="${EVAL_DIR_HISTORY_MONTHS:-24}"
 # [SES] device: server=cuda(既定), local=mps/cpu
 DEVICE="${DEVICE:-cuda}"
-echo "[SES] DYNAMIC_START=$DYNAMIC_START TRAIN_STARTS=(${TRAIN_STARTS[*]}) EVAL_DIR_HISTORY_MONTHS=$EVAL_DIR_HISTORY_MONTHS DEVICE=$DEVICE"
+echo "[SES] DYNAMIC_START=$DYNAMIC_START LABEL_TAIL_MONTHS=${LABEL_TAIL_MONTHS:-none} TRAIN_STARTS=(${TRAIN_STARTS[*]}) EVAL_DIR_HISTORY_MONTHS=$EVAL_DIR_HISTORY_MONTHS DEVICE=$DEVICE"
+
+# [align系列] extract に渡す tail 引数と、キャッシュ衝突回避用サフィックス
+LABEL_TAIL_ARGS=()
+CACHE_SUFFIX=""
+if [ -n "$LABEL_TAIL_MONTHS" ]; then
+    LABEL_TAIL_ARGS+=(--label-tail-months "$LABEL_TAIL_MONTHS")
+    CACHE_SUFFIX="_tail${LABEL_TAIL_MONTHS}"
+fi
 
 # MCE-IRL 専用キャッシュ (既存 outputs/trajectory_cache とは別物)
 # CACHE_TAG で scope ごとに分離する (run_mce_pipeline.sh から渡される)。
@@ -190,7 +231,7 @@ for i in 0 1 2 3; do
     fs="${TRAIN_FS[$i]}"
     fe="${TRAIN_FE[$i]}"
     ts="${TRAIN_STARTS[$i]}"
-    cache_path="$CACHE_DIR/mce_traj_${win}_ts${ts}.pkl"
+    cache_path="$CACHE_DIR/mce_traj_${win}_ts${ts}${CACHE_SUFFIX}.pkl"
     if [ -f "$cache_path" ]; then
         echo "[MCE-IRL cache ${win}m] スキップ（キャッシュ済み: $cache_path）"
     else
@@ -204,6 +245,7 @@ for i in 0 1 2 3; do
             --future-window-end "$fe" \
             --n-jobs -1 \
             --output "$cache_path" \
+            "${LABEL_TAIL_ARGS[@]}" \
             "${EXTRA_PATH_FEAT_ARGS[@]}"
         echo "[MCE-IRL cache ${win}m] 抽出完了 → $cache_path"
     fi
@@ -244,7 +286,7 @@ for i in 0 1 2 3; do
             --train-end "$TRAIN_END" \
             --future-window-start "$fs" \
             --future-window-end "$fe" \
-            --trajectories-cache "$CACHE_DIR/mce_traj_${win}_ts${ts}.pkl" \
+            --trajectories-cache "$CACHE_DIR/mce_traj_${win}_ts${ts}${CACHE_SUFFIX}.pkl" \
             --output "$model_dir" \
             --skip-threshold \
             "${warm_args[@]}"

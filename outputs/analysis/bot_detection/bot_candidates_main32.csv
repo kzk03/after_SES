@@ -1,7 +1,0 @@
-email,n_requests,n_accepted,n_unique_owners,n_unique_projects,median_latency,accept_rate,owner_diversity,matched_pattern,behavior_flag,is_bot
-arista-openstack-test@aristanetworks.com,3277,3221,285,1,0.0,0.9829111992676228,0.0869697894415624,-test@,,True
-openstack-ci-external@quobyte.com,2653,2303,411,3,0.0,0.8680738786279684,0.15491895966830005,-ci-,,True
-open-e-ci-joviandss@open-e.com,1768,1341,236,1,0.0,0.7584841628959276,0.1334841628959276,-ci-,,True
-openstack-ci-team@hgst.com,4,4,4,1,0.0,1.0,1.0,-ci-,,True
-trivial-rebase@review.openstack.org,2,2,2,1,0.0,1.0,1.0,@review.openstack.org,,True
-oc-neutron-test@oneconvergence.com,1,1,1,1,2.0,1.0,1.0,-test@,,True

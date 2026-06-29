@@ -594,6 +594,7 @@ def _process_one_reviewer(
     label_col,
     dirs_column,
     multitask,
+    responded_in_window=False,
 ):
     """1レビュアー分の軌跡を抽出する（並列処理用ワーカー関数）。"""
     history_start = train_start
@@ -628,7 +629,10 @@ def _process_one_reviewer(
             future_acceptance = False
             sample_weight = 0.5
         else:
-            accepted = label_df[label_df[label_col] == 1]
+            if responded_in_window:
+                accepted = label_df[label_df["first_response_time"].notna()]
+            else:
+                accepted = label_df[label_df[label_col] == 1]
             future_acceptance = len(accepted) > 0
             sample_weight = 1.0
 
@@ -667,7 +671,10 @@ def _process_one_reviewer(
             if len(month_future_df) == 0:
                 month_label = 0
             else:
-                month_accepted = month_future_df[month_future_df[label_col] == 1]
+                if responded_in_window:
+                    month_accepted = month_future_df[month_future_df["first_response_time"].notna()]
+                else:
+                    month_accepted = month_future_df[month_future_df[label_col] == 1]
                 month_label = 1 if len(month_accepted) > 0 else 0
 
             step_labels.append(month_label)
@@ -690,7 +697,10 @@ def _process_one_reviewer(
                     if len(mt_df) == 0:
                         mt_label = 0
                     else:
-                        mt_label = 1 if len(mt_df[mt_df[label_col] == 1]) > 0 else 0
+                        if responded_in_window:
+                            mt_label = 1 if mt_df["first_response_time"].notna().any() else 0
+                        else:
+                            mt_label = 1 if len(mt_df[mt_df[label_col] == 1]) > 0 else 0
                     step_labels_per_window[f"{fw_s}-{fw_e}"].append(mt_label)
             step_context_dates.append(month_end)
 
@@ -791,6 +801,7 @@ def extract_directory_level_trajectories(
     dirs_column: str = 'dirs',
     multitask: bool = False,
     n_jobs: int = -1,
+    responded_in_window: bool = False,
 ) -> List[Dict[str, Any]]:
     """
     ディレクトリ単位の軌跡を抽出する。[サーバ版: joblib 並列化]
@@ -798,6 +809,7 @@ def extract_directory_level_trajectories(
     1サンプル = (開発者, ディレクトリ) ペア。
     ラベルは「その開発者がそのディレクトリに将来も貢献するか」。
     特徴量は common_features 25次元 + path_features 3次元 = 28次元。
+    responded_in_window=True: label==1(14日以内)の代わりに first_response_time notna で正例判定。
     """
     from joblib import Parallel, delayed
     import numpy as np
@@ -825,6 +837,7 @@ def extract_directory_level_trajectories(
             train_start, train_end,
             future_window_start_months, future_window_end_months,
             reviewer_col, date_col, label_col, dirs_column, multitask,
+            responded_in_window,
         )
         for reviewer in active_reviewers
     )
