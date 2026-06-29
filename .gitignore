@@ -14,3 +14,6 @@ writing/*
 
 *.log
 logs/**
+
+data/raw_json/
+data/refetch_20260615/
