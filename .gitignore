@@ -7,3 +7,10 @@ writing/*.log
 writing/*.synctex.gz
 writing/*.fls
 writing/*.fdb_latexmk
+
+writing/*
+
+.env
+
+*.log
+logs/**
