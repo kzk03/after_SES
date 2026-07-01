@@ -2,6 +2,13 @@
 """
 Phase 1 オフライン RL 評価スクリプト
 
+粒度非依存 (月次 MDP / event 単位 MDP のどちらの transitions parquet でも動く):
+  state/action/reward/step_label/r_theta/feature_end/email の列さえあれば評価できるため、
+  build_rl_dataset.py (月次) と build_rl_dataset_event.py (event単位) の
+  どちらの出力に対しても同じスクリプトをそのまま使う。
+  "monthly_accept" という列名は月次版由来の名残だが、event 単位データでは
+  「そのイベント自体の承諾有無」を表す値がそのまま入るだけで、処理は変わらない。
+
 IRL eval (`scripts/analyze/eval/eval_mce_irl_path_prediction.py`) と互換のスキーマで
 3ファイルを出力する:
   - summary_metrics.json : 手法別の集計指標 (clf_auc_roc, clf_auc_pr, clf_f1, ...)

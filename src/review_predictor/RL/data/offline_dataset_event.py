@@ -1,0 +1,292 @@
+"""オフライン RL データセット (event 単位版)
+
+`offline_dataset.py` (月単位 MDP) とは独立した並行実装。
+月単位実装は一切変更せず、目的別にファイルを分離している。
+
+MDP 定義 (event 単位):
+  s_t   : event t (1件のレビュー依頼) の到着時点 (timestamp) での dev 特徴量
+  a_t   : event t 自体の承諾有無 (Discrete(2))
+          月単位版と異なり、集計 (_monthly_accept 相当) は不要。
+          生データの `accepted` フラグをそのまま使う。
+  r_t   : event t が属する月 m の step_labels[m] + λ · R_θ[m]
+          （IRL モデルは月次系列で学習済みのため、報酬は月単位のまま
+          その月に属する全 event へ broadcast する）
+  s_{t+1}: 時系列で次の event (月をまたいでもよい) の特徴量
+
+設計判断:
+  - IRL (R_θ) の再学習はしない。月次系列のまま forward_all_steps を呼び、
+    月ごとの R_θ を計算してから、各 event にその月の値を配る。
+  - action は月次版の `_monthly_accept` のような区間フィルタが不要。
+    個々の event dict が直接 accepted/label を持つため、それをそのまま使う。
+  - state 計算時の activity_df は「その event の timestamp 以前のイベントのみ」
+    に絞る (同月内の未来イベントを含めない) ことで、月単位版で発生した
+    累積履歴由来の未来情報混入を event 単位でも確実に防ぐ。
+"""
+
+from __future__ import annotations
+
+import logging
+from datetime import timedelta
+from typing import Any, Dict, List, Optional, Sequence, Tuple
+
+import numpy as np
+import pandas as pd
+import torch
+
+logger = logging.getLogger(__name__)
+
+
+def _find_containing_month_index(
+    event_ts: pd.Timestamp,
+    step_feature_ends: Sequence[Optional[pd.Timestamp]],
+) -> Optional[int]:
+    """event_ts が属する月インデックス t を返す。
+
+    区間 (step_feature_ends[t-1], step_feature_ends[t]] に event_ts が
+    収まる t を探す。見つからなければ None。
+    """
+    prev: Optional[pd.Timestamp] = None
+    for t, fe in enumerate(step_feature_ends):
+        if fe is not None:
+            if (prev is None or event_ts > prev) and event_ts <= fe:
+                return t
+            prev = fe
+    return None
+
+
+def _row_from_event(email: str, act: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """1件の生イベント dict を activity_df の行形式に変換する。
+
+    build_transitions (月次版) の行変換ロジックと同一。
+    """
+    ts = act.get("timestamp")
+    if ts is None:
+        return None
+    return {
+        "email": email if act.get("action_type") != "authored" else act.get("reviewer_email", ""),
+        "timestamp": pd.Timestamp(ts),
+        "label": 1 if act.get("accepted", False) else 0,
+        "owner_email": act.get("owner_email", email),
+        "change_insertions": act.get("lines_added", act.get("change_insertions", 0)) or 0,
+        "change_deletions": act.get("lines_deleted", act.get("change_deletions", 0)) or 0,
+        "change_files_count": act.get("files_changed", act.get("change_files_count", 0)) or 0,
+        "first_response_time": act.get("response_time", act.get("first_response_time")),
+    }
+
+
+def build_event_transitions(
+    trajectories: List[Dict[str, Any]],
+    reward_fn,
+    state_builder,
+    feature_window_days: int = 180,
+    reward_shaping: float = 0.3,
+    event_action_types: Tuple[str, ...] = ("review",),
+) -> List[Dict[str, Any]]:
+    """軌跡リストから event 単位の (s, a, r, s', done) タプルリストを構築する。
+
+    Args:
+        trajectories: extract_mce_trajectories.py の出力形式の軌跡リスト
+                      (月次版と同じ入力フォーマットをそのまま使う)
+        reward_fn: IRLRewardFn インスタンス
+        state_builder: RLStateBuilder インスタンス
+        feature_window_days: 特徴量抽出窓（日数）
+        reward_shaping: R_θ のシェイピング係数 λ
+        event_action_types: 行動判定の対象とする event の action_type
+                             ("authored" は承諾/非承諾の意思決定が無いため除外)
+
+    Returns:
+        transition dict のリスト。月次版と同じキー構成に加えて
+        "month_idx" (所属月インデックス) を持つ。
+    """
+    transitions: List[Dict[str, Any]] = []
+    skipped_traj = 0
+    skipped_events = 0
+
+    for traj in trajectories:
+        developer = traj.get("developer", traj.get("developer_info", {}))
+        email = developer.get(
+            "email", developer.get("developer_id", developer.get("reviewer", ""))
+        )
+        monthly_histories = traj.get("monthly_activity_histories", [])
+        step_labels = traj.get("step_labels", [])
+        step_context_dates = traj.get("step_context_dates", [])
+        path_features_per_step = traj.get("path_features_per_step", [])
+        profile_features_static = traj.get("profile_features", None)
+
+        min_len = min(len(monthly_histories), len(step_labels))
+        if min_len < 2 or not monthly_histories:
+            skipped_traj += 1
+            continue
+
+        # ── 1. 月次の state/action ベクトルを構築し、R_θ を月単位で計算する ──
+        # (IRL モデルは月次系列で学習済みのため、報酬計算は月単位のまま変更しない)
+        state_vecs: List[np.ndarray] = []
+        action_vecs: List[np.ndarray] = []
+        step_feature_ends: List[Optional[pd.Timestamp]] = []
+
+        for i in range(min_len):
+            month_history = monthly_histories[i]
+            feature_end_ts = (
+                step_context_dates[i] if i < len(step_context_dates) else None
+            )
+            if feature_end_ts is None:
+                if month_history:
+                    feature_end_ts = month_history[-1].get("timestamp")
+                if feature_end_ts is None:
+                    state_vecs.append(np.zeros(state_builder.state_dim, dtype=np.float32))
+                    action_vecs.append(np.zeros(state_builder.action_dim, dtype=np.float32))
+                    step_feature_ends.append(None)
+                    continue
+
+            feature_end = pd.Timestamp(feature_end_ts)
+
+            rows = [r for r in (_row_from_event(email, act) for act in month_history) if r is not None]
+            if not rows:
+                state_vecs.append(np.zeros(state_builder.state_dim, dtype=np.float32))
+                action_vecs.append(np.zeros(state_builder.action_dim, dtype=np.float32))
+                step_feature_ends.append(feature_end)
+                continue
+
+            activity_df = pd.DataFrame(rows)
+            path_vec = path_features_per_step[i] if i < len(path_features_per_step) else None
+
+            sv = state_builder.build_obs(
+                email=email,
+                activity_df=activity_df,
+                feature_end=feature_end.to_pydatetime(),
+                episode_assign_count=0,
+                path_features_vec=path_vec,
+                profile_features_vec=profile_features_static,
+                feature_window_days=feature_window_days,
+            )
+            av = state_builder.build_action_features(
+                email=email,
+                activity_df=activity_df,
+                feature_end=feature_end.to_pydatetime(),
+                feature_window_days=feature_window_days,
+            )
+            state_vecs.append(sv)
+            action_vecs.append(av)
+            step_feature_ends.append(feature_end)
+
+        if len(state_vecs) < 2:
+            skipped_traj += 1
+            continue
+
+        irl_states = torch.tensor(
+            np.stack([sv[: state_builder.state_dim] for sv in state_vecs]),
+            dtype=torch.float32,
+        ).unsqueeze(0)
+        irl_actions = torch.tensor(
+            np.stack(action_vecs), dtype=torch.float32
+        ).unsqueeze(0)
+        length = torch.tensor([len(state_vecs)], dtype=torch.long)
+
+        try:
+            reward_fn.system.network.eval()
+            with torch.no_grad():
+                logits_all = reward_fn.system.network.forward_all_steps(
+                    irl_states.to(reward_fn.device),
+                    irl_actions.to(reward_fn.device),
+                    length.to(reward_fn.device),
+                )
+            logits_all = logits_all[0]
+            rewards_all = (logits_all[:, 1] - logits_all[:, 0]).cpu().numpy()
+        except Exception as e:
+            logger.warning("R_θ 計算エラー (email=%s): %s", email, e)
+            skipped_traj += 1
+            continue
+
+        # ── 2. 累積履歴の最終スナップショットを master pool として個々の event を抽出 ──
+        # monthly_activity_histories[-1] は「開始点から最終月末までの累積履歴」なので
+        # 軌跡内の全イベントを含む最も完全なリストになる。
+        master_events = monthly_histories[-1]
+        review_events = [
+            act
+            for act in master_events
+            if act.get("timestamp") is not None
+            and act.get("action_type", "review") in event_action_types
+        ]
+        review_events.sort(key=lambda a: pd.Timestamp(a["timestamp"]))
+
+        # ── 3. 各 event ごとに state を構築 (未来イベントを含めないよう都度フィルタ) ──
+        event_records: List[Dict[str, Any]] = []
+        for ev in review_events:
+            ts = pd.Timestamp(ev["timestamp"])
+            month_idx = _find_containing_month_index(ts, step_feature_ends)
+            if month_idx is None:
+                skipped_events += 1
+                continue
+
+            rows = []
+            for act in master_events:
+                act_ts = act.get("timestamp")
+                if act_ts is None:
+                    continue
+                act_ts = pd.Timestamp(act_ts)
+                if act_ts > ts:
+                    continue  # このイベント以降の未来イベントは除外
+                row = _row_from_event(email, act)
+                if row is not None:
+                    rows.append(row)
+            if not rows:
+                skipped_events += 1
+                continue
+
+            activity_df = pd.DataFrame(rows)
+            path_vec = (
+                path_features_per_step[month_idx]
+                if month_idx < len(path_features_per_step)
+                else None
+            )
+            sv = state_builder.build_obs(
+                email=email,
+                activity_df=activity_df,
+                feature_end=ts.to_pydatetime(),
+                episode_assign_count=0,
+                path_features_vec=path_vec,
+                profile_features_vec=profile_features_static,
+                feature_window_days=feature_window_days,
+            )
+            action_label = 1 if (ev.get("accepted", False) or ev.get("label") == 1) else 0
+
+            event_records.append({
+                "timestamp": ts,
+                "state": sv,
+                "action": action_label,
+                "month_idx": month_idx,
+            })
+
+        if len(event_records) < 2:
+            skipped_traj += 1
+            continue
+
+        # ── 4. (s_t, a_t, r_t, s_{t+1}, done) を構築 ──
+        for t in range(len(event_records) - 1):
+            rec = event_records[t]
+            m = rec["month_idx"]
+            label_m = float(bool(step_labels[m])) if m < len(step_labels) else 0.0
+            r_theta_m = float(rewards_all[m]) if m < len(rewards_all) else 0.0
+            shaped_reward = label_m + reward_shaping * r_theta_m
+            done = t == len(event_records) - 2
+            transitions.append({
+                "state": rec["state"].tolist(),
+                "action": rec["action"],
+                "reward": shaped_reward,
+                "next_state": event_records[t + 1]["state"].tolist(),
+                "done": float(done),
+                "email": email,
+                "step_label": label_m,
+                "r_theta": r_theta_m,
+                "feature_end": rec["timestamp"].isoformat(),
+                "month_idx": m,
+            })
+
+    logger.info(
+        "build_event_transitions 完了: %d transitions, "
+        "%d 軌跡をスキップ, %d event をスキップ",
+        len(transitions),
+        skipped_traj,
+        skipped_events,
+    )
+    return transitions
