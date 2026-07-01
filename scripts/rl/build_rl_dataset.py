@@ -1,0 +1,191 @@
+#!/usr/bin/env python3
+"""
+RL オフラインデータセット構築スクリプト
+
+IRL で学習済みの R_θ を使って歴史データ軌跡にラベル付けを行い、
+(s, a, r, s', done) タプルを Parquet / JSON 形式で保存する。
+
+使い方:
+    python scripts/rl/build_rl_dataset.py \
+        --trajectories data/trajectories/mce_irl_trajectories.json \
+        --irl-model outputs/main32_mce_volat_ep150/mce_irl_model.pt \
+        --irl-config outputs/main32_mce_volat_ep150/config.json \
+        --output outputs/rl/offline/transitions.parquet \
+        --state-dim 32 \
+        --action-dim 5 \
+        --device cpu
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import logging
+import sys
+from pathlib import Path
+
+import pandas as pd
+import torch
+
+ROOT = Path(__file__).resolve().parents[2]
+SRC = ROOT / "src"
+if str(SRC) not in sys.path:
+    sys.path.append(str(SRC))
+
+from review_predictor.IRL.model.mce_irl_predictor import MCEIRLSystem
+from review_predictor.RL.env.reward_fn import IRLRewardFn
+from review_predictor.RL.env.state_builder import RLStateBuilder
+from review_predictor.RL.data.offline_dataset import build_transitions
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+
+def parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(description="RL offline dataset builder")
+    p.add_argument("--trajectories", required=True, help="軌跡ファイルパス (.pkl または .json)")
+    p.add_argument("--irl-model", required=True, help="MCE-IRL チェックポイントパス (.pt)")
+    p.add_argument("--irl-config", required=True, help="IRL 設定 JSON / model_metadata.json パス")
+    p.add_argument("--output", required=True, help="出力ファイルパス (.parquet または .json)")
+    p.add_argument("--state-dim", type=int, default=32, help="IRL state 次元")
+    p.add_argument("--action-dim", type=int, default=5, help="IRL action 次元")
+    p.add_argument("--feature-window", type=int, default=180, help="特徴量抽出窓（日数）")
+    p.add_argument(
+        "--reward-shaping",
+        type=float,
+        default=0.3,
+        help="R_θ シェイピング係数 λ (r = step_labels + λ·R_θ, 推奨 0.3)",
+    )
+    p.add_argument(
+        "--test-split-date",
+        type=str,
+        default=None,
+        help=(
+            "test 分割の基準日 (YYYY-MM-DD)。feature_end >= この日付の transition は "
+            "transitions_test.parquet に分離保存される。未指定なら分割しない。"
+        ),
+    )
+    p.add_argument("--device", default="cpu", help="torch デバイス (cpu/cuda)")
+    return p.parse_args()
+
+
+def main() -> None:
+    args = parse_args()
+
+    # 軌跡ロード（pickle / json 両対応）
+    logger.info("軌跡をロード: %s", args.trajectories)
+    traj_path = Path(args.trajectories)
+    if traj_path.suffix in (".pkl", ".pickle"):
+        import pickle
+        with open(traj_path, "rb") as f:
+            trajectories = pickle.load(f)
+    else:
+        with open(traj_path, encoding="utf-8") as f:
+            trajectories = json.load(f)
+    logger.info("軌跡数: %d", len(trajectories))
+
+    # IRL 設定ロード
+    with open(args.irl_config, encoding="utf-8") as f:
+        irl_config = json.load(f)
+    irl_config["state_dim"] = args.state_dim
+    irl_config["action_dim"] = args.action_dim
+
+    # MCEIRLSystem + IRLRewardFn を初期化
+    logger.info("MCEIRLSystem をロード: %s", args.irl_model)
+    system = MCEIRLSystem(irl_config)
+    ckpt = torch.load(args.irl_model, map_location=args.device, weights_only=True)
+    if "network_state_dict" in ckpt:
+        system.network.load_state_dict(ckpt["network_state_dict"])
+    else:
+        system.network.load_state_dict(ckpt)
+    system.network.to(system.device)
+    system.network.eval()
+
+    reward_fn = IRLRewardFn(system)
+    state_builder = RLStateBuilder(
+        state_dim=args.state_dim,
+        action_dim=args.action_dim,
+    )
+
+    # (s, a, r, s', done) 構築
+    logger.info("トランジションを構築中...")
+    transitions = build_transitions(
+        trajectories=trajectories,
+        reward_fn=reward_fn,
+        state_builder=state_builder,
+        feature_window_days=args.feature_window,
+        reward_shaping=args.reward_shaping,
+    )
+    logger.info("トランジション数: %d", len(transitions))
+
+    if not transitions:
+        logger.error("トランジションが空です。軌跡データを確認してください。")
+        sys.exit(1)
+
+    # 保存
+    output_path = Path(args.output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    df = pd.DataFrame(transitions)
+
+    # 時間ベース train/test split
+    test_df = None
+    if args.test_split_date and "feature_end" in df.columns:
+        split_ts = pd.Timestamp(args.test_split_date)
+        feature_end_ts = pd.to_datetime(df["feature_end"], errors="coerce")
+        is_test = feature_end_ts >= split_ts
+        n_test = int(is_test.sum())
+        n_train = int((~is_test).sum())
+        if n_test > 0:
+            test_df = df[is_test].copy()
+            df = df[~is_test].copy()
+            test_path = output_path.with_name(
+                output_path.stem + "_test" + output_path.suffix
+            )
+            if output_path.suffix == ".parquet":
+                test_df.to_parquet(test_path, index=False)
+            else:
+                test_df.to_json(test_path, orient="records", force_ascii=False, indent=2)
+            logger.info(
+                "train/test split (基準日=%s): train=%d, test=%d → test を %s に保存",
+                args.test_split_date, n_train, n_test, test_path,
+            )
+        else:
+            logger.warning(
+                "test_split_date=%s 以降の transition が0件のため split 無効",
+                args.test_split_date,
+            )
+
+    if output_path.suffix == ".parquet":
+        df.to_parquet(output_path, index=False)
+    else:
+        df.to_json(output_path, orient="records", force_ascii=False, indent=2)
+
+    logger.info("保存完了 (train): %s", output_path)
+
+    # 報酬分布の簡易統計
+    rewards = df["reward"].astype(float)
+    logger.info(
+        "報酬分布: mean=%.4f std=%.4f min=%.4f max=%.4f",
+        rewards.mean(), rewards.std(), rewards.min(), rewards.max(),
+    )
+    logger.info("action=0 割合: %.2f%%", (df["action"] == 0).mean() * 100)
+    logger.info("action=1 割合: %.2f%%", (df["action"] == 1).mean() * 100)
+    if "step_label" in df.columns:
+        logger.info(
+            "step_label=1 割合 (3ヶ月先継続): %.2f%%",
+            (df["step_label"] == 1).mean() * 100,
+        )
+    if "r_theta" in df.columns:
+        r_th = df["r_theta"].astype(float)
+        logger.info(
+            "R_θ 単体分布: mean=%.4f std=%.4f min=%.4f max=%.4f",
+            r_th.mean(), r_th.std(), r_th.min(), r_th.max(),
+        )
+    logger.info("reward shaping λ = %.3f", args.reward_shaping)
+
+
+if __name__ == "__main__":
+    main()
