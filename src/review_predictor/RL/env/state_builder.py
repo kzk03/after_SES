@@ -155,7 +155,8 @@ class RLStateBuilder:
                 feature_end,
                 normalize=True,
             )
-        except Exception:
+        except Exception as e:
+            logger.warning("行動特徴量抽出エラー (email=%s): %s", email, e)
             features = {}
 
         av = [float(features.get(f, 0.0)) for f in ACTION_FEATURES]
