@@ -128,6 +128,7 @@ class IQLAgent:
         self.tau = tau
         self.beta = beta
         self.adv_clip = adv_clip
+        self.lr = lr
         self.device = torch.device(device)
         self.target_update_freq = target_update_freq
 
@@ -151,12 +152,26 @@ class IQLAgent:
         weight = torch.where(diff < 0, self.tau, 1.0 - self.tau)
         return (weight * diff.pow(2)).mean()
 
-    def _v_loss(
+    def _q_sa_target(
         self, states: torch.Tensor, actions: torch.Tensor
     ) -> torch.Tensor:
+        """Q_target(s, a) を勾配なしで計算する ([B])。
+
+        _v_loss と _pi_loss の両方で使うため _update で 1 回だけ計算して
+        共有する (q_target は _update 末尾でしか同期されないため等価)。
+        """
         with torch.no_grad():
             q_vals = self.q_target(states)               # [B, A]
-            q_sa = q_vals.gather(1, actions.unsqueeze(1)).squeeze(1)  # [B]
+            return q_vals.gather(1, actions.unsqueeze(1)).squeeze(1)  # [B]
+
+    def _v_loss(
+        self,
+        states: torch.Tensor,
+        actions: torch.Tensor,
+        q_sa: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
+        if q_sa is None:
+            q_sa = self._q_sa_target(states, actions)
         v = self.v_net(states)                           # [B]
         return self._expectile_loss(q_sa - v)
 
@@ -176,12 +191,16 @@ class IQLAgent:
         return F.mse_loss(q_sa, target_q)
 
     def _pi_loss(
-        self, states: torch.Tensor, actions: torch.Tensor
+        self,
+        states: torch.Tensor,
+        actions: torch.Tensor,
+        q_sa: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
+        if q_sa is None:
+            q_sa = self._q_sa_target(states, actions)
         with torch.no_grad():
-            q_vals = self.q_target(states)               # [B, A]
+            # v は直前の V 更新を反映した最新値を使う (IQL のセマンティクス)
             v = self.v_net(states)                       # [B]
-            q_sa = q_vals.gather(1, actions.unsqueeze(1)).squeeze(1)
             adv = (q_sa - v).clamp(max=self.adv_clip)
             weight = torch.exp(self.beta * adv)
             weight = weight / weight.mean().clamp(min=1e-6)
@@ -209,9 +228,13 @@ class IQLAgent:
         next_states = next_states.to(self.device)
         dones = dones.to(self.device)
 
+        # q_target(s, a) は V 更新と Policy 更新の両方で使う。
+        # q_target は本ステップ末尾まで変化しないため 1 回だけ計算して共有する。
+        q_sa_target = self._q_sa_target(states, actions)
+
         # 1. V 更新
         self.v_opt.zero_grad()
-        lv = self._v_loss(states, actions)
+        lv = self._v_loss(states, actions, q_sa=q_sa_target)
         lv.backward()
         nn.utils.clip_grad_norm_(self.v_net.parameters(), 1.0)
         self.v_opt.step()
@@ -225,7 +248,7 @@ class IQLAgent:
 
         # 3. Policy 更新
         self.pi_opt.zero_grad()
-        lpi = self._pi_loss(states, actions)
+        lpi = self._pi_loss(states, actions, q_sa=q_sa_target)
         lpi.backward()
         nn.utils.clip_grad_norm_(self.policy.parameters(), 1.0)
         self.pi_opt.step()
@@ -311,11 +334,22 @@ class IQLAgent:
     # ------------------------------------------------------------------
 
     def save(self, path: str) -> None:
+        """全コンストラクタ引数 + 学習状態を保存する。
+
+        推論のみの利用ではネットワーク state_dict と config だけで足りるが、
+        学習再開 (resume) にも耐えるよう _train_step / q_target / optimizer
+        状態も含めて完全に round-trip させる。
+        """
         torch.save(
             {
                 "v_net": self.v_net.state_dict(),
                 "q_net": self.q_net.state_dict(),
+                "q_target": self.q_target.state_dict(),
                 "policy": self.policy.state_dict(),
+                "v_opt": self.v_opt.state_dict(),
+                "q_opt": self.q_opt.state_dict(),
+                "pi_opt": self.pi_opt.state_dict(),
+                "train_step": self._train_step,
                 "obs_dim": self.obs_dim,
                 "n_actions": self.n_actions,
                 "config": {
@@ -323,6 +357,8 @@ class IQLAgent:
                     "tau": self.tau,
                     "beta": self.beta,
                     "adv_clip": self.adv_clip,
+                    "lr": self.lr,
+                    "target_update_freq": self.target_update_freq,
                     "hidden_dim": self.v_net.net[0].out_features,
                 },
             },
@@ -342,12 +378,21 @@ class IQLAgent:
             tau=cfg.get("tau", 0.9),
             beta=cfg.get("beta", 3.0),
             adv_clip=cfg.get("adv_clip", 100.0),
+            lr=cfg.get("lr", 3e-4),
+            target_update_freq=cfg.get("target_update_freq", 100),
             device=device,
         )
         agent.v_net.load_state_dict(ckpt["v_net"])
         agent.q_net.load_state_dict(ckpt["q_net"])
-        agent.q_target.load_state_dict(ckpt["q_net"])
+        # 旧フォーマット (q_target 未保存) では q_net のコピーで初期化する
+        agent.q_target.load_state_dict(ckpt.get("q_target", ckpt["q_net"]))
         agent.policy.load_state_dict(ckpt["policy"])
+        # optimizer / step カウンタは存在すれば復元 (学習再開用、旧フォーマット互換)
+        if "v_opt" in ckpt:
+            agent.v_opt.load_state_dict(ckpt["v_opt"])
+            agent.q_opt.load_state_dict(ckpt["q_opt"])
+            agent.pi_opt.load_state_dict(ckpt["pi_opt"])
+        agent._train_step = int(ckpt.get("train_step", 0))
         return agent
 
     def load_bc_weights(self, bc_policy) -> None:

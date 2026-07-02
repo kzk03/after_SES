@@ -40,6 +40,7 @@ class BCPolicy(nn.Module):
         super().__init__()
         self.obs_dim = obs_dim
         self.n_actions = n_actions
+        self.dropout = dropout
         self.net = nn.Sequential(
             nn.Linear(obs_dim, hidden_dim),
             nn.LayerNorm(hidden_dim),
@@ -198,6 +199,7 @@ class BCTrainer:
                 "obs_dim": self.policy.obs_dim,
                 "n_actions": self.policy.n_actions,
                 "hidden_dim": self.policy.net[0].out_features,
+                "dropout": self.policy.dropout,
             },
             path,
         )
@@ -210,6 +212,7 @@ class BCTrainer:
             obs_dim=ckpt["obs_dim"],
             n_actions=ckpt["n_actions"],
             hidden_dim=ckpt.get("hidden_dim", 256),
+            dropout=ckpt.get("dropout", 0.1),
         )
         policy.load_state_dict(ckpt["policy_state_dict"])
         return policy.to(device)
