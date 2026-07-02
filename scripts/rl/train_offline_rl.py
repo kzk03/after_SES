@@ -71,8 +71,8 @@ def load_dataset(path: str, obs_dim: int, device: str) -> OfflineRLDataset:
         df = pd.read_json(p)
 
     def _to_vec(val, dim: int) -> list:
-        if isinstance(val, list):
-            v = val[:dim]
+        if isinstance(val, (list, np.ndarray)):
+            v = list(val[:dim])
             v += [0.0] * max(0, dim - len(v))
             return v
         return [float(val)] + [0.0] * (dim - 1)

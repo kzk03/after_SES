@@ -164,8 +164,8 @@ def load_transitions(path: Path, obs_dim: int) -> Dict[str, np.ndarray]:
         df = pd.read_json(path)
 
     def _to_vec(val, dim: int) -> list:
-        if isinstance(val, list):
-            v = val[:dim]
+        if isinstance(val, (list, np.ndarray)):
+            v = list(val[:dim])
             v += [0.0] * max(0, dim - len(v))
             return v
         return [float(val)] + [0.0] * (dim - 1)
