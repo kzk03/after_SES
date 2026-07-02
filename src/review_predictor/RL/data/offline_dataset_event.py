@@ -21,6 +21,11 @@ MDP 定義 (event 単位):
   - state 計算時の activity_df は「その event の timestamp 以前のイベントのみ」
     に絞る (同月内の未来イベントを含めない) ことで、月単位版で発生した
     累積履歴由来の未来情報混入を event 単位でも確実に防ぐ。
+    (event 自身も extract_common_features の `timestamp < feature_end`
+    フィルタで除外される = 行動を状態から読み取れない)
+  - 特徴量は IRL 学習時 (mce_irl_predictor._extract_one) と同じ定義
+    (全履歴窓 + step_total_project_reviews) で再構築する。
+    凍結 R_θ に学習時と同じ分布の入力を渡すため。
 """
 
 from __future__ import annotations
@@ -119,6 +124,7 @@ def build_event_transitions(
         monthly_histories = traj.get("monthly_activity_histories", [])
         step_labels = traj.get("step_labels", [])
         step_context_dates = traj.get("step_context_dates", [])
+        step_total_project_reviews = traj.get("step_total_project_reviews", [])
         path_features_per_step = traj.get("path_features_per_step", [])
         profile_features_static = traj.get("profile_features", None)
 
@@ -167,6 +173,12 @@ def build_event_transitions(
 
             activity_df = pd.DataFrame(rows)
             path_vec = path_features_per_step[i] if i < len(path_features_per_step) else None
+            # IRL 学習時 (_extract_one) と同じく step_total_project_reviews を渡す
+            total_proj = (
+                int(step_total_project_reviews[i])
+                if i < len(step_total_project_reviews)
+                else 0
+            )
 
             sv = state_builder.build_obs(
                 email=email,
@@ -175,12 +187,14 @@ def build_event_transitions(
                 episode_assign_count=0,
                 path_features_vec=path_vec,
                 profile_features_vec=profile_features_static,
+                total_project_reviews=total_proj,
                 feature_window_days=feature_window_days,
             )
             av = state_builder.build_action_features(
                 email=email,
                 activity_df=activity_df,
                 feature_end=feature_end.to_pydatetime(),
+                total_project_reviews=total_proj,
                 feature_window_days=feature_window_days,
             )
             state_vecs.append(sv)
@@ -265,6 +279,11 @@ def build_event_transitions(
                 if month_idx < len(path_features_per_step)
                 else None
             )
+            total_proj = (
+                int(step_total_project_reviews[month_idx])
+                if month_idx < len(step_total_project_reviews)
+                else 0
+            )
             sv = state_builder.build_obs(
                 email=email,
                 activity_df=activity_df,
@@ -272,6 +291,7 @@ def build_event_transitions(
                 episode_assign_count=0,
                 path_features_vec=path_vec,
                 profile_features_vec=profile_features_static,
+                total_project_reviews=total_proj,
                 feature_window_days=feature_window_days,
             )
             action_label = 1 if (ev.get("accepted", False) or ev.get("label") == 1) else 0

@@ -56,6 +56,27 @@ class RLStateBuilder:
         # RL 観測次元 = IRL state_dim + 1（episode_assign_count）
         self.obs_dim = state_dim + 1
 
+    @staticmethod
+    def _feature_start(
+        activity_df: pd.DataFrame,
+        feature_end: datetime,
+        feature_window_days: int,
+    ) -> datetime:
+        """特徴量抽出の開始日時を返す。
+
+        IRL 学習時 (mce_irl_predictor._extract_one) は
+        `feature_start = df["timestamp"].min()`（= 累積履歴の最古、実質全履歴窓）
+        で特徴量を計算している。凍結 R_θ に学習時と同じ分布の入力を渡すため、
+        ここでも同じ定義を使う。activity_df が空のときのみ
+        feature_window_days でフォールバックする。
+        """
+        if len(activity_df) > 0 and "timestamp" in activity_df.columns:
+            ts_min = activity_df["timestamp"].min()
+            if pd.notna(ts_min):
+                return ts_min
+        from datetime import timedelta
+        return feature_end - timedelta(days=feature_window_days)
+
     def build_obs(
         self,
         email: str,
@@ -77,13 +98,15 @@ class RLStateBuilder:
             path_features_vec: path 特徴量ベクトル（IRL モデルが使う場合）
             profile_features_vec: profile 特徴量ベクトル（5次元, IRL が使う場合）
             total_project_reviews: プロジェクト全体のレビュー件数
-            feature_window_days: 特徴量抽出窓（日数）
+                (IRL 学習時は step_total_project_reviews[i] が渡される。
+                0 だと core_reviewer_ratio が「自分の履歴内シェア≒1.0」に
+                化けるため、呼び出し側は必ず軌跡の値を渡すこと)
+            feature_window_days: activity_df が空の場合のフォールバック窓（日数）
 
         Returns:
             観測ベクトル [obs_dim] = [state_dim + 1]
         """
-        from datetime import timedelta
-        feature_start = feature_end - timedelta(days=feature_window_days)
+        feature_start = self._feature_start(activity_df, feature_end, feature_window_days)
 
         try:
             features = extract_common_features(
@@ -124,6 +147,7 @@ class RLStateBuilder:
         email: str,
         activity_df: pd.DataFrame,
         feature_end: datetime,
+        total_project_reviews: int = 0,
         feature_window_days: int = 180,
     ) -> np.ndarray:
         """IRL の action 特徴量ベクトルを構築する。
@@ -132,13 +156,13 @@ class RLStateBuilder:
             email: 開発者メールアドレス
             activity_df: レビュー活動データ
             feature_end: 予測時点
-            feature_window_days: 特徴量抽出窓（日数）
+            total_project_reviews: プロジェクト全体のレビュー件数 (build_obs と同様)
+            feature_window_days: activity_df が空の場合のフォールバック窓（日数）
 
         Returns:
             action 特徴量ベクトル [action_dim]
         """
-        from datetime import timedelta
-        feature_start = feature_end - timedelta(days=feature_window_days)
+        feature_start = self._feature_start(activity_df, feature_end, feature_window_days)
 
         try:
             features = extract_common_features(
@@ -147,6 +171,7 @@ class RLStateBuilder:
                 feature_start,
                 feature_end,
                 normalize=True,
+                total_project_reviews=total_project_reviews,
             )
         except Exception as e:
             logger.warning("行動特徴量抽出エラー (email=%s): %s", email, e)
