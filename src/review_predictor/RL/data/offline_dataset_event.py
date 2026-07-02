@@ -140,7 +140,16 @@ def build_event_transitions(
             )
             if feature_end_ts is None:
                 if month_history:
-                    feature_end_ts = month_history[-1].get("timestamp")
+                    # month_history はソート保証がないため、末尾要素ではなく
+                    # 最大 timestamp を採用する (未ソート CSV 由来でも正しい)
+                    feature_end_ts = max(
+                        (
+                            pd.Timestamp(a["timestamp"])
+                            for a in month_history
+                            if a.get("timestamp") is not None
+                        ),
+                        default=None,
+                    )
                 if feature_end_ts is None:
                     state_vecs.append(np.zeros(state_builder.state_dim, dtype=np.float32))
                     action_vecs.append(np.zeros(state_builder.action_dim, dtype=np.float32))
@@ -218,7 +227,24 @@ def build_event_transitions(
         ]
         review_events.sort(key=lambda a: pd.Timestamp(a["timestamp"]))
 
-        # ── 3. 各 event ごとに state を構築 (未来イベントを含めないよう都度フィルタ) ──
+        # master pool 全体を 1 回だけ行形式に変換し、timestamp 昇順に整列しておく。
+        # 各 event の「その時点までの履歴」は searchsorted による先頭スライスで得る
+        # (イベントごとに全リストを再スキャンして DataFrame を作り直す O(E^2) を回避)。
+        master_rows = [
+            row
+            for row in (_row_from_event(email, act) for act in master_events)
+            if row is not None
+        ]
+        master_rows.sort(key=lambda r: r["timestamp"])
+        if not master_rows:
+            skipped_traj += 1
+            continue
+        master_df = pd.DataFrame(master_rows)
+        master_ts_ns = np.array(
+            [r["timestamp"].value for r in master_rows], dtype=np.int64
+        )
+
+        # ── 3. 各 event ごとに state を構築 (未来イベントを含めないようスライス) ──
         event_records: List[Dict[str, Any]] = []
         for ev in review_events:
             ts = pd.Timestamp(ev["timestamp"])
@@ -227,22 +253,13 @@ def build_event_transitions(
                 skipped_events += 1
                 continue
 
-            rows = []
-            for act in master_events:
-                act_ts = act.get("timestamp")
-                if act_ts is None:
-                    continue
-                act_ts = pd.Timestamp(act_ts)
-                if act_ts > ts:
-                    continue  # このイベント以降の未来イベントは除外
-                row = _row_from_event(email, act)
-                if row is not None:
-                    rows.append(row)
-            if not rows:
+            # timestamp <= ts の行数 (未来イベントを除いた履歴の先頭スライス幅)
+            cutoff = int(np.searchsorted(master_ts_ns, ts.value, side="right"))
+            if cutoff == 0:
                 skipped_events += 1
                 continue
 
-            activity_df = pd.DataFrame(rows)
+            activity_df = master_df.iloc[:cutoff]
             path_vec = (
                 path_features_per_step[month_idx]
                 if month_idx < len(path_features_per_step)

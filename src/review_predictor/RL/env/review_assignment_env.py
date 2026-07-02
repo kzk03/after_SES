@@ -21,6 +21,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import gymnasium as gymnasium
 import numpy as np
+import torch
 
 logger = logging.getLogger(__name__)
 
@@ -208,9 +209,6 @@ class ReviewAssignmentEnv(gymnasium.Env):
         Returns:
             total_reward, pi_a1, r_theta
         """
-        import torch
-        from review_predictor.IRL.features.common_features import ACTION_FEATURES
-
         if not self._current_episode:
             return 0.0, 0.5, 0.0
 

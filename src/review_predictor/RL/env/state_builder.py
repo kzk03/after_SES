@@ -37,24 +37,22 @@ class RLStateBuilder:
     """開発者ごとの RL 観測ベクトルを構築する。
 
     IRL の特徴量抽出器をラップし、RL 専用の状態拡張を担当する。
-    PathFeatureExtractor は省略可能（パス特徴量なし設定の場合）。
+    path 特徴量は呼び出し側が build_obs(path_features_vec=...) で渡す。
+    渡されない場合は末尾のゼロパディングで state_dim に揃う。
     """
 
     def __init__(
         self,
         state_dim: int,
         action_dim: int,
-        path_feature_extractor=None,
     ) -> None:
         """
         Args:
             state_dim: IRL モデルの state_dim（CONFIG 値）
             action_dim: IRL モデルの action_dim（CONFIG 値）
-            path_feature_extractor: PathFeatureExtractor インスタンス（省略可）
         """
         self.state_dim = state_dim
         self.action_dim = action_dim
-        self.path_extractor = path_feature_extractor
         # RL 観測次元 = IRL state_dim + 1（episode_assign_count）
         self.obs_dim = state_dim + 1
 
@@ -105,12 +103,7 @@ class RLStateBuilder:
 
         if path_features_vec is not None:
             sv.extend(float(v) for v in path_features_vec)
-        elif self.path_extractor is not None:
-            # PathFeatureExtractor が渡されている場合、自動抽出
-            # ※呼び出し側が path_features_vec を渡す方が効率的なため、
-            #   フォールバックとして実装
-            sv.extend(0.0 for _ in range(6))
-        # path なしで state_dim が 26 の場合はここで sv = 26 次元
+        # path 特徴量なしの場合は後段のゼロパディングで state_dim に揃う
 
         if profile_features_vec is not None:
             sv.extend(float(v) for v in profile_features_vec)

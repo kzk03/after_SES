@@ -101,7 +101,9 @@ class OfflineRLDataset(Dataset):
 
     @property
     def n_actions(self) -> int:
-        return int(self.actions.max().item()) + 1
+        # MDP 定義上は Discrete(2)。action=0 のみのサブセットでも
+        # 出力層のサイズが 1 に潰れないよう下限 2 を保証する。
+        return max(int(self.actions.max().item()) + 1, 2)
 
 
 def _monthly_accept(
@@ -171,9 +173,6 @@ def build_transitions(
     Returns:
         transition dict のリスト
     """
-    import torch
-    from review_predictor.IRL.features.common_features import ACTION_FEATURES
-
     transitions: List[Dict[str, Any]] = []
     skipped = 0
 
@@ -207,7 +206,16 @@ def build_transitions(
             )
             if feature_end_ts is None:
                 if month_history:
-                    feature_end_ts = month_history[-1].get("timestamp")
+                    # month_history はソート保証がないため、末尾要素ではなく
+                    # 最大 timestamp を採用する (未ソート CSV 由来でも正しい)
+                    feature_end_ts = max(
+                        (
+                            pd.Timestamp(a["timestamp"])
+                            for a in month_history
+                            if a.get("timestamp") is not None
+                        ),
+                        default=None,
+                    )
                 if feature_end_ts is None:
                     state_vecs.append(np.zeros(state_builder.state_dim, dtype=np.float32))
                     action_vecs.append(np.zeros(state_builder.action_dim, dtype=np.float32))
@@ -281,7 +289,6 @@ def build_transitions(
         # forward_all_steps で全ステップの R_θ を取得
         try:
             reward_fn.system.network.eval()
-            import torch.nn.functional as F
             with torch.no_grad():
                 logits_all = reward_fn.system.network.forward_all_steps(
                     irl_states.to(reward_fn.device),
