@@ -303,11 +303,14 @@ def build_transitions(
                 monthly_histories[t] if t < len(monthly_histories) else []
             )
             window_end = step_feature_ends[t] if t < len(step_feature_ends) else None
-            window_start = (
-                step_feature_ends[t - 1]
-                if t > 0 and (t - 1) < len(step_feature_ends)
-                else None
-            )
+            # 直前ステップの feature_end が None (解決不能) な場合、そのまま None を
+            # 使うと下限フィルタが外れて累積スキャンバグが再発するため、
+            # 直近の非 None な feature_end まで遡って探す。
+            window_start = None
+            for prev_t in range(t - 1, -1, -1):
+                if prev_t < len(step_feature_ends) and step_feature_ends[prev_t] is not None:
+                    window_start = step_feature_ends[prev_t]
+                    break
             action_label = _monthly_accept(month_history, window_start, window_end)
             label_t = float(bool(step_labels[t])) if t < len(step_labels) else 0.0
             shaped_reward = label_t + reward_shaping * float(rewards_all[t])

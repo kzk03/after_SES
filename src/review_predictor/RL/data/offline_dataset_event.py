@@ -44,13 +44,22 @@ def _find_containing_month_index(
 
     区間 (step_feature_ends[t-1], step_feature_ends[t]] に event_ts が
     収まる t を探す。見つからなければ None。
+
+    途中に feature_end が解決できない (None の) 月が挟まっている場合、
+    その月の本来の境界が分からないため、直前の有効な境界から次の有効な
+    境界までの区間は「どちらの月に属すか判定不能」として None を返す
+    (次の有効な月に誤って丸ごと帰属させない)。
     """
     prev: Optional[pd.Timestamp] = None
+    ambiguous = False
     for t, fe in enumerate(step_feature_ends):
-        if fe is not None:
-            if (prev is None or event_ts > prev) and event_ts <= fe:
-                return t
-            prev = fe
+        if fe is None:
+            ambiguous = True
+            continue
+        if not ambiguous and (prev is None or event_ts > prev) and event_ts <= fe:
+            return t
+        ambiguous = False
+        prev = fe
     return None
 
 
