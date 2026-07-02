@@ -58,8 +58,9 @@ class BCPolicy(nn.Module):
 
     def act(self, obs: np.ndarray, deterministic: bool = True) -> int:
         """numpy 観測から行動を選択する（推論時）。"""
+        device = next(self.parameters()).device
         with torch.no_grad():
-            obs_t = torch.tensor(obs, dtype=torch.float32).unsqueeze(0)
+            obs_t = torch.tensor(obs, dtype=torch.float32, device=device).unsqueeze(0)
             logits = self.forward(obs_t)
             if deterministic:
                 return int(logits.argmax(dim=-1).item())
@@ -110,7 +111,9 @@ class BCTrainer:
         n = len(dataset)
         indices = list(range(n))
         random.shuffle(indices)
-        val_n = max(1, int(n * val_ratio))
+        # val_n は train_idx が空にならないよう n-1 でクリップする
+        # (n=1 の場合は val_n=0 となり、検証セットなしで全件を学習に使う)
+        val_n = min(max(1, int(n * val_ratio)), max(0, n - 1))
         train_idx = indices[val_n:]
         val_idx = indices[:val_n]
 
