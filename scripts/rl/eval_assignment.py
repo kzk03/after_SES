@@ -111,6 +111,17 @@ def _safe_spearman(x: np.ndarray, y: np.ndarray) -> float:
         return float("nan")
 
 
+def _minmax_normalize(x: np.ndarray) -> np.ndarray:
+    """min-max 正規化で [0, 1] に変換する。
+
+    定数配列や非有限値を含む配列はそのまま返す (0除算・NaN伝播の防止)。
+    F1閾値判定・Ensemble合成の両方で同一の正規化を使うため一元化している。
+    """
+    if not np.isfinite(x).all() or x.max() <= x.min():
+        return x
+    return (x - x.min()) / (x.max() - x.min() + 1e-12)
+
+
 def classify_metrics(
     name: str, y_true: np.ndarray, y_score: np.ndarray,
 ) -> Dict[str, float]:
@@ -120,10 +131,7 @@ def classify_metrics(
     auc_roc = _safe_auc(y_true, y_score)
     auc_pr = _safe_auc_pr(y_true, y_score)
     # スコアを 0-1 に正規化して f1 threshold=0.5 で計算
-    if np.isfinite(y_score).all() and y_score.max() > y_score.min():
-        norm = (y_score - y_score.min()) / (y_score.max() - y_score.min() + 1e-12)
-    else:
-        norm = y_score
+    norm = _minmax_normalize(y_score)
     f1, prec, rec = _safe_f1_at_threshold(y_true, norm, threshold=0.5)
     return {
         "name": name,
@@ -237,8 +245,7 @@ def fit_ensemble_beta(
     betas: Tuple[float, ...] = (0.0, 0.2, 0.5, 0.7, 0.9, 1.0),
 ) -> Tuple[float, np.ndarray]:
     """β を train 上で grid search し、AUC 最大の β を返す。"""
-    # V(s) を 0-1 に正規化
-    v_norm = (v_train - v_train.min()) / (v_train.max() - v_train.min() + 1e-12)
+    v_norm = _minmax_normalize(v_train)
     best_beta, best_auc = 0.5, -np.inf
     for beta in betas:
         combined = beta * irl_pi_train + (1 - beta) * v_norm
@@ -252,8 +259,7 @@ def fit_ensemble_beta(
 def apply_ensemble(
     irl_pi: np.ndarray, v: np.ndarray, beta: float,
 ) -> np.ndarray:
-    v_norm = (v - v.min()) / (v.max() - v.min() + 1e-12)
-    return beta * irl_pi + (1 - beta) * v_norm
+    return beta * irl_pi + (1 - beta) * _minmax_normalize(v)
 
 
 def calibrate_isotonic(

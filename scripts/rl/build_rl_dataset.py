@@ -35,6 +35,7 @@ from review_predictor.IRL.model.mce_irl_predictor import MCEIRLSystem
 from review_predictor.RL.env.reward_fn import IRLRewardFn
 from review_predictor.RL.env.state_builder import RLStateBuilder
 from review_predictor.RL.data.offline_dataset import build_transitions
+from review_predictor.RL.data.dataset_io import save_transitions_with_split
 
 logging.basicConfig(
     level=logging.INFO,
@@ -124,46 +125,10 @@ def main() -> None:
         logger.error("トランジションが空です。軌跡データを確認してください。")
         sys.exit(1)
 
-    # 保存
-    output_path = Path(args.output)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    df = pd.DataFrame(transitions)
-
-    # 時間ベース train/test split
-    test_df = None
-    if args.test_split_date and "feature_end" in df.columns:
-        split_ts = pd.Timestamp(args.test_split_date)
-        feature_end_ts = pd.to_datetime(df["feature_end"], errors="coerce")
-        is_test = feature_end_ts >= split_ts
-        n_test = int(is_test.sum())
-        n_train = int((~is_test).sum())
-        if n_test > 0:
-            test_df = df[is_test].copy()
-            df = df[~is_test].copy()
-            test_path = output_path.with_name(
-                output_path.stem + "_test" + output_path.suffix
-            )
-            if output_path.suffix == ".parquet":
-                test_df.to_parquet(test_path, index=False)
-            else:
-                test_df.to_json(test_path, orient="records", force_ascii=False, indent=2)
-            logger.info(
-                "train/test split (基準日=%s): train=%d, test=%d → test を %s に保存",
-                args.test_split_date, n_train, n_test, test_path,
-            )
-        else:
-            logger.warning(
-                "test_split_date=%s 以降の transition が0件のため split 無効",
-                args.test_split_date,
-            )
-
-    if output_path.suffix == ".parquet":
-        df.to_parquet(output_path, index=False)
-    else:
-        df.to_json(output_path, orient="records", force_ascii=False, indent=2)
-
-    logger.info("保存完了 (train): %s", output_path)
+    # 保存 (時間ベース train/test split 込み — 共通処理は dataset_io.py 参照)
+    df = save_transitions_with_split(
+        transitions, Path(args.output), test_split_date=args.test_split_date,
+    )
 
     # 報酬分布の簡易統計
     rewards = df["reward"].astype(float)

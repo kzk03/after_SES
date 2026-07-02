@@ -136,12 +136,14 @@ else
     if [ ! -f "$RAW_JSON_LIST_FILE" ]; then
         echo "ERROR: RAW_JSON_LIST_FILE が見つかりません: $RAW_JSON_LIST_FILE" >&2; exit 1
     fi
-    RAW_JSONS=$(cat "$RAW_JSON_LIST_FILE")
+    # 姉妹スクリプト (run_mce_irl_variant_single.sh 等) と同じ配列パターン。
+    # 非配列の unquoted 展開だと空白/glob 文字を含むパスで引数が壊れる。
+    read -r -a RAW_JSON <<< "$(cat "$RAW_JSON_LIST_FILE")"
 
     echo "[Step 1] 軌跡を抽出中..."
     uv run python scripts/train/extract_mce_trajectories.py \
         --reviews "$REVIEWS" \
-        --raw-json $RAW_JSONS \
+        --raw-json "${RAW_JSON[@]}" \
         --train-start "$TRAIN_START" \
         --train-end   "$TRAIN_END" \
         --future-window-start "$FW_START" \
