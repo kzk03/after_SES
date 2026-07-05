@@ -29,9 +29,9 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import linear_sum_assignment
 
-# [align系列] ALIGN=1 で outputs/t0_sweep_align/ を参照、出力は _align サフィックス。
+# [align系列] ALIGN=1 で outputs/t0_sweep_align_fs24/ を参照、出力は _align サフィックス。
 ALIGN = os.environ.get("ALIGN", "0") == "1"
-SWEEP = os.environ.get("T0_SWEEP_ROOT", "outputs/t0_sweep_align" if ALIGN else "outputs/t0_sweep")
+SWEEP = os.environ.get("T0_SWEEP_ROOT", "outputs/t0_sweep_align_fs24" if ALIGN else "outputs/t0_sweep")
 SUFFIX = "_align" if ALIGN else ""
 # t0_compare.py と同じ掃引点。archetype dir は tag から導出。
 T0_CONFIG = [

@@ -24,13 +24,23 @@ from verify_blabel_headline import compute_headline, load_df_with_dirs  # noqa: 
 
 # [align系列] ALIGN=1 で outputs/t0_sweep_align/ を参照し、base(2023-01) も align 再学習物
 # を使う（dynstartB は旧設計のため流用不可）。出力ファイル名は _align サフィックス。
+# [inter系列] INTER=1 で outputs/t0_sweep_inter/（buffer消去のみ・tail統一なし）を参照。
+# base も inter 再学習物を使う。出力ファイル名は _inter サフィックス。
 ALIGN = os.environ.get("ALIGN", "0") == "1"
-SWEEP = os.environ.get("T0_SWEEP_ROOT", "outputs/t0_sweep_align" if ALIGN else "outputs/t0_sweep")
-SUFFIX = "_align" if ALIGN else ""
+INTER = os.environ.get("INTER", "0") == "1"
+if ALIGN and INTER:
+    raise SystemExit("ALIGN=1 と INTER=1 は同時指定不可")
+# 既定は各系列の従来 step 数（align=24step, inter=45step）。fs36/fs24 等の別 step
+# 系列は T0_SWEEP_ROOT=outputs/t0_sweep_{align,inter}_fs<steps> で指定する。
+_default_sweep = ("outputs/t0_sweep_align_fs24" if ALIGN
+                  else "outputs/t0_sweep_inter_fs45" if INTER
+                  else "outputs/t0_sweep")
+SWEEP = os.environ.get("T0_SWEEP_ROOT", _default_sweep)
+SUFFIX = "_align" if ALIGN else ("_inter" if INTER else "")
 
 # t0 → (irl_base, rf_base, series ラベル)
-if ALIGN:
-    # 全点 align 系列（base も再学習）
+if ALIGN or INTER:
+    # 全点を同一系列で再学習（base 2023-01 も dynstartB 流用不可）
     _base_irl, _base_rf = f"{SWEEP}/20230101/irl/lstm_baseline", f"{SWEEP}/20230101/rf"
 else:
     # 基準 2023-01 は既存 dynstartB を流用
