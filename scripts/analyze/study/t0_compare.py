@@ -36,7 +36,12 @@ _default_sweep = ("outputs/t0_sweep_align_fs24" if ALIGN
                   else "outputs/t0_sweep_inter_fs45" if INTER
                   else "outputs/t0_sweep")
 SWEEP = os.environ.get("T0_SWEEP_ROOT", _default_sweep)
-SUFFIX = "_align" if ALIGN else ("_inter" if INTER else "")
+# T0_SWEEP_ROOT 明示時は root 名からサフィックスを導出（fs24/fs36 系列間で
+# writing/fig/ の図名が衝突しないように）。未指定時は従来名を維持。
+if "T0_SWEEP_ROOT" in os.environ:
+    SUFFIX = "_" + pathlib.Path(SWEEP).name.removeprefix("t0_sweep_")
+else:
+    SUFFIX = "_align" if ALIGN else ("_inter" if INTER else "")
 
 # t0 → (irl_base, rf_base, series ラベル)
 if ALIGN or INTER:

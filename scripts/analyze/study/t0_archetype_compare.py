@@ -32,7 +32,11 @@ from scipy.optimize import linear_sum_assignment
 # [align系列] ALIGN=1 で outputs/t0_sweep_align_fs24/ を参照、出力は _align サフィックス。
 ALIGN = os.environ.get("ALIGN", "0") == "1"
 SWEEP = os.environ.get("T0_SWEEP_ROOT", "outputs/t0_sweep_align_fs24" if ALIGN else "outputs/t0_sweep")
-SUFFIX = "_align" if ALIGN else ""
+# T0_SWEEP_ROOT 明示時は root 名からサフィックス導出（fig 名の系列間衝突防止）
+if "T0_SWEEP_ROOT" in os.environ:
+    SUFFIX = "_" + pathlib.Path(SWEEP).name.removeprefix("t0_sweep_")
+else:
+    SUFFIX = "_align" if ALIGN else ""
 # t0_compare.py と同じ掃引点。archetype dir は tag から導出。
 T0_CONFIG = [
     ("2022-01-01", "20220101", "year"),
@@ -67,13 +71,26 @@ def load_t0(tag: str, level: str, k: int):
 
 
 def match_to_base(base_prof: pd.DataFrame, prof: pd.DataFrame) -> dict:
-    """prof の各 archetype を base_prof に最近傍対応付け。{prof_arch -> base_arch}。"""
+    """prof の各 archetype を base_prof に最近傍対応付け。
+
+    Returns: {prof_arch -> (base_arch, matched_dist, margin)}
+      matched_dist: 対応先との Euclidean 距離
+      margin: (2番目に近い基準原型との距離) − matched_dist。
+              負 = Hungarian の全体最適が個別最近傍と矛盾 = 対応する原型が
+              基準側に存在しない強制マッチ（同定不能）。
+    """
     B = base_prof.to_numpy()           # (k, f)
     P = prof.to_numpy()                # (k, f)
     # cost[i, j] = ||P_i - B_j||
     cost = np.linalg.norm(P[:, None, :] - B[None, :, :], axis=2)
     row_ind, col_ind = linear_sum_assignment(cost)
-    return {prof.index[i]: base_prof.index[j] for i, j in zip(row_ind, col_ind)}
+    out = {}
+    for i, j in zip(row_ind, col_ind):
+        row = cost[i].copy()
+        matched = row[j]
+        row[j] = np.inf
+        out[prof.index[i]] = (base_prof.index[j], float(matched), float(row.min() - matched))
+    return out
 
 
 def main() -> None:
@@ -97,13 +114,14 @@ def main() -> None:
             print(f"[skip] t0={t0}: archetype 未生成 ({arch_dir(tag, level)})")
             continue
         prof, auc = loaded
-        mapping = match_to_base(base_prof, prof) if tag != "20230101" else {a: a for a in base_prof.index}
+        mapping = (match_to_base(base_prof, prof) if tag != "20230101"
+                   else {a: (a, 0.0, np.nan) for a in base_prof.index})
 
         # archetype × model の AUC を wide 化
         wide = auc.pivot_table(index="archetype", columns="model", values="auc")
         npiv = auc.pivot_table(index="archetype", columns="model", values="n_samples")
         for arch in prof.index:
-            base_arch = mapping[arch]
+            base_arch, mdist, margin = mapping[arch]
             irl = wide.loc[arch].get("cold_irl", np.nan)
             rf = wide.loc[arch].get("rf_dir", np.nan)
             ens = wide.loc[arch].get("ens", np.nan)
@@ -115,6 +133,10 @@ def main() -> None:
                 "RF": round(rf, 3) if pd.notna(rf) else np.nan,
                 "Ens": round(ens, 3) if pd.notna(ens) else np.nan,
                 "IRL_minus_RF": round(irl - rf, 3) if pd.notna(irl) and pd.notna(rf) else np.nan,
+                # 対応付け品質: margin<0 は同定不能（writing/t0_archetype_discussion.md §2）
+                "match_dist": round(mdist, 3),
+                "match_margin": round(margin, 3) if pd.notna(margin) else np.nan,
+                "match_ok": bool(pd.isna(margin) or margin > 0),
             })
 
     if not rows:
@@ -143,7 +165,11 @@ def main() -> None:
             sub = out[out["base_archetype"] == a].copy()
             sub["x"] = pd.to_datetime(sub["t0"])
             sub = sub.sort_values("x")
-            ax.plot(sub["x"], sub["IRL_minus_RF"], marker="o", label=a)
+            (line,) = ax.plot(sub["x"], sub["IRL_minus_RF"], marker="o", label=a)
+            bad = sub[~sub["match_ok"]]
+            if len(bad):  # 負マージン=同定不能の点は×で強調
+                ax.plot(bad["x"], bad["IRL_minus_RF"], ls="none", marker="x",
+                        ms=11, mew=2.5, color=line.get_color())
         ax.axhline(0, ls="-", c="gray", lw=0.8)
         ax.axvline(pd.Timestamp("2023-01-01"), ls="--", c="gray", alpha=.6, label="t0 (paper)")
         ax.set_xlabel("t0 (snapshot time)")
