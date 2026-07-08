@@ -509,8 +509,9 @@ def extract_review_acceptance_trajectories(
 
 def _process_one_reviewer(
     reviewer,
-    df,
-    history_df,
+    reviewer_requests,
+    reviewer_authored,
+    total_proj_by_month_end,
     path_extractor,
     train_start,
     train_end,
@@ -532,11 +533,19 @@ def _process_one_reviewer(
     month_end + label_tail_months <= train_end の月のみステップ採用するため、
     最新 month_end = train_end - label_tail_months で全 horizon が揃う
     （Phase B の train_start 後方延長が不要になる）。
+
+    reviewer_requests / reviewer_authored / total_proj_by_month_end は
+    呼び出し元 (extract_directory_level_trajectories) で df 全体から
+    レビュアー単位・月単位に事前分割/事前集計したもの。各ワーカーに
+    全体 df をそのまま渡すとタスクごとに丸ごと再pickleされ、48並列時に
+    メモリ圧迫でworkerが落ちる(loky "worker stopped" 警告)ため分割している。
     """
     history_start = train_start
     history_end = train_end
 
-    reviewer_history = history_df[history_df[reviewer_col] == reviewer]
+    reviewer_history = reviewer_requests[
+        (reviewer_requests[date_col] >= history_start) & (reviewer_requests[date_col] < history_end)
+    ]
 
     reviewer_dirs = set()
     for dirs in reviewer_history[dirs_column]:
@@ -554,11 +563,10 @@ def _process_one_reviewer(
         label_start = train_end + pd.DateOffset(months=future_window_start_months)
         label_end = train_end + pd.DateOffset(months=future_window_end_months)
 
-        label_df = df[
-            (df[date_col] >= label_start) &
-            (df[date_col] < label_end) &
-            (df[reviewer_col] == reviewer) &
-            (df[dirs_column].map(lambda ds: directory in ds if ds else False))
+        label_df = reviewer_requests[
+            (reviewer_requests[date_col] >= label_start) &
+            (reviewer_requests[date_col] < label_end) &
+            (reviewer_requests[dirs_column].map(lambda ds: directory in ds if ds else False))
         ]
 
         if len(label_df) == 0:
@@ -605,11 +613,10 @@ def _process_one_reviewer(
                 if future_start >= train_end:
                     continue
 
-            month_future_df = df[
-                (df[date_col] >= future_start) &
-                (df[date_col] < future_end) &
-                (df[reviewer_col] == reviewer) &
-                (df[dirs_column].map(lambda ds: directory in ds if ds else False))
+            month_future_df = reviewer_requests[
+                (reviewer_requests[date_col] >= future_start) &
+                (reviewer_requests[date_col] < future_end) &
+                (reviewer_requests[dirs_column].map(lambda ds: directory in ds if ds else False))
             ]
 
             if len(month_future_df) == 0:
@@ -632,11 +639,10 @@ def _process_one_reviewer(
                     if mt_future_start >= train_end:
                         step_labels_per_window[f"{fw_s}-{fw_e}"].append(0)
                         continue
-                    mt_df = df[
-                        (df[date_col] >= mt_future_start) &
-                        (df[date_col] < mt_future_end) &
-                        (df[reviewer_col] == reviewer) &
-                        (df[dirs_column].map(lambda ds: directory in ds if ds else False))
+                    mt_df = reviewer_requests[
+                        (reviewer_requests[date_col] >= mt_future_start) &
+                        (reviewer_requests[date_col] < mt_future_end) &
+                        (reviewer_requests[dirs_column].map(lambda ds: directory in ds if ds else False))
                     ]
                     if len(mt_df) == 0:
                         mt_label = 0
@@ -648,7 +654,7 @@ def _process_one_reviewer(
                     step_labels_per_window[f"{fw_s}-{fw_e}"].append(mt_label)
             step_context_dates.append(month_end)
 
-            total_proj = len(df[(df[date_col] >= history_start) & (df[date_col] < month_end)])
+            total_proj = total_proj_by_month_end[month_end]
             step_total_project_reviews.append(total_proj)
 
             month_history = reviewer_history[reviewer_history[date_col] < month_end]
@@ -668,10 +674,9 @@ def _process_one_reviewer(
                     'lines_added': row.get('change_insertions', 0),
                     'lines_deleted': row.get('change_deletions', 0),
                 })
-            authored_history = df[
-                (df['owner_email'] == reviewer) &
-                (df[date_col] >= history_start) &
-                (df[date_col] < month_end)
+            authored_history = reviewer_authored[
+                (reviewer_authored[date_col] >= history_start) &
+                (reviewer_authored[date_col] < month_end)
             ]
             for _, row in authored_history.iterrows():
                 monthly_activities.append({
@@ -778,10 +783,31 @@ def extract_directory_level_trajectories(
     active_reviewers = history_df[reviewer_col].unique()
     logger.info(f"特徴量計算期間内のレビュアー数: {len(active_reviewers)}")
 
+    # レビュアー単位に事前分割 + 月次カウントを事前計算する。
+    # 全体 df/history_df をタスクごとにそのまま渡すと、各ワーカーで毎回
+    # 全表スキャン + 丸ごと再pickleが発生し、48並列時にメモリ圧迫で
+    # workerが落ちる (loky "A worker stopped..." 警告) 原因になるため、
+    # ここで一度だけ分割・集計してから各ワーカーには小さいスライスのみ渡す。
+    reviewer_requests_by_id = dict(tuple(df.groupby(reviewer_col)))
+    reviewer_authored_by_id = dict(tuple(df.groupby('owner_email')))
+    empty_df = df.iloc[0:0]
+
+    total_proj_by_month_end = {}
+    for month_start in pd.date_range(start=history_start, end=history_end, freq='MS')[:-1]:
+        month_end = month_start + pd.DateOffset(months=1)
+        if month_end not in total_proj_by_month_end:
+            total_proj_by_month_end[month_end] = len(
+                df[(df[date_col] >= history_start) & (df[date_col] < month_end)]
+            )
+
     # レビュアー単位で並列処理
     batch_results = Parallel(n_jobs=n_jobs, backend="loky", verbose=10)(
         delayed(_process_one_reviewer)(
-            reviewer, df, history_df, path_extractor,
+            reviewer,
+            reviewer_requests_by_id.get(reviewer, empty_df),
+            reviewer_authored_by_id.get(reviewer, empty_df),
+            total_proj_by_month_end,
+            path_extractor,
             train_start, train_end,
             future_window_start_months, future_window_end_months,
             reviewer_col, date_col, label_col, dirs_column, multitask,

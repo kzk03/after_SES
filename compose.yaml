@@ -1,11 +1,16 @@
 services:
   app:
-    container_name: lann
-    image: lann
+    container_name: kazoo-latest
+    image: kazoo-latest
     deploy:
       resources:
         limits:
-          cpus: '38.0'
+          cpus: '20.0'
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
     build:
       context: .
       args:
