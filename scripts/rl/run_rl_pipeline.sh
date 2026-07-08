@@ -29,8 +29,18 @@
 #   BC_EPOCHS            : BC エポック数 (default: 50)
 #   IQL_EPOCHS           : IQL エポック数 (default: 100)
 #   REWARD_SHAPING       : R_θ シェイピング係数 λ (default: 0.3, r = step_label + λ·R_θ)
+#   IQL_GAMMA            : IQL 割引率 (default: 0.99)
+#   IQL_TAU              : IQL expectile (default: 0.9)
+#   IQL_BETA             : IQL advantage-weight 温度 (default: 3.0)
+#   SEED                 : 乱数 seed (default: 42)
+#   HOLDOUT_DEVS_RATIO   : dev 単位 holdout の割合 (default: 0 = 無効)。
+#                          有効時は transitions_devholdout.parquet に分離され、
+#                          eval_devholdout/ に未知 dev 評価が追加出力される
 #   TEST_SPLIT_DATE      : test 分割の基準日 (default: TRAIN_END, 例 2022-01-01)
 #                          feature_end >= この日付 の transition を transitions_test.parquet に分離
+#
+# λ / γ の感度分析をまとめて回す場合は scripts/rl/run_rl_sweep.sh を使う
+# (データセット構築1回で λ×γ の組を再学習できる)。
 
 set -e
 export PYTHONHASHSEED=0
@@ -57,6 +67,11 @@ SKIP_DATASET_BUILD="${SKIP_DATASET_BUILD:-0}"
 BC_EPOCHS="${BC_EPOCHS:-50}"
 IQL_EPOCHS="${IQL_EPOCHS:-100}"
 REWARD_SHAPING="${REWARD_SHAPING:-0.3}"
+IQL_GAMMA="${IQL_GAMMA:-0.99}"
+IQL_TAU="${IQL_TAU:-0.9}"
+IQL_BETA="${IQL_BETA:-3.0}"
+SEED="${SEED:-42}"
+HOLDOUT_DEVS_RATIO="${HOLDOUT_DEVS_RATIO:-0}"
 TEST_SPLIT_DATE="${TEST_SPLIT_DATE:-}"  # 既定は後段で TRAIN_END に設定
 
 # T0 ウィンドウから train_start / train_end を導出
@@ -79,6 +94,7 @@ TRAJ_CACHE="${TRAJ_CACHE_DIR}/mce_traj_${T0_WINDOW}.pkl"
 RL_OUTPUT_DIR="outputs/rl/${VARIANT}_${T0_WINDOW}m"
 DATASET_PATH="${RL_OUTPUT_DIR}/transitions.parquet"
 DATASET_TEST_PATH="${RL_OUTPUT_DIR}/transitions_test.parquet"
+DATASET_DEVHOLD_PATH="${RL_OUTPUT_DIR}/transitions_devholdout.parquet"
 EVAL_OUTPUT_DIR="${RL_OUTPUT_DIR}/eval"
 
 # TEST_SPLIT_DATE が未指定なら TRAIN_END を使う
@@ -89,7 +105,9 @@ fi
 # state_dim / action_dim は model_metadata.json から取得
 STATE_DIM=$(python3 -c "import json; d=json.load(open('${IRL_CONFIG}')); print(d['state_dim'])" 2>/dev/null || echo "32")
 ACTION_DIM=$(python3 -c "import json; d=json.load(open('${IRL_CONFIG}')); print(d['action_dim'])" 2>/dev/null || echo "5")
-OBS_DIM=$((STATE_DIM + 1))
+# episode_assign_count は Phase 1 では常に 0 の死んだ次元のため観測から除外
+# (build_rl_dataset.py の --with-assign-count を使う場合は +1 に戻すこと)
+OBS_DIM=$STATE_DIM
 
 echo "========================================================"
 echo " RL Pipeline: variant=${VARIANT} t0=${T0_WINDOW}m"
@@ -153,6 +171,8 @@ else
         --action-dim       "$ACTION_DIM" \
         --reward-shaping   "$REWARD_SHAPING" \
         --test-split-date  "$TEST_SPLIT_DATE" \
+        --dev-label-window "${FW_START},${FW_END}" \
+        --holdout-devs-ratio "$HOLDOUT_DEVS_RATIO" \
         --device           "$DEVICE"
     echo "[Step 2] 完了: $DATASET_PATH"
 fi
@@ -168,6 +188,10 @@ uv run python scripts/rl/train_offline_rl.py \
     --n-actions  2 \
     --bc-epochs  "$BC_EPOCHS" \
     --iql-epochs "$IQL_EPOCHS" \
+    --gamma      "$IQL_GAMMA" \
+    --tau        "$IQL_TAU" \
+    --beta       "$IQL_BETA" \
+    --seed       "$SEED" \
     --device     "$DEVICE"
 echo "[Step 3] 完了: ${RL_OUTPUT_DIR}/iql_agent.pt"
 
@@ -187,6 +211,19 @@ if [ -f "$DATASET_TEST_PATH" ]; then
     EVAL_ARGS+=(--test-dataset "$DATASET_TEST_PATH")
 fi
 uv run python scripts/rl/eval_assignment.py "${EVAL_ARGS[@]}"
+
+# dev holdout があれば未知 dev 評価も出力
+if [ -f "$DATASET_DEVHOLD_PATH" ]; then
+    echo "[Step 4b] 未知 dev 評価 (devholdout)..."
+    uv run python scripts/rl/eval_assignment.py \
+        --train-dataset "$DATASET_PATH" \
+        --test-dataset  "$DATASET_DEVHOLD_PATH" \
+        --iql-model     "${RL_OUTPUT_DIR}/iql_agent.pt" \
+        --bc-model      "${RL_OUTPUT_DIR}/bc_policy.pt" \
+        --obs-dim       "$OBS_DIM" \
+        --output-dir    "${EVAL_OUTPUT_DIR}_devholdout" \
+        --device        "$DEVICE"
+fi
 echo "[Step 4] 完了: $EVAL_OUTPUT_DIR/"
 
 echo "========================================================"

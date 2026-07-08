@@ -1,11 +1,13 @@
 """RL 状態ベクトル構築モジュール
 
-既存の IRL 特徴量抽出（extract_common_features + PathFeatureExtractor）を再利用し、
-RL 専用の追加特徴（エピソード内累積割り当て件数）を付加する。
+既存の IRL 特徴量抽出（extract_common_features + PathFeatureExtractor）を再利用する。
 
-観測次元 = state_dim + 1
+観測次元 = state_dim (+1)
   state_dim: IRL モデル設定値（26, 32, 37, 42 など）
-  +1:        episode_assign_count（エピソード内累積割り当て件数、正規化 cap=50）
+  +1:        episode_assign_count（エピソード内累積割り当て件数、正規化 cap=50）。
+             Phase 1 (オフライン RL) では常に 0 の死んだ次元になるため、
+             include_assign_count=False で除外できる（データセット構築 CLI の既定は除外）。
+             Phase 2 (オンライン割り当て環境) では True にして使う。
 
 IRL の STATE_FEATURES には concurrent_open_reviews_7d / recent_load_ratio_30d_all /
 accept_rate_drift_30d がすでに含まれているため、これら以外の負荷特徴量は追加しない。
@@ -45,16 +47,22 @@ class RLStateBuilder:
         self,
         state_dim: int,
         action_dim: int,
+        include_assign_count: bool = True,
     ) -> None:
         """
         Args:
             state_dim: IRL モデルの state_dim（CONFIG 値）
             action_dim: IRL モデルの action_dim（CONFIG 値）
+            include_assign_count: episode_assign_count 次元を観測に含めるか。
+                Phase 1 のオフライン RL では常に 0 の死んだ次元になるため
+                False を推奨（データセット構築 CLI の既定は False）。
+                Phase 2 のオンライン環境 (review_assignment_env) では True。
         """
         self.state_dim = state_dim
         self.action_dim = action_dim
-        # RL 観測次元 = IRL state_dim + 1（episode_assign_count）
-        self.obs_dim = state_dim + 1
+        self.include_assign_count = include_assign_count
+        # RL 観測次元 = IRL state_dim (+1: episode_assign_count)
+        self.obs_dim = state_dim + (1 if include_assign_count else 0)
 
     @staticmethod
     def _feature_start(
@@ -104,7 +112,7 @@ class RLStateBuilder:
             feature_window_days: activity_df が空の場合のフォールバック窓（日数）
 
         Returns:
-            観測ベクトル [obs_dim] = [state_dim + 1]
+            観測ベクトル [obs_dim] = [state_dim (+1)]
         """
         feature_start = self._feature_start(activity_df, feature_end, feature_window_days)
 
@@ -138,7 +146,8 @@ class RLStateBuilder:
             sv = sv[: self.state_dim]
 
         # RL 専用特徴量: エピソード内累積割り当て件数（正規化）
-        sv.append(min(episode_assign_count / EPISODE_ASSIGN_CAP, 1.0))
+        if self.include_assign_count:
+            sv.append(min(episode_assign_count / EPISODE_ASSIGN_CAP, 1.0))
 
         return np.array(sv, dtype=np.float32)
 

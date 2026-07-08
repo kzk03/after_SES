@@ -31,10 +31,10 @@ class OfflineRLDataset(Dataset):
     """オフライン RL 用 PyTorch Dataset。
 
     各サンプル: (s, a, r, s', done)
-      s:    状態ベクトル [state_dim + 1]（IRL state + episode_assign_count）
-      a:    行動（0=割り当て拒否/非継続, 1=割り当て承諾/継続）
-      r:    R_θ(s, a) — IRL ラベル付き報酬
-      s':   次状態ベクトル [state_dim + 1]
+      s:    状態ベクトル [obs_dim]（IRL state。include_assign_count=True なら +1）
+      a:    行動（0=非承諾, 1=承諾）
+      r:    step_label + λ·R_θ（build_transitions 参照）
+      s':   次状態ベクトル [obs_dim]
       done: エピソード終端フラグ
     """
 
@@ -76,6 +76,33 @@ class OfflineRLDataset(Dataset):
             float(self.rewards.std()),
         )
 
+    @classmethod
+    def from_arrays(
+        cls,
+        states: np.ndarray,
+        actions: np.ndarray,
+        rewards: np.ndarray,
+        next_states: np.ndarray,
+        dones: np.ndarray,
+        device: str = "cpu",
+    ) -> "OfflineRLDataset":
+        """numpy 配列から直接構築する (行ごとの dict 経由より高速)。"""
+        ds = cls.__new__(cls)
+        ds.device = torch.device(device)
+        ds.states = torch.as_tensor(np.asarray(states, dtype=np.float32))
+        ds.actions = torch.as_tensor(np.asarray(actions, dtype=np.int64))
+        ds.rewards = torch.as_tensor(np.asarray(rewards, dtype=np.float32))
+        ds.next_states = torch.as_tensor(np.asarray(next_states, dtype=np.float32))
+        ds.dones = torch.as_tensor(np.asarray(dones, dtype=np.float32))
+        if len(ds.states) == 0:
+            raise ValueError("transitions が空です")
+        logger.info(
+            "OfflineRLDataset: %d サンプル, obs_dim=%d, reward_mean=%.4f±%.4f",
+            len(ds.states), ds.states.shape[1],
+            float(ds.rewards.mean()), float(ds.rewards.std()),
+        )
+        return ds
+
     def __len__(self) -> int:
         return len(self.states)
 
@@ -107,6 +134,45 @@ class OfflineRLDataset(Dataset):
         # MDP 定義上は Discrete(2)。action=0 のみのサブセットでも
         # 出力層のサイズが 1 に潰れないよう下限 2 を保証する。
         return max(int(self.actions.max().item()) + 1, 2)
+
+
+def accepted_timestamps_ns(master_events: List[Dict[str, Any]]) -> np.ndarray:
+    """承諾 review イベントの timestamp (ns 整数) 昇順配列を返す。
+
+    dev 単位の継続ラベル (step_label_dev) 計算用。authored イベントは
+    承諾の意思決定が無いため除外する。月次版・event 版で共用。
+    """
+    return np.array(
+        sorted(
+            pd.Timestamp(a["timestamp"]).value
+            for a in master_events
+            if a.get("timestamp") is not None
+            and a.get("action_type", "review") != "authored"
+            and (a.get("accepted", False) or a.get("label") == 1)
+        ),
+        dtype=np.int64,
+    )
+
+
+def dev_accept_label(
+    acc_ts_ns: np.ndarray,
+    window_start: pd.Timestamp,
+    window_end: pd.Timestamp,
+    horizon: Optional[pd.Timestamp],
+) -> Optional[float]:
+    """dev 単位の継続ラベル: [window_start, window_end) に承諾が1件以上あれば 1.0。
+
+    directory 限定の step_labels と違い、どの directory への承諾でもカウントする
+    (§3-1 の design decision 用比較列)。窓が観測ホライズン (履歴プールの末尾 =
+    最後の feature_end) を超える場合は「観測不能」として None を返す
+    (履歴プールにイベントが無いことと「活動しなかった」ことを区別できないため)。
+    train_model.py のラベル定義と同じ半開区間 [start, end) を使う。
+    """
+    if horizon is None or window_end > horizon:
+        return None
+    lo = int(np.searchsorted(acc_ts_ns, window_start.value, side="left"))
+    hi = int(np.searchsorted(acc_ts_ns, window_end.value, side="left"))
+    return 1.0 if hi > lo else 0.0
 
 
 def _monthly_accept(
@@ -147,6 +213,8 @@ def build_transitions(
     state_builder,
     feature_window_days: int = 180,
     reward_shaping: float = 0.3,
+    dev_label_window_months: Tuple[int, int] = (0, 3),
+    done_mode: str = "episode_end",
 ) -> List[Dict[str, Any]]:
     """軌跡リストから (s, a, r, s', done) タプルリストを構築する。
 
@@ -179,9 +247,20 @@ def build_transitions(
         state_builder: RLStateBuilder インスタンス
         feature_window_days: 特徴量抽出窓（日数）
         reward_shaping: R_θ のシェイピング係数 λ (0.0 で binary のみ)
+        dev_label_window_months: step_label_dev (dev 単位継続ラベル) の窓
+            (開始月オフセット, 終了月オフセット)。step_labels の抽出時
+            future window (0-3 / 3-6 / ...) と揃えること。
+        done_mode: エピソード終端の扱い。
+            - "episode_end" (既定): 軌跡の最終 transition を done=1 にする
+              (従来動作。データ打ち切りを terminal 扱いするため、観測末期の
+              V が過小評価される既知バイアスあり)
+            - "dropout": 月次軌跡は固定の月グリッドで打ち切られる
+              (真の離脱は判定できない) ため、全 transition done=0 として
+              最終遷移も bootstrap する (truncation の正しい扱い)
 
     Returns:
-        transition dict のリスト
+        transition dict のリスト。step_label (directory 単位) に加えて
+        step_label_dev (dev 単位、観測不能なら None) と directory 列を持つ。
     """
     transitions: List[Dict[str, Any]] = []
     skipped = 0
@@ -191,6 +270,7 @@ def build_transitions(
         email = developer.get(
             "email", developer.get("developer_id", developer.get("reviewer", ""))
         )
+        directory = traj.get("directory", "")
         monthly_histories = traj.get("monthly_activity_histories", [])
         step_labels = traj.get("step_labels", [])
         step_context_dates = traj.get("step_context_dates", [])
@@ -320,6 +400,13 @@ def build_transitions(
             skipped += 1
             continue
 
+        # dev 単位継続ラベル (step_label_dev) 用: 承諾イベントの昇順 ts 配列と
+        # 観測ホライズン (履歴プールの末尾 = 最後の有効な feature_end)
+        acc_ts_ns = accepted_timestamps_ns(monthly_histories[min_len - 1])
+        horizon = max(
+            (fe for fe in step_feature_ends if fe is not None), default=None
+        )
+
         # (s_t, a_t, r_t, s_{t+1}, done) タプルを作成
         # state  = fe_t 時点の特徴量 (行動より過去の情報のみ)
         # action = 月 t+1 (区間 (fe_t, fe_{t+1}]) に dev が承諾を行ったか
@@ -341,6 +428,13 @@ def build_transitions(
                 float(bool(step_labels[t + 1])) if t + 1 < len(step_labels) else 0.0
             )
             shaped_reward = label_next + reward_shaping * float(rewards_all[t + 1])
+            # dev 単位継続: step_labels[t+1] と同じ窓オフセットを fe_{t+1} から取る
+            label_dev = dev_accept_label(
+                acc_ts_ns,
+                window_end + pd.DateOffset(months=dev_label_window_months[0]),
+                window_end + pd.DateOffset(months=dev_label_window_months[1]),
+                horizon,
+            )
             traj_transitions.append({
                 "state": state_vecs[t].tolist(),
                 "action": action_label,
@@ -348,14 +442,17 @@ def build_transitions(
                 "next_state": state_vecs[t + 1].tolist(),
                 "done": 0.0,
                 "email": email,
+                "directory": directory,
                 "step_label": label_next,
+                # step_label_dev: directory を問わない dev 単位継続 (観測不能なら None)
+                "step_label_dev": label_dev,
                 # r_theta: 意思決定時点 (s_t) の IRL スコア。評価ベースライン用
                 "r_theta": float(rewards_all[t]),
                 # r_theta_next: 報酬シェイピングに使った fe_{t+1} 時点の R_θ
                 "r_theta_next": float(rewards_all[t + 1]),
                 "feature_end": window_start.isoformat(),
             })
-        if traj_transitions:
+        if traj_transitions and done_mode == "episode_end":
             traj_transitions[-1]["done"] = 1.0
         transitions.extend(traj_transitions)
 

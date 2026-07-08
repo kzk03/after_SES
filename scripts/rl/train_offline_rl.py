@@ -20,11 +20,12 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import random
 import sys
 from pathlib import Path
+from typing import Optional
 
 import numpy as np
-import pandas as pd
 import torch
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -35,6 +36,11 @@ if str(SRC) not in sys.path:
 from review_predictor.RL.agent.bc_policy import BCPolicy, BCTrainer
 from review_predictor.RL.agent.iql import IQLAgent
 from review_predictor.RL.data.offline_dataset import OfflineRLDataset
+from review_predictor.RL.data.loading import (
+    load_transitions_df,
+    recompute_reward,
+    states_matrix,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -57,46 +63,62 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--gamma", type=float, default=0.99, help="IQL 割引率")
     p.add_argument("--tau", type=float, default=0.9, help="IQL expectile パラメータ")
     p.add_argument("--beta", type=float, default=3.0, help="IQL advantage-weight 温度")
+    p.add_argument(
+        "--reward-shaping",
+        type=float,
+        default=None,
+        help=(
+            "λ を指定すると保存済みの reward 列を無視して "
+            "r = step_label + λ·R_θ を列から再計算する (λ sweep 用、"
+            "データセット再ビルド不要)。未指定なら保存済み reward を使う。"
+        ),
+    )
+    p.add_argument("--seed", type=int, default=42, help="乱数 seed (BC split / torch 初期化)")
     p.add_argument("--device", default="cpu", help="torch デバイス")
     p.add_argument("--skip-bc", action="store_true", help="BC をスキップして IQL のみ実行")
     return p.parse_args()
 
 
-def load_dataset(path: str, obs_dim: int, device: str) -> OfflineRLDataset:
-    """parquet / json からデータセットをロードする。"""
-    p = Path(path)
-    if p.suffix == ".parquet":
-        df = pd.read_parquet(p)
-    else:
-        df = pd.read_json(p)
+def load_dataset(
+    path: str,
+    obs_dim: int,
+    device: str,
+    reward_shaping: Optional[float] = None,
+) -> OfflineRLDataset:
+    """parquet / json からデータセットをロードする。
 
-    def _to_vec(val, dim: int) -> list:
-        if isinstance(val, (list, np.ndarray)):
-            v = list(val[:dim])
-            v += [0.0] * max(0, dim - len(v))
-            return v
-        return [float(val)] + [0.0] * (dim - 1)
-
-    transitions = []
-    for _, row in df.iterrows():
-        transitions.append({
-            "state": _to_vec(row["state"], obs_dim),
-            "action": int(row["action"]),
-            "reward": float(row["reward"]),
-            "next_state": _to_vec(row["next_state"], obs_dim),
-            "done": float(row["done"]),
-        })
-
-    return OfflineRLDataset(transitions, device=device)
+    reward_shaping (λ) 指定時は保存済み reward を使わず
+    step_label + λ·R_θ を列から再計算する (loading.recompute_reward)。
+    """
+    df = load_transitions_df(path)
+    rewards = (
+        recompute_reward(df, reward_shaping)
+        if reward_shaping is not None
+        else df["reward"].astype(float).to_numpy(dtype=np.float32)
+    )
+    return OfflineRLDataset.from_arrays(
+        states=states_matrix(df["state"], obs_dim),
+        actions=df["action"].astype(int).to_numpy(),
+        rewards=rewards,
+        next_states=states_matrix(df["next_state"], obs_dim),
+        dones=df["done"].astype(float).to_numpy(),
+        device=device,
+    )
 
 
 def main() -> None:
     args = parse_args()
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info("データセットをロード: %s", args.dataset)
-    dataset = load_dataset(args.dataset, args.obs_dim, args.device)
+    dataset = load_dataset(
+        args.dataset, args.obs_dim, args.device, reward_shaping=args.reward_shaping,
+    )
     logger.info("サンプル数: %d, obs_dim=%d", len(dataset), dataset.obs_dim)
 
     bc_policy = None
@@ -146,6 +168,10 @@ def main() -> None:
 
     with open(output_dir / "iql_stats.json", "w") as f:
         json.dump(iql_stats, f, indent=2)
+
+    # 実行条件を記録 (summarize_rl_results.py が run パラメータとして集約する)
+    with open(output_dir / "train_config.json", "w") as f:
+        json.dump(vars(args), f, indent=2)
 
     logger.info(
         "IQL 完了: 最終 V=%.4f Q=%.4f π=%.4f",

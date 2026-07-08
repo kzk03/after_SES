@@ -11,6 +11,10 @@ MDP 定義 (event 単位):
   r_t   : event t が属する月 m の step_labels[m] + λ · R_θ[m]
           （IRL モデルは月次系列で学習済みのため、報酬は月単位のまま
           その月に属する全 event へ broadcast する）
+          ※ transition の "r_theta" 列は評価ベースライン用に
+          **前月末の R_θ[m-1]**（イベント到着より過去）を格納する。
+          月末の R_θ[m] はイベント自身の結果を入力に含むため、評価に使うと
+          IRL 側に事後情報がリークする。シェイピング値は "r_theta_next" 列。
   s_{t+1}: 時系列で次の event (月をまたいでもよい) の特徴量
 
 設計判断:
@@ -37,6 +41,11 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 import numpy as np
 import pandas as pd
 import torch
+
+from review_predictor.RL.data.offline_dataset import (
+    accepted_timestamps_ns,
+    dev_accept_label,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -95,6 +104,9 @@ def build_event_transitions(
     feature_window_days: int = 180,
     reward_shaping: float = 0.3,
     event_action_types: Tuple[str, ...] = ("review",),
+    dev_label_window_months: Tuple[int, int] = (0, 3),
+    done_mode: str = "episode_end",
+    dropout_gap_months: int = 3,
 ) -> List[Dict[str, Any]]:
     """軌跡リストから event 単位の (s, a, r, s', done) タプルリストを構築する。
 
@@ -107,6 +119,16 @@ def build_event_transitions(
         reward_shaping: R_θ のシェイピング係数 λ
         event_action_types: 行動判定の対象とする event の action_type
                              ("authored" は承諾/非承諾の意思決定が無いため除外)
+        dev_label_window_months: step_label_dev (dev 単位継続ラベル) の窓
+            (開始月オフセット, 終了月オフセット)。step_labels の抽出時
+            future window (0-3 / 3-6 / ...) と揃えること。
+        done_mode: エピソード終端の扱い。
+            - "episode_end" (既定): 最終 transition を done=1 (従来動作)
+            - "dropout": 最終レビューイベントから観測ホライズンまでの
+              空白が dropout_gap_months 以上あるときだけ done=1
+              (真の離脱)。空白が短ければデータ打ち切りとみなし done=0 で
+              bootstrap する
+        dropout_gap_months: done_mode="dropout" の離脱判定ギャップ (月)
 
     Returns:
         transition dict のリスト。月次版と同じキー構成に加えて
@@ -121,6 +143,7 @@ def build_event_transitions(
         email = developer.get(
             "email", developer.get("developer_id", developer.get("reviewer", ""))
         )
+        directory = traj.get("directory", "")
         monthly_histories = traj.get("monthly_activity_histories", [])
         step_labels = traj.get("step_labels", [])
         step_context_dates = traj.get("step_context_dates", [])
@@ -307,14 +330,46 @@ def build_event_transitions(
             skipped_traj += 1
             continue
 
+        # dev 単位継続ラベル (step_label_dev) 用: 承諾イベントの昇順 ts 配列と
+        # 観測ホライズン (履歴プールが確実にカバーする末尾 = 最後の有効 feature_end)
+        acc_ts_ns = accepted_timestamps_ns(master_events)
+        horizon = max(
+            (fe for fe in step_feature_ends if fe is not None), default=None
+        )
+
         # ── 4. (s_t, a_t, r_t, s_{t+1}, done) を構築 ──
         for t in range(len(event_records) - 1):
             rec = event_records[t]
             m = rec["month_idx"]
             label_m = float(bool(step_labels[m])) if m < len(step_labels) else 0.0
+            # R_θ[m] は fe_m (月末) 時点 = イベント到着より後の同月イベント
+            # (当該イベント自身の結果を含む) を入力に持つため、報酬シェイピング
+            # には使えるが評価ベースラインには使えない (事後情報のリーク)。
+            # 評価用の決定時点スコアは前月末の R_θ[m-1] (イベントより厳密に過去)。
+            # m=0 のみ前月が無いため R_θ[0] にフォールバックする (初月イベントに
+            # 限り同月情報を含む近似。全体の一部でありドキュメント化で許容)。
             r_theta_m = float(rewards_all[m]) if m < len(rewards_all) else 0.0
+            r_theta_decision = (
+                float(rewards_all[m - 1]) if m >= 1 else r_theta_m
+            )
             shaped_reward = label_m + reward_shaping * r_theta_m
             done = t == len(event_records) - 2
+            if done and done_mode == "dropout":
+                # 最終イベント以降 horizon まで dropout_gap_months 以上の
+                # 空白があれば「真の離脱」= terminal。短ければ打ち切り。
+                last_ts = event_records[t + 1]["timestamp"]
+                done = (
+                    horizon is not None
+                    and last_ts + pd.DateOffset(months=dropout_gap_months) <= horizon
+                )
+            # dev 単位継続: step_labels[m] と同じ窓オフセットを fe_m から取る
+            fe_m = step_feature_ends[m]
+            label_dev = dev_accept_label(
+                acc_ts_ns,
+                fe_m + pd.DateOffset(months=dev_label_window_months[0]),
+                fe_m + pd.DateOffset(months=dev_label_window_months[1]),
+                horizon,
+            )
             transitions.append({
                 "state": rec["state"].tolist(),
                 "action": rec["action"],
@@ -322,8 +377,14 @@ def build_event_transitions(
                 "next_state": event_records[t + 1]["state"].tolist(),
                 "done": float(done),
                 "email": email,
+                "directory": directory,
                 "step_label": label_m,
-                "r_theta": r_theta_m,
+                # step_label_dev: directory を問わない dev 単位継続 (観測不能なら None)
+                "step_label_dev": label_dev,
+                # r_theta: 決定時点 (イベント到着) より前の月末 R_θ[m-1]。評価ベースライン用
+                "r_theta": r_theta_decision,
+                # r_theta_next: 報酬シェイピングに使った所属月末の R_θ[m]
+                "r_theta_next": r_theta_m,
                 "feature_end": rec["timestamp"].isoformat(),
                 "month_idx": m,
             })

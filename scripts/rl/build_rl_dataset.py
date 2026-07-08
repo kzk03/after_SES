@@ -18,24 +18,19 @@ IRL で学習済みの R_θ を使って歴史データ軌跡にラベル付け�
 from __future__ import annotations
 
 import argparse
-import json
 import logging
 import sys
 from pathlib import Path
-
-import pandas as pd
-import torch
 
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.append(str(SRC))
 
-from review_predictor.IRL.model.mce_irl_predictor import MCEIRLSystem
-from review_predictor.RL.env.reward_fn import IRLRewardFn
 from review_predictor.RL.env.state_builder import RLStateBuilder
 from review_predictor.RL.data.offline_dataset import build_transitions
 from review_predictor.RL.data.dataset_io import save_transitions_with_split
+from review_predictor.RL.data.loading import load_irl_reward_fn, load_trajectories
 
 logging.basicConfig(
     level=logging.INFO,
@@ -68,6 +63,42 @@ def parse_args() -> argparse.Namespace:
             "transitions_test.parquet に分離保存される。未指定なら分割しない。"
         ),
     )
+    p.add_argument(
+        "--dev-label-window",
+        type=str,
+        default="0,3",
+        help=(
+            "step_label_dev (dev 単位継続ラベル) の窓オフセット '開始月,終了月'。"
+            "軌跡抽出時の future window (0,3 / 3,6 / ...) と揃えること。"
+        ),
+    )
+    p.add_argument(
+        "--with-assign-count",
+        action="store_true",
+        help=(
+            "episode_assign_count 次元を観測に含める (Phase 2 用)。"
+            "既定はオフ = obs_dim は state_dim と等しい。"
+        ),
+    )
+    p.add_argument(
+        "--holdout-devs-ratio",
+        type=float,
+        default=0.0,
+        help=(
+            "dev 単位 holdout の割合 (0.0 で無効)。email ハッシュで決定的に選んだ "
+            "dev の全 transition を <stem>_devholdout に分離する (未知 dev 汎化評価用)。"
+        ),
+    )
+    p.add_argument("--holdout-seed", type=int, default=42, help="dev holdout のハッシュ seed")
+    p.add_argument(
+        "--done-mode",
+        choices=["episode_end", "dropout"],
+        default="episode_end",
+        help=(
+            "エピソード終端の扱い。episode_end=最終遷移 done=1 (既定)、"
+            "dropout=打ち切りを bootstrap (月次は全 done=0)"
+        ),
+    )
     p.add_argument("--device", default="cpu", help="torch デバイス (cpu/cuda)")
     return p.parse_args()
 
@@ -75,40 +106,26 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
 
-    # 軌跡ロード（pickle / json 両対応）
+    # 軌跡・凍結 IRL のロード (共通処理は loading.py 参照)
     logger.info("軌跡をロード: %s", args.trajectories)
-    traj_path = Path(args.trajectories)
-    if traj_path.suffix in (".pkl", ".pickle"):
-        import pickle
-        with open(traj_path, "rb") as f:
-            trajectories = pickle.load(f)
-    else:
-        with open(traj_path, encoding="utf-8") as f:
-            trajectories = json.load(f)
+    trajectories = load_trajectories(args.trajectories)
     logger.info("軌跡数: %d", len(trajectories))
 
-    # IRL 設定ロード
-    with open(args.irl_config, encoding="utf-8") as f:
-        irl_config = json.load(f)
-    irl_config["state_dim"] = args.state_dim
-    irl_config["action_dim"] = args.action_dim
-
-    # MCEIRLSystem + IRLRewardFn を初期化
     logger.info("MCEIRLSystem をロード: %s", args.irl_model)
-    system = MCEIRLSystem(irl_config)
-    ckpt = torch.load(args.irl_model, map_location=args.device, weights_only=True)
-    if "network_state_dict" in ckpt:
-        system.network.load_state_dict(ckpt["network_state_dict"])
-    else:
-        system.network.load_state_dict(ckpt)
-    system.network.to(system.device)
-    system.network.eval()
-
-    reward_fn = IRLRewardFn(system)
+    reward_fn = load_irl_reward_fn(
+        args.irl_model, args.irl_config, args.state_dim, args.action_dim, args.device,
+    )
     state_builder = RLStateBuilder(
         state_dim=args.state_dim,
         action_dim=args.action_dim,
+        include_assign_count=args.with_assign_count,
     )
+    logger.info("obs_dim = %d (include_assign_count=%s)", state_builder.obs_dim, args.with_assign_count)
+
+    dev_label_window = tuple(int(x) for x in args.dev_label_window.split(","))
+    if len(dev_label_window) != 2:
+        logger.error("--dev-label-window は '開始月,終了月' 形式で指定してください: %s", args.dev_label_window)
+        sys.exit(1)
 
     # (s, a, r, s', done) 構築
     logger.info("トランジションを構築中...")
@@ -118,6 +135,8 @@ def main() -> None:
         state_builder=state_builder,
         feature_window_days=args.feature_window,
         reward_shaping=args.reward_shaping,
+        dev_label_window_months=dev_label_window,
+        done_mode=args.done_mode,
     )
     logger.info("トランジション数: %d", len(transitions))
 
@@ -125,9 +144,13 @@ def main() -> None:
         logger.error("トランジションが空です。軌跡データを確認してください。")
         sys.exit(1)
 
-    # 保存 (時間ベース train/test split 込み — 共通処理は dataset_io.py 参照)
+    # 保存 (時間分割 + dev holdout — 共通処理は dataset_io.py 参照)
     df = save_transitions_with_split(
-        transitions, Path(args.output), test_split_date=args.test_split_date,
+        transitions,
+        Path(args.output),
+        test_split_date=args.test_split_date,
+        holdout_devs_ratio=args.holdout_devs_ratio,
+        holdout_seed=args.holdout_seed,
     )
 
     # 報酬分布の簡易統計
