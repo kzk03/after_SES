@@ -1,6 +1,7 @@
 .venv/
 __pycache__/
 *.pyc
+.DS_Store
 writing/*.aux
 writing/*.dvi
 writing/*.log
