@@ -1,5 +1,5 @@
 #!/bin/bash
-# RL フルパイプライン (軌跡抽出 → データセット構築 → λ×γ sweep → 評価 → 考察)
+# RL フルパイプライン (軌跡抽出 → データセット構築 → λ×γ×τ×β sweep → 評価 → 考察)
 #
 # キャッシュ作成から評価・考察まで1本で連続実行する。
 # データセット構築 (重い特徴量抽出) は粒度ごとに 1 回だけ行い、
@@ -14,10 +14,10 @@
 #   Step0 軌跡抽出   : mce_traj_<t0>.pkl が無ければ抽出 (train-end を延長し
 #                       test split が空にならないようにする)
 #   Step1 build      : 粒度 (event/monthly) ごとにデータセットを1回構築
-#   Step2 train      : λ×γ の組ごとに BC→IQL を学習
+#   Step2 train      : λ×γ×τ×β の組ごとに BC→IQL を学習
 #   Step3 eval       : train-fit → test 固定適用の評価 (+ dev holdout があれば追加評価)
 #   Step4 summarize  : 全 run の summary_metrics.json を横断集約
-#   Step5 analyze    : 代表点 (ANALYSIS_LAMBDA/GAMMA) について手法間 bootstrap 検定 +
+#   Step5 analyze    : 代表点 (ANALYSIS_LAMBDA/GAMMA/TAU/BETA) について手法間 bootstrap 検定 +
 #                       V(s) 駆動要因分析 (RQ2 考察の下書き) を自動生成
 #
 # 前提:
@@ -40,21 +40,25 @@
 #   GRANULARITIES       : "event monthly" (default) — 回す粒度
 #   LAMBDAS             : λ のリスト (default: "0 0.1 0.3 0.5 1.0")
 #   GAMMAS              : γ のリスト (default: "0.99"。感度を見るなら "0.9 0.95 0.99")
+#   TAUS                : IQL expectile τ のリスト (default: "0.9"。感度を見るなら "0.5 0.7 0.9")
+#   BETAS               : IQL advantage-weight β のリスト (default: "3.0"。感度を見るなら "1.0 3.0 10.0")
 #   HOLDOUT_DEVS_RATIO  : dev holdout 割合 (default: 0.1)
 #   TEST_SPLIT_DATE     : test 分割基準日 (default: IRL の train_end = 2022-01-01)
 #   BC_EPOCHS / IQL_EPOCHS / SEED / OUTBASE / REBUILD_DATASET (=1 で再ビルド)
 #   [Step5 考察]
 #   ANALYSIS_LAMBDA     : 詳細分析の対象 λ (default: 0.3)
 #   ANALYSIS_GAMMA      : 詳細分析の対象 γ (default: GAMMAS の先頭)
+#   ANALYSIS_TAU        : 詳細分析の対象 τ (default: TAUS の先頭)
+#   ANALYSIS_BETA       : 詳細分析の対象 β (default: BETAS の先頭)
 #   BOOT_N              : bootstrap 反復回数 (default: 1000)
 #   VALUE_N_REPEATS     : permutation 感度の反復回数 (default: 5)
 #   SKIP_ANALYSIS       : 1 で Step5 をスキップ
 #
 # 出力:
-#   outputs/rl/sweep/<variant>_<t0>m_<gran>/dataset/          (共有データセット)
-#   outputs/rl/sweep/<variant>_<t0>m_<gran>/lam<λ>_gam<γ>/    (モデル + eval)
-#   outputs/rl/sweep/summary.csv / summary.md                 (横断集約)
-#   outputs/rl/analysis/<variant>_<t0>m_<gran>/                (統計検定 + V(s)分析)
+#   outputs/rl/sweep/<variant>_<t0>m_<gran>/dataset/                      (共有データセット)
+#   outputs/rl/sweep/<variant>_<t0>m_<gran>/lam<λ>_gam<γ>_tau<τ>_beta<β>/  (モデル + eval)
+#   outputs/rl/sweep/summary.csv / summary.md                             (横断集約)
+#   outputs/rl/analysis/<variant>_<t0>m_<gran>/                           (統計検定 + V(s)分析)
 
 set -e
 export PYTHONHASHSEED=0
@@ -73,6 +77,8 @@ OUTBASE="${OUTBASE:-outputs/main32_mce_volat_ep150}"
 GRANULARITIES="${GRANULARITIES:-event monthly}"
 LAMBDAS="${LAMBDAS:-0 0.1 0.3 0.5 1.0}"
 GAMMAS="${GAMMAS:-0.99}"
+TAUS="${TAUS:-0.9}"
+BETAS="${BETAS:-3.0}"
 HOLDOUT_DEVS_RATIO="${HOLDOUT_DEVS_RATIO:-0.1}"
 TEST_SPLIT_DATE="${TEST_SPLIT_DATE:-}"
 BC_EPOCHS="${BC_EPOCHS:-50}"
@@ -100,8 +106,10 @@ case "$T0_WINDOW" in
     *) echo "ERROR: t0_window は 0-3 / 3-6 / 6-9 / 9-12" >&2; exit 1 ;;
 esac
 if [ -z "$TEST_SPLIT_DATE" ]; then TEST_SPLIT_DATE="$TRAIN_END"; fi
-# GAMMAS の先頭を ANALYSIS_GAMMA の既定値にする
+# GAMMAS/TAUS/BETAS の先頭を ANALYSIS_* の既定値にする
 ANALYSIS_GAMMA="${ANALYSIS_GAMMA:-$(echo "$GAMMAS" | awk '{print $1}')}"
+ANALYSIS_TAU="${ANALYSIS_TAU:-$(echo "$TAUS" | awk '{print $1}')}"
+ANALYSIS_BETA="${ANALYSIS_BETA:-$(echo "$BETAS" | awk '{print $1}')}"
 
 IRL_MODEL_DIR="${OUTBASE}/${VARIANT}/train_${T0_WINDOW}m"
 IRL_MODEL="${IRL_MODEL_DIR}/mce_irl_model.pt"
@@ -119,6 +127,8 @@ echo " RL Full Pipeline: variant=${VARIANT} t0=${T0_WINDOW}m device=${DEVICE}"
 echo "   granularities : ${GRANULARITIES}"
 echo "   λ grid        : ${LAMBDAS}  (詳細考察は λ=${ANALYSIS_LAMBDA})"
 echo "   γ grid        : ${GAMMAS}  (詳細考察は γ=${ANALYSIS_GAMMA})"
+echo "   τ grid        : ${TAUS}  (詳細考察は τ=${ANALYSIS_TAU})"
+echo "   β grid        : ${BETAS}  (詳細考察は β=${ANALYSIS_BETA})"
 echo "   dev holdout   : ${HOLDOUT_DEVS_RATIO}"
 echo "   test split    : ${TEST_SPLIT_DATE}"
 echo "   extract range : ${EXTRACT_TRAIN_START} 〜 ${EXTRACT_TRAIN_END}"
@@ -203,48 +213,54 @@ for GRAN in $GRANULARITIES; do
             --device             "$DEVICE"
     fi
 
-    # ── Step2-3: λ × γ で train + eval ──
+    # ── Step2-3: λ × γ × τ × β で train + eval ──
     for LAM in $LAMBDAS; do
         for GAM in $GAMMAS; do
-            RUN_DIR="${BASE_DIR}/lam${LAM}_gam${GAM}"
-            echo "[Step2-3:${GRAN}] λ=${LAM} γ=${GAM} → ${RUN_DIR}"
-            mkdir -p "$RUN_DIR"
+            for TAU in $TAUS; do
+                for BETA in $BETAS; do
+                    RUN_DIR="${BASE_DIR}/lam${LAM}_gam${GAM}_tau${TAU}_beta${BETA}"
+                    echo "[Step2-3:${GRAN}] λ=${LAM} γ=${GAM} τ=${TAU} β=${BETA} → ${RUN_DIR}"
+                    mkdir -p "$RUN_DIR"
 
-            uv run python scripts/rl/train_offline_rl.py \
-                --dataset        "$DATASET_PATH" \
-                --output-dir     "$RUN_DIR" \
-                --obs-dim        "$OBS_DIM" \
-                --n-actions      2 \
-                --bc-epochs      "$BC_EPOCHS" \
-                --iql-epochs     "$IQL_EPOCHS" \
-                --gamma          "$GAM" \
-                --reward-shaping "$LAM" \
-                --seed           "$SEED" \
-                --device         "$DEVICE"
+                    uv run python scripts/rl/train_offline_rl.py \
+                        --dataset        "$DATASET_PATH" \
+                        --output-dir     "$RUN_DIR" \
+                        --obs-dim        "$OBS_DIM" \
+                        --n-actions      2 \
+                        --bc-epochs      "$BC_EPOCHS" \
+                        --iql-epochs     "$IQL_EPOCHS" \
+                        --gamma          "$GAM" \
+                        --tau            "$TAU" \
+                        --beta           "$BETA" \
+                        --reward-shaping "$LAM" \
+                        --seed           "$SEED" \
+                        --device         "$DEVICE"
 
-            EVAL_ARGS=(
-                --train-dataset "$DATASET_PATH"
-                --iql-model     "${RUN_DIR}/iql_agent.pt"
-                --bc-model      "${RUN_DIR}/bc_policy.pt"
-                --obs-dim       "$OBS_DIM"
-                --output-dir    "${RUN_DIR}/eval"
-                --device        "$DEVICE"
-            )
-            if [ -f "$DATASET_TEST_PATH" ]; then
-                EVAL_ARGS+=(--test-dataset "$DATASET_TEST_PATH")
-            fi
-            uv run python scripts/rl/eval_assignment.py "${EVAL_ARGS[@]}"
+                    EVAL_ARGS=(
+                        --train-dataset "$DATASET_PATH"
+                        --iql-model     "${RUN_DIR}/iql_agent.pt"
+                        --bc-model      "${RUN_DIR}/bc_policy.pt"
+                        --obs-dim       "$OBS_DIM"
+                        --output-dir    "${RUN_DIR}/eval"
+                        --device        "$DEVICE"
+                    )
+                    if [ -f "$DATASET_TEST_PATH" ]; then
+                        EVAL_ARGS+=(--test-dataset "$DATASET_TEST_PATH")
+                    fi
+                    uv run python scripts/rl/eval_assignment.py "${EVAL_ARGS[@]}"
 
-            if [ -f "$DATASET_DEVHOLD_PATH" ]; then
-                uv run python scripts/rl/eval_assignment.py \
-                    --train-dataset "$DATASET_PATH" \
-                    --test-dataset  "$DATASET_DEVHOLD_PATH" \
-                    --iql-model     "${RUN_DIR}/iql_agent.pt" \
-                    --bc-model      "${RUN_DIR}/bc_policy.pt" \
-                    --obs-dim       "$OBS_DIM" \
-                    --output-dir    "${RUN_DIR}/eval_devholdout" \
-                    --device        "$DEVICE"
-            fi
+                    if [ -f "$DATASET_DEVHOLD_PATH" ]; then
+                        uv run python scripts/rl/eval_assignment.py \
+                            --train-dataset "$DATASET_PATH" \
+                            --test-dataset  "$DATASET_DEVHOLD_PATH" \
+                            --iql-model     "${RUN_DIR}/iql_agent.pt" \
+                            --bc-model      "${RUN_DIR}/bc_policy.pt" \
+                            --obs-dim       "$OBS_DIM" \
+                            --output-dir    "${RUN_DIR}/eval_devholdout" \
+                            --device        "$DEVICE"
+                    fi
+                done
+            done
         done
     done
 done
@@ -263,15 +279,15 @@ uv run python scripts/rl/summarize_rl_results.py "$SWEEP_ROOT" \
 if [ "$SKIP_ANALYSIS" = "1" ]; then
     echo "[Step5] SKIP_ANALYSIS=1 のためスキップ"
 else
-    echo "[Step5] 考察分析中 (λ=${ANALYSIS_LAMBDA}, γ=${ANALYSIS_GAMMA})..."
+    echo "[Step5] 考察分析中 (λ=${ANALYSIS_LAMBDA}, γ=${ANALYSIS_GAMMA}, τ=${ANALYSIS_TAU}, β=${ANALYSIS_BETA})..."
     for GRAN in $GRANULARITIES; do
         BASE_DIR="${SWEEP_ROOT}/${VARIANT}_${T0_WINDOW}m_${GRAN}"
-        RUN_DIR="${BASE_DIR}/lam${ANALYSIS_LAMBDA}_gam${ANALYSIS_GAMMA}"
+        RUN_DIR="${BASE_DIR}/lam${ANALYSIS_LAMBDA}_gam${ANALYSIS_GAMMA}_tau${ANALYSIS_TAU}_beta${ANALYSIS_BETA}"
         DATASET_DIR="${BASE_DIR}/dataset"
         OUT_DIR="${ANALYSIS_ROOT}/${VARIANT}_${T0_WINDOW}m_${GRAN}"
 
         if [ ! -f "${RUN_DIR}/eval/pair_predictions.csv" ]; then
-            echo "  [${GRAN}] スキップ: ${RUN_DIR}/eval/pair_predictions.csv が無い (λ/γ の組が sweep 対象外)"
+            echo "  [${GRAN}] スキップ: ${RUN_DIR}/eval/pair_predictions.csv が無い (λ/γ/τ/β の組が sweep 対象外)"
             continue
         fi
         mkdir -p "$OUT_DIR"
@@ -307,7 +323,7 @@ fi
 echo "========================================================"
 echo " フルパイプライン完了"
 echo "   軌跡キャッシュ : ${TRAJ_CACHE}"
-echo "   各 run         : ${SWEEP_ROOT}/<variant>_<t0>m_<gran>/lam*_gam*/eval/"
+echo "   各 run         : ${SWEEP_ROOT}/<variant>_<t0>m_<gran>/lam*_gam*_tau*_beta*/eval/"
 echo "   集約結果       : ${SWEEP_ROOT}/summary.csv / summary.md"
 echo "   考察分析       : ${ANALYSIS_ROOT}/<variant>_<t0>m_<gran>/"
 echo "     ├─ methods_stats_<target>.csv/md  (手法間 bootstrap 検定)"
