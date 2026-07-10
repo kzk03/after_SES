@@ -17,6 +17,7 @@ PyTorch Dataset として返す。
 from __future__ import annotations
 
 import logging
+import time
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
@@ -265,7 +266,22 @@ def build_transitions(
     transitions: List[Dict[str, Any]] = []
     skipped = 0
 
-    for traj in trajectories:
+    total_traj = len(trajectories)
+    log_interval = max(1, total_traj // 20)  # 進捗ログをおよそ20回に分けて出す
+    start_time = time.time()
+
+    for i, traj in enumerate(trajectories):
+        if i > 0 and i % log_interval == 0:
+            elapsed = time.time() - start_time
+            rate = i / elapsed
+            remaining_min = (total_traj - i) / rate / 60
+            logger.info(
+                "進捗: %d/%d 軌跡 (%.1f%%) 経過%.1f分 残り推定%.1f分 "
+                "transitions=%d skipped=%d",
+                i, total_traj, 100 * i / total_traj,
+                elapsed / 60, remaining_min, len(transitions), skipped,
+            )
+
         developer = traj.get("developer", traj.get("developer_info", {}))
         email = developer.get(
             "email", developer.get("developer_id", developer.get("reviewer", ""))

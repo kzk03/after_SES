@@ -1,7 +1,7 @@
 """
 Random Forest baseline for review continuation prediction.
 
-Uses the same 14-dimensional features as IRL (via common_features.py)
+Uses the same 31-dimensional features as IRL (via common_features.py)
 to train a scikit-learn RandomForestClassifier.
 """
 
@@ -30,7 +30,7 @@ def extract_features_for_window(
     eval_end: pd.Timestamp,
     project_type: str = "multi",
 ) -> pd.DataFrame:
-    """Extract 14-dim features per developer.
+    """Extract 31-dim features per developer.
 
     Feature period: train_start ~ train_end
     Label period: eval_start ~ eval_end
@@ -98,13 +98,13 @@ def extract_features_for_window_directory(
     path_extractor=None,
     dirs_column: str = "dirs",
 ) -> pd.DataFrame:
-    """Extract 28-dim features per (developer, directory) pair.
+    """Extract 37-dim features per (developer, directory) pair.
 
     Feature period: train_start ~ train_end
     Label: developer contributed to directory D in eval period.
 
     Returns:
-        DataFrame with 28 feature columns + 'label' + 'email' + 'directory'.
+        DataFrame with 37 feature columns + 'label' + 'email' + 'directory'.
     """
     from review_predictor.IRL.features.common_features import FEATURE_NAMES_WITH_PATH
     from review_predictor.IRL.features.path_features import PATH_FEATURE_NAMES
@@ -180,7 +180,7 @@ def extract_features_for_window_directory(
 def prepare_rf_features_directory(
     features_df: pd.DataFrame,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Convert directory-level features DataFrame to (X, y) arrays (28-dim)."""
+    """Convert directory-level features DataFrame to (X, y) arrays (37-dim)."""
     from review_predictor.IRL.features.common_features import FEATURE_NAMES_WITH_PATH
 
     X = features_df[FEATURE_NAMES_WITH_PATH].values.astype(float)
