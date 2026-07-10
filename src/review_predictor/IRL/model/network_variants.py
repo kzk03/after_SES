@@ -397,78 +397,6 @@ class IRLNetworkV3(BaseIRLNetwork):
 
 
 # ═══════════════════════════════════════════════════════════════
-#  V4: LSTM + Attention + Multi-task
-# ═══════════════════════════════════════════════════════════════
-
-class IRLNetworkV4(BaseIRLNetwork):
-    """LSTM + Attention + Multi-task"""
-
-    def __init__(self, state_dim: int, action_dim: int,
-                 hidden_dim: int = 128, dropout: float = 0.1):
-        super().__init__(state_dim, action_dim, hidden_dim, dropout)
-        self.backbone = LSTMBackbone(hidden_dim, dropout)
-        self.attention = TemporalAttention(hidden_dim)
-        self.multitask_head = MultiTaskHead(hidden_dim, dropout)
-
-    def forward(self, state, action, lengths):
-        combined = self._encode(state, action)
-        lstm_out, last_hidden = self.backbone(combined, lengths)
-        context = self.attention(lstm_out, last_hidden, lengths)
-        reward = self.reward_predictor(context)
-        cont_dict = self.multitask_head(context)
-        return reward, cont_dict
-
-    def forward_all_steps(self, state, action, lengths, return_reward=False):
-        combined = self._encode(state, action)
-        lstm_out, _ = self.backbone(combined, lengths)
-        B, L, D = lstm_out.shape
-        flat = lstm_out.reshape(-1, D)
-        cont_dict = {
-            i: head(flat).squeeze(-1).view(B, L)
-            for i, head in enumerate(self.multitask_head.heads)
-        }
-        if return_reward:
-            rew = self.reward_predictor(flat).squeeze(-1).view(B, L)
-            return rew, cont_dict
-        return cont_dict
-
-
-# ═══════════════════════════════════════════════════════════════
-#  V5: Transformer + Multi-task
-# ═══════════════════════════════════════════════════════════════
-
-class IRLNetworkV5(BaseIRLNetwork):
-    """Transformer + Multi-task"""
-
-    def __init__(self, state_dim: int, action_dim: int,
-                 hidden_dim: int = 128, dropout: float = 0.1):
-        super().__init__(state_dim, action_dim, hidden_dim, dropout)
-        self.backbone = TransformerBackbone(hidden_dim, dropout=dropout)
-        self.multitask_head = MultiTaskHead(hidden_dim, dropout)
-
-    def forward(self, state, action, lengths):
-        combined = self._encode(state, action)
-        _, cls_out = self.backbone(combined, lengths)
-        reward = self.reward_predictor(cls_out)
-        cont_dict = self.multitask_head(cls_out)
-        return reward, cont_dict
-
-    def forward_all_steps(self, state, action, lengths, return_reward=False):
-        combined = self._encode(state, action)
-        all_out, _ = self.backbone(combined, lengths)
-        B, L, D = all_out.shape
-        flat = all_out.reshape(-1, D)
-        cont_dict = {
-            i: head(flat).squeeze(-1).view(B, L)
-            for i, head in enumerate(self.multitask_head.heads)
-        }
-        if return_reward:
-            rew = self.reward_predictor(flat).squeeze(-1).view(B, L)
-            return rew, cont_dict
-        return cont_dict
-
-
-# ═══════════════════════════════════════════════════════════════
 #  V6: LSTM + Snapshot MLP (Hybrid: IRL の時系列 + RF_dir 風の snapshot)
 # ═══════════════════════════════════════════════════════════════
 
@@ -629,8 +557,6 @@ VARIANT_REGISTRY = {
     1: IRLNetworkV1,
     2: IRLNetworkV2,
     3: IRLNetworkV3,
-    4: IRLNetworkV4,
-    5: IRLNetworkV5,
     6: IRLNetworkV6_Hybrid,
     7: IRLNetworkV7_ArchetypeAux,
 }
@@ -640,8 +566,6 @@ VARIANT_NAMES = {
     1: "lstm_attention",
     2: "transformer",
     3: "lstm_multitask",
-    4: "lstm_attn_multitask",
-    5: "transformer_multitask",
     6: "lstm_hybrid_snapshot",
     7: "lstm_archetype_aux",
 }
@@ -657,8 +581,8 @@ def create_network(variant: int, state_dim: int, action_dim: int,
 
 
 def is_multitask(variant: int) -> bool:
-    """Multi-task バリアントかどうか（V3/V4/V5 のみ：4 horizon multi-head）"""
-    return variant in {3, 4, 5}
+    """Multi-task バリアントかどうか（V3 のみ：4 horizon multi-head）"""
+    return variant in {3}
 
 
 def is_archetype_aux(variant: int) -> bool:
