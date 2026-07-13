@@ -34,12 +34,12 @@ OUTBASE="${3:-outputs/mce_irl_variant_comparison_server}"
 GPU_ID="${4:-0}"
 SAVE_IMPORTANCE="${5:-false}"
 
-# MCE-IRL は variant 0/1/2/3 対応 (3 = LSTM Two-tower, 2026-05-15 追加)。
+# MCE-IRL は variant 0/1/2/3/8 対応 (3 = LSTM Two-tower, 8 = GRU 2026-07-13 追加)。
 # multi-task ヘッド (variant 4/5) は持たない。
 case "$VTYPE" in
-    0|1|2|3) ;;
+    0|1|2|3|8) ;;
     *)
-        echo "ERROR: MCE-IRL は variant 0/1/2/3 のみ対応 (指定: $VTYPE)" >&2
+        echo "ERROR: MCE-IRL は variant 0/1/2/3/8 のみ対応 (指定: $VTYPE)" >&2
         exit 1
         ;;
 esac
@@ -76,6 +76,11 @@ TRAIN_END="${TRAIN_END:-2022-01-01}"
 EVAL_CUTOFF="${EVAL_CUTOFF:-2023-01-01}"
 EPOCHS="${EPOCHS:-150}"
 PATIENCE="${PATIENCE:-15}"
+# [SES査読対応] FINAL_STEP_ONLY=1: 損失を最終有効ステップのみに限定（退化版LSTM分類器）。
+# VNAME は別名（例: lstm_final_only）を推奨。軌跡キャッシュは通常IRLと共有される。
+FINAL_STEP_ONLY="${FINAL_STEP_ONLY:-0}"
+final_step_args=()
+[ "$FINAL_STEP_ONLY" = "1" ] && final_step_args=(--final-step-only)
 
 TRAIN_WINDOWS=("0-3" "3-6" "6-9" "9-12")
 TRAIN_FS=(0 3 6 9)
@@ -289,7 +294,8 @@ for i in 0 1 2 3; do
             --trajectories-cache "$CACHE_DIR/mce_traj_${win}_ts${ts}${CACHE_SUFFIX}.pkl" \
             --output "$model_dir" \
             --skip-threshold \
-            "${warm_args[@]}"
+            "${warm_args[@]}" \
+            "${final_step_args[@]}"
         echo "[MCE-IRL $VNAME train_${win}m] 学習完了"
     fi
 done

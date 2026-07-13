@@ -1311,8 +1311,8 @@ def main():
         "--model-type",
         type=int,
         default=0,
-        choices=[0, 1, 2, 3, 4, 5, 6, 7],
-        help="モデルバリアント (0:LSTM, 1:LSTM+Attn, 2:Transformer, 3:LSTM+MT, 4:LSTM+Attn+MT, 5:Trans+MT, 6:LSTM+SnapshotMLP Hybrid, 7:LSTM+Archetype Aux)"
+        choices=[0, 1, 2, 3, 4, 5, 6, 7, 8],
+        help="モデルバリアント (0:LSTM, 1:LSTM+Attn, 2:Transformer, 3:LSTM+MT, 4:LSTM+Attn+MT, 5:Trans+MT, 6:LSTM+SnapshotMLP Hybrid, 7:LSTM+Archetype Aux, 8:GRU)"
     )
     # 2026-05-21 追加: model_type=7 (archetype 補助タスク) 用の引数
     parser.add_argument(
@@ -1343,6 +1343,13 @@ def main():
         help="訓練データ上の F1 最適閾値計算をスキップ。"
              " 閾値は 46928 軌跡の逐次推論で 1 時間以上かかるため、AUC/Spearman ベース"
              " 評価しか使わない場合は不要。"
+    )
+    parser.add_argument(
+        "--final-step-only",
+        action="store_true",
+        help="[アブレーション] 損失を最終有効ステップのみに限定する（退化版LSTM分類器）。"
+             " 全ステップの行動整合（報酬の步wise教師）を外し、時系列表現＋最終ラベル"
+             " 直接分類としての性能を測る。SES査読対応(R1/R2)のLSTM単体比較用。"
     )
     # Phase 2 (2026-05-15): co-change graph 由来の path 特徴量用 CSV
     # 軌跡キャッシュを使わず内部抽出する場合のみ effective。
@@ -1541,6 +1548,7 @@ def main():
             'dropout': 0.2,
             'model_type': args.model_type,
             'aux_lambda': args.aux_lambda,
+            'final_step_only': args.final_step_only,
         }
         irl_system = MCEIRLSystem(config)
 

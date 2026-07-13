@@ -1095,7 +1095,62 @@ def evaluate_single_timepoint(
         from sklearn.ensemble import RandomForestClassifier as RFC
         X_train_dir, y_train_dir = prepare_rf_features_directory(rf_dir_train_df)
         clf_dir = RFC(n_estimators=100, class_weight="balanced", random_state=777, n_jobs=-1)  # IRL の RANDOM_SEED=777 に統一
-        clf_dir.fit(X_train_dir, y_train_dir)
+        _weak_w = os.environ.get("RF_WEAK_NEG_WEIGHT", "")
+        if _weak_w and "weak_neg" in rf_dir_train_df.columns:
+            # 依頼なし弱負例へ IRL 損失（式(1)）と同じ重みを掛けて学習目的を揃える
+            sw = np.where(
+                (y_train_dir == 0) & (rf_dir_train_df["weak_neg"].values == 1),
+                float(_weak_w),
+                1.0,
+            )
+            clf_dir.fit(X_train_dir, y_train_dir, sample_weight=sw)
+            logger.info(
+                f"RF_Dir: 弱負例重み {_weak_w} を適用 "
+                f"(weak_neg {int((sw != 1.0).sum())}/{len(sw)} 件)"
+            )
+        else:
+            sw = None
+            clf_dir.fit(X_train_dir, y_train_dir)
+
+        # 勾配ブースティングの追加ベースライン。GBDT_DIR にカンマ区切りで指定:
+        #   hist（=1 も後方互換で可）: sklearn HistGradientBoosting
+        #   lgbm: LightGBM本体 / xgb: XGBoost本体（査読A-1で名指しされた2つ）
+        # 例: GBDT_DIR=hist,lgbm,xgb
+        gbdt_models: Dict[str, object] = {}
+        _gbdt_kinds = [
+            k.strip() for k in os.environ.get("GBDT_DIR", "").split(",") if k.strip()
+        ]
+        for _kind in _gbdt_kinds:
+            if _kind in ("1", "hist"):
+                from sklearn.ensemble import HistGradientBoostingClassifier
+                _m = HistGradientBoostingClassifier(
+                    class_weight="balanced", random_state=777, early_stopping=False,
+                )
+                _m.fit(X_train_dir, y_train_dir, sample_weight=sw)
+                gbdt_models["GBDT_Dir"] = _m
+            elif _kind == "lgbm":
+                from lightgbm import LGBMClassifier
+                _m = LGBMClassifier(
+                    class_weight="balanced", random_state=777, n_jobs=-1, verbose=-1,
+                )
+                _m.fit(X_train_dir, y_train_dir, sample_weight=sw)
+                gbdt_models["LGBM_Dir"] = _m
+            elif _kind == "xgb":
+                from xgboost import XGBClassifier
+                from sklearn.utils.class_weight import compute_sample_weight
+                # XGBoost には class_weight が無いので balanced 相当の重みを自前計算し、
+                # RF/hist/lgbm と同じく弱負例重みと乗算して学習目的を揃える
+                _bal = compute_sample_weight("balanced", y_train_dir)
+                _xgb_sw = _bal if sw is None else _bal * sw
+                _m = XGBClassifier(random_state=777, n_jobs=-1, eval_metric="logloss")
+                _m.fit(X_train_dir, y_train_dir, sample_weight=_xgb_sw)
+                gbdt_models["XGB_Dir"] = _m
+            else:
+                logger.warning(f"GBDT_DIR: 不明な種別 '{_kind}' を無視")
+        for _name in gbdt_models:
+            logger.info(
+                f"{_name}: 学習完了 (weak_neg重み={'あり' if sw is not None else 'なし'})"
+            )
 
         # RF_Dir Gini importance を保存
         if save_importance and output_dir is not None:
@@ -1118,6 +1173,8 @@ def evaluate_single_timepoint(
         feature_start = prediction_time - pd.Timedelta(days=rf_dir_feature_window_days)
         rf_dir_agg: Dict[str, float] = {}
         rf_dir_dev_probs: Dict[str, Dict[str, float]] = {}
+        # モデル名 -> dir -> dev -> prob
+        gbdt_dir_dev_probs: Dict[str, Dict[str, Dict[str, float]]] = {}
 
         rf_dir_pairs = [(d, dev) for d, devs in dir_developers.items() for dev in devs]
         logger.info(f"RF_Dir: {len(rf_dir_pairs)} ペアを並列推論 (n_jobs={n_jobs})...")
@@ -1133,14 +1190,19 @@ def evaluate_single_timepoint(
             feat_row = {**common_feats, **path_feats}
             X = np.array([[feat_row.get(f, 0.0) for f in FEATURE_NAMES_WITH_PATH]], dtype=np.float64)
             prob = float(clf_dir.predict_proba(X)[0, 1])
-            return d, dev, prob
+            gprobs = {
+                name: float(m.predict_proba(X)[0, 1]) for name, m in gbdt_models.items()
+            }
+            return d, dev, prob, gprobs
 
         rf_dir_results = Parallel(n_jobs=n_jobs, backend="loky")(
             delayed(_rf_dir_predict_one)(d, dev) for d, dev in rf_dir_pairs
         )
-        for d, dev, prob in rf_dir_results:
+        for d, dev, prob, gprobs in rf_dir_results:
             rf_dir_dev_probs.setdefault(d, {})[dev] = prob
             rf_dir_agg[d] = rf_dir_agg.get(d, 0.0) + prob
+            for name, gp in gprobs.items():
+                gbdt_dir_dev_probs.setdefault(name, {}).setdefault(d, {})[dev] = gp
 
         methods["RF_Dir"] = rf_dir_agg
         metrics = compute_metrics(rf_dir_agg, actual, "RF_Dir")
@@ -1199,6 +1261,42 @@ def evaluate_single_timepoint(
                     f"[RF_Dir classification] "
                     + " ".join(f"{k}={v:.3f}" for k, v in clf_m.items())
                 )
+
+        # GBDT系ベースラインの分類評価（GBDT_DIR 指定時のみ）
+        for _gname, _gprobs in gbdt_dir_dev_probs.items():
+            y_true_g: List[int] = []
+            y_prob_g: List[float] = []
+            for d, devs in dir_developers.items():
+                actual_devs = actual_dir_devs.get(d, set())
+                for dev in devs:
+                    y_true_g.append(1 if dev in actual_devs else 0)
+                    y_prob_g.append(_gprobs.get(d, {}).get(dev, 0.5))
+            y_t = np.array(y_true_g)
+            y_p = np.array(y_prob_g)
+            n_p = int(y_t.sum())
+            n_n = len(y_t) - n_p
+            if n_p > 0 and n_n > 0:
+                from sklearn.metrics import roc_auc_score, f1_score, precision_score, recall_score, precision_recall_curve
+                from sklearn.metrics import auc as sk_auc
+                prec_c, rec_c, thr = precision_recall_curve(y_t, y_p)
+                f1s = 2 * (prec_c * rec_c) / (prec_c + rec_c + 1e-10)
+                bi = np.argmax(f1s)
+                bt = thr[bi] if bi < len(thr) else 0.5
+                yp = (y_p >= bt).astype(int)
+                all_results[_gname] = {
+                    "clf_auc_roc": float(roc_auc_score(y_t, y_p)),
+                    "clf_auc_pr": float(sk_auc(rec_c, prec_c)),
+                    "clf_f1": float(f1_score(y_t, yp, zero_division=0)),
+                    "clf_precision": float(precision_score(y_t, yp, zero_division=0)),
+                    "clf_recall": float(recall_score(y_t, yp, zero_division=0)),
+                    "clf_threshold": float(bt),
+                    "clf_n_pairs": float(len(y_t)),
+                    "clf_n_pos": float(n_p), "clf_n_neg": float(n_n),
+                }
+                logger.info(
+                    f"[{_gname} classification] "
+                    + " ".join(f"{k}={v:.3f}" for k, v in all_results[_gname].items())
+                )
     else:
         logger.warning(f"RF_Dir: 学習データ不足 ({len(rf_dir_train_df)} samples)")
 
@@ -1244,6 +1342,7 @@ def evaluate_single_timepoint(
     # 8. (developer, directory) ペアごとの予測結果を CSV 保存
     # rf_dir_dev_probs がスコープ内に存在しない場合は空辞書
     _rf_dir_dev_probs = rf_dir_dev_probs if 'rf_dir_dev_probs' in dir() else {}
+    _gbdt_dir_dev_probs = gbdt_dir_dev_probs if 'gbdt_dir_dev_probs' in dir() else {}
     _irl_dir_probs_cal = irl_dir_probs_cal if 'irl_dir_probs_cal' in dir() else {}
     pair_rows: List[Dict] = []
     for d, devs in dir_developers.items():
@@ -1259,6 +1358,9 @@ def evaluate_single_timepoint(
                 "irl_global_prob": continuation_probs.get(dev, None),
                 "rf_global_prob": rf_probs.get(dev, None),
             }
+            # GBDT系ベースライン列: gbdt_dir_prob / lgbm_dir_prob / xgb_dir_prob
+            for _gname, _gprobs in _gbdt_dir_dev_probs.items():
+                row[f"{_gname.lower()}_prob"] = _gprobs.get(d, {}).get(dev, None)
             pair_rows.append(row)
     pair_df = pd.DataFrame(pair_rows)
     all_results["_pair_predictions"] = pair_df

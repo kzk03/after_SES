@@ -119,6 +119,54 @@ class LSTMBackbone(nn.Module):
         return lstm_out, last_hidden
 
 
+class GRUBackbone(nn.Module):
+    """2層 GRU + LayerNorm（SES査読B-3対応: RNN系列モデル比較用）。
+
+    LSTMBackbone とインタフェース互換（セル状態を持たない点のみ異なる）。
+    """
+
+    def __init__(self, hidden_dim: int = 128, dropout: float = 0.1):
+        super().__init__()
+        self.gru = nn.GRU(
+            hidden_dim, hidden_dim,
+            num_layers=2, batch_first=True, dropout=dropout,
+        )
+        self.norm = nn.LayerNorm(hidden_dim)
+
+    def forward(self, combined: torch.Tensor, lengths: torch.Tensor):
+        """
+        Args:
+            combined: [B, L, hidden_dim]
+            lengths:  [B]
+
+        Returns:
+            gru_out: [B, L, hidden_dim]  全ステップ出力（LayerNorm済み）
+            last_hidden: [B, hidden_dim]  各系列の最終ステップ
+        """
+        B = combined.size(0)
+        lengths_cpu = lengths.cpu()
+        sorted_lengths, sorted_idx = lengths_cpu.sort(descending=True)
+        _, unsort_idx = sorted_idx.sort()
+
+        packed = nn.utils.rnn.pack_padded_sequence(
+            combined[sorted_idx], sorted_lengths,
+            batch_first=True, enforce_sorted=True,
+        )
+        out_packed, _ = self.gru(packed)
+        out_sorted, _ = nn.utils.rnn.pad_packed_sequence(
+            out_packed, batch_first=True, total_length=combined.size(1),
+        )
+        gru_out = out_sorted[unsort_idx]
+        gru_out = self.norm(gru_out)
+
+        # 最終ステップを取得
+        last_hidden = torch.zeros(B, gru_out.size(-1), device=combined.device)
+        for i in range(B):
+            last_hidden[i] = gru_out[i, lengths[i].item() - 1, :]
+
+        return gru_out, last_hidden
+
+
 class TemporalAttention(nn.Module):
     """LSTM 出力に対する Temporal Attention。
 

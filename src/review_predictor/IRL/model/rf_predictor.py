@@ -143,8 +143,10 @@ def extract_features_for_window_directory(
             ]
             if len(dev_eval) == 0:
                 label = 0
+                weak_neg = 1  # 依頼なし＝弱負例（IRL 側の sample_weight=0.5 と同じ区分）
             else:
                 label = 1 if (dev_eval["label"] == 1).any() else 0
+                weak_neg = 0
 
             # パス特徴量（3次元）
             if path_extractor is not None:
@@ -160,13 +162,14 @@ def extract_features_for_window_directory(
 
             row = {**common_feats, **path_feats}
             row["label"] = label
+            row["weak_neg"] = weak_neg
             row["email"] = email
             row["directory"] = directory
             rows.append(row)
 
     if not rows:
         return pd.DataFrame(
-            columns=FEATURE_NAMES_WITH_PATH + ["label", "email", "directory"]
+            columns=FEATURE_NAMES_WITH_PATH + ["label", "weak_neg", "email", "directory"]
         )
 
     result = pd.DataFrame(rows)
