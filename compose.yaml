@@ -1,11 +1,13 @@
 services:
   app:
-    container_name: kazoo-latest
-    image: kazoo-latest
+    container_name: kazuki-cpuset
+    image: kazuki-cpuset
+    # deployブロックの代わりにcpusetを使う（NUMA Node 0 の 0〜19番スレッドに固定する例）
+    cpuset: "0-19" 
     deploy:
       resources:
-        limits:
-          cpus: '20.0'
+        # limits:      <-- cpusetを使う場合は不要（併用も可能ですが基本は片方で十分です）
+        #   cpus: '20.0'
         reservations:
           devices:
             - driver: nvidia
