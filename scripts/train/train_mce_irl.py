@@ -1644,6 +1644,9 @@ def main():
             # 2026-05-21: archetype 補助タスク (model_type=7) 用の設定を残す
             'aux_lambda': float(args.aux_lambda),
             'aux_archetype_csv': str(args.aux_archetype_csv) if args.aux_archetype_csv else None,
+            # 2026-07-14: SES査読B-3 の退化版 (最終有効ステップのみ教師) かどうか。
+            # checkpoint は state_dict のみでフラグが残らないため、ここが唯一の記録。
+            'final_step_only': bool(args.final_step_only),
         }
         metadata_path = output_dir / "model_metadata.json"
         with open(metadata_path, 'w') as f:
