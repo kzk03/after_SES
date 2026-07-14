@@ -58,6 +58,7 @@ from __future__ import annotations
 import json
 import logging
 import math
+import os
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, FrozenSet, Iterable, List, Optional, Set, Union
@@ -95,6 +96,19 @@ _REVIEW_COUNT_LOG_CAP: float = math.log1p(100.0)
 #: hub_score の正規化キャップ。32 main repos での実測 max は ~64 (openstack/nova の
 #  68 dir 中、最も connected な dir で 64 近傍)。 64 で 1.0 に正規化。
 _HUB_SCORE_NORM_CAP: float = 64.0
+
+
+def dir_prefix_enabled(explicit: Optional[bool] = None) -> bool:
+    """
+    ディレクトリ key に project 接頭辞 (`kernel/common:drivers/gpu`) を付けるか。
+
+    OpenStack main32 では dir 名がrepo名 (nova/ 等) から始まるため衝突しないが、
+    AOSP 等では同名 dir (include/linux 等) が複数repoに現れて衝突する。
+    環境変数 DIR_PREFIX_PROJECT=1 で有効化 (既定は無効 = OpenStack 従来挙動)。
+    """
+    if explicit is not None:
+        return explicit
+    return os.environ.get("DIR_PREFIX_PROJECT", "0") == "1"
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -135,6 +149,7 @@ def extract_dirs(file_paths: Iterable[str], depth: int = 2) -> FrozenSet[str]:
 def load_change_dir_map(
     json_path: str | Path,
     depth: int = 2,
+    prefix_project: Optional[bool] = None,
 ) -> Dict[str, FrozenSet[str]]:
     """
     raw_json (data/raw_json/openstack__<proj>.json) を読み込み、
@@ -157,6 +172,7 @@ def load_change_dir_map(
     with open(json_path, "r", encoding="utf-8") as f:
         changes = json.load(f)
 
+    use_prefix = dir_prefix_enabled(prefix_project)
     result: Dict[str, FrozenSet[str]] = {}
     skipped = 0
     for change in changes:
@@ -180,7 +196,10 @@ def load_change_dir_map(
             continue
 
         key = f"{quote(project, safe='')}~{number}"
-        result[key] = extract_dirs(files, depth=depth)
+        dirs = extract_dirs(files, depth=depth)
+        if use_prefix:
+            dirs = frozenset(f"{project}:{d}" for d in dirs)
+        result[key] = dirs
 
     logger.info(
         f"change_dir_map 構築完了: {len(result)} changes "
@@ -192,11 +211,12 @@ def load_change_dir_map(
 def load_change_dir_map_multi(
     json_paths: list[str | Path],
     depth: int = 2,
+    prefix_project: Optional[bool] = None,
 ) -> Dict[str, FrozenSet[str]]:
     """複数の raw JSON ファイルから change_dir_map を統合構築する。"""
     merged: Dict[str, FrozenSet[str]] = {}
     for jp in json_paths:
-        partial = load_change_dir_map(jp, depth=depth)
+        partial = load_change_dir_map(jp, depth=depth, prefix_project=prefix_project)
         merged.update(partial)
         logger.info(f"  {Path(jp).name}: {len(partial)} changes")
     logger.info(
@@ -284,6 +304,8 @@ class PathFeatureExtractor:
         # ── co-change graph 由来の特徴量用キャッシュ ──
         # キーは directory 文字列 (例: "nova/compute")。
         # 32 main repos では directory 名が project namespace 先頭にあるため衝突なし。
+        # AOSP 等の衝突するホストでは DIR_PREFIX_PROJECT=1 で "project:dir" キーになる
+        # (dirs 列・hub_scores・cochange_neighbors すべて同じ接頭辞規則で揃う)。
         self.hub_score_by_dir: Dict[str, float] = {}
         self.neighbors_by_dir: Dict[str, Set[str]] = {}
         if hub_scores_path is not None:
@@ -297,10 +319,13 @@ class PathFeatureExtractor:
             logger.warning(f"hub_scores CSV not found: {path} (path_hub_score=0.0)")
             return
         hs_df = pd.read_csv(path)
-        for d, hs in zip(hs_df["directory"], hs_df["hub_score"]):
-            d = str(d)
+        use_prefix = dir_prefix_enabled() and "project" in hs_df.columns
+        projects = hs_df["project"] if use_prefix else [None] * len(hs_df)
+        for proj, d, hs in zip(projects, hs_df["directory"], hs_df["hub_score"]):
+            d = f"{proj}:{d}" if use_prefix else str(d)
             hs = float(hs)
-            # 同 directory 名が複数 project に出現したら max を取る (実際は起きないはず)
+            # 同 directory 名が複数 project に出現したら max を取る
+            # (OpenStack main32 では起きない。AOSP 等は DIR_PREFIX_PROJECT=1 で回避)
             if d in self.hub_score_by_dir:
                 self.hub_score_by_dir[d] = max(self.hub_score_by_dir[d], hs)
             else:
@@ -315,6 +340,11 @@ class PathFeatureExtractor:
             )
             return
         cn_df = pd.read_csv(path)
+        if dir_prefix_enabled() and "project" in cn_df.columns:
+            # neighbor は同一 project 内の共変更ペアなので同じ接頭辞を付ける
+            cn_df = cn_df.copy()
+            cn_df["directory"] = cn_df["project"].astype(str) + ":" + cn_df["directory"].astype(str)
+            cn_df["neighbor"] = cn_df["project"].astype(str) + ":" + cn_df["neighbor"].astype(str)
         for d, group in cn_df.groupby("directory"):
             self.neighbors_by_dir[str(d)] = set(group["neighbor"].astype(str).tolist())
         logger.info(
