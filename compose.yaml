@@ -1,18 +1,18 @@
 services:
   app:
-    container_name: kazuki-cpuset
-    image: kazuki-cpuset
+    container_name: kazuki-1
+    image: kazuki-1
     # deployブロックの代わりにcpusetを使う（NUMA Node 0 の 0〜19番スレッドに固定する例）
-    cpuset: "0-19" 
-    deploy:
-      resources:
-        # limits:      <-- cpusetを使う場合は不要（併用も可能ですが基本は片方で十分です）
-        #   cpus: '20.0'
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+    # cpuset: "0-19" 
+    # deploy:
+    #   resources:
+    #     # limits:      <-- cpusetを使う場合は不要（併用も可能ですが基本は片方で十分です）
+    #     #   cpus: '20.0'
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
     build:
       context: .
       args:
