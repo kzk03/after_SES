@@ -340,11 +340,34 @@ class PathFeatureExtractor:
             )
             return
         cn_df = pd.read_csv(path)
+        # COCHANGE_MIN_WEIGHT: weight>=N のエッジのみ残す(デフォルト=1=全件)。
+        # AOSP等の大規模グラフ(4.6M edges)では2以上に設定すると worker メモリ圧迫を回避できる。
+        min_weight = int(os.environ.get("COCHANGE_MIN_WEIGHT", "1"))
+        if "weight" in cn_df.columns and min_weight > 1:
+            before = len(cn_df)
+            cn_df = cn_df[cn_df["weight"] >= min_weight]
+            logger.info(
+                f"cochange_neighbors filtered by weight>={min_weight}: "
+                f"{len(cn_df):,}/{before:,} edges retained"
+            )
         if dir_prefix_enabled() and "project" in cn_df.columns:
             # neighbor は同一 project 内の共変更ペアなので同じ接頭辞を付ける
             cn_df = cn_df.copy()
             cn_df["directory"] = cn_df["project"].astype(str) + ":" + cn_df["directory"].astype(str)
             cn_df["neighbor"] = cn_df["project"].astype(str) + ":" + cn_df["neighbor"].astype(str)
+        # COCHANGE_TOPK: directory ごとに weight 上位K近傍のみ残す(デフォルト=0=無効)。
+        # AOSP等はハブ dir が近傍1000超を持ち少数 dir にエッジが集中するため、
+        # top-K キャップは min_weight 閾値より少ないエッジ削減で大きくメモリを落とせる
+        # (worker への pickle コピー削減)。0 は従来挙動(全近傍保持)。
+        topk = int(os.environ.get("COCHANGE_TOPK", "0"))
+        if topk > 0 and "weight" in cn_df.columns:
+            before = len(cn_df)
+            cn_df = cn_df.sort_values("weight", ascending=False)
+            cn_df = cn_df.groupby("directory", sort=False).head(topk)
+            logger.info(
+                f"cochange_neighbors capped to top-{topk} neighbors/dir: "
+                f"{len(cn_df):,}/{before:,} edges retained"
+            )
         for d, group in cn_df.groupby("directory"):
             self.neighbors_by_dir[str(d)] = set(group["neighbor"].astype(str).tolist())
         logger.info(

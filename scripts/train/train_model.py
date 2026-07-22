@@ -73,6 +73,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import random
 import sys
 from pathlib import Path
@@ -783,6 +784,16 @@ def extract_directory_level_trajectories(
     active_reviewers = history_df[reviewer_col].unique()
     logger.info(f"特徴量計算期間内のレビュアー数: {len(active_reviewers)}")
 
+    # MIN_REVIEWER_CHANGES: 訓練期間内の change 数がこれ未満のレビュアーをスキップ。
+    # AOSP など大規模データでタスク数を削減しメモリ・時間を節約する。デフォルト=1(全件)。
+    min_reviewer_changes = int(os.environ.get("MIN_REVIEWER_CHANGES", "1"))
+    if min_reviewer_changes > 1:
+        counts = history_df[reviewer_col].value_counts()
+        active_reviewers = counts[counts >= min_reviewer_changes].index.to_numpy()
+        logger.info(
+            f"MIN_REVIEWER_CHANGES={min_reviewer_changes} フィルタ後: {len(active_reviewers)} レビュアー"
+        )
+
     # レビュアー単位に事前分割 + 月次カウントを事前計算する。
     # 全体 df/history_df をタスクごとにそのまま渡すと、各ワーカーで毎回
     # 全表スキャン + 丸ごと再pickleが発生し、48並列時にメモリ圧迫で
@@ -800,8 +811,12 @@ def extract_directory_level_trajectories(
                 df[(df[date_col] >= history_start) & (df[date_col] < month_end)]
             )
 
-    # レビュアー単位で並列処理
-    batch_results = Parallel(n_jobs=n_jobs, backend="loky", verbose=10)(
+    # threading バックエンド: スレッド間でメモリを共有するため
+    # PathFeatureExtractor(3.3M edges)のpickleコピーが不要になり、
+    # 入力・出力両方のMemoryErrorを回避できる。
+    # loky(プロセス)と異なりGILが残るが、pandas/numpyはGILを解放するため
+    # 実用上の並列効果は得られる。共有オブジェクトは全てread-onlyなので安全。
+    batch_results = Parallel(n_jobs=n_jobs, backend="threading", verbose=10)(
         delayed(_process_one_reviewer)(
             reviewer,
             reviewer_requests_by_id.get(reviewer, empty_df),

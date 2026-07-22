@@ -86,6 +86,12 @@ TRAIN_WINDOWS=("0-3" "3-6" "6-9" "9-12")
 TRAIN_FS=(0 3 6 9)
 TRAIN_FE=(3 6 9 12)
 
+# [並行実行] 処理する窓インデックスの部分集合(スペース区切り)。複数サーバで
+# 学習窓を分担する用途 (例: brain-1 で WINDOW_IDX="0 1"、brain-2 で "2 3")。
+# 抽出/学習/評価の3ループすべてがこの部分集合のみを処理する。既定は全窓。
+# 評価は ti ごとに ei>=ti を回す三角構造なので、窓集合の分割で全パターンを分担できる。
+WINDOW_IDX="${WINDOW_IDX:-0 1 2 3}"
+
 # ── [SES 追加] horizon別「動的学習開始日」(②: 特徴量計測期間を全horizonで揃える) ──
 # 後方クリップ (month_end+FE<=train_end) で長horizonほど最新month_endが早まり、
 # 月次ステップ数が 0-3m=33 .. 9-12m=24 とズレる。等化方式は2通り:
@@ -139,7 +145,7 @@ fi
 EVAL_DIR_HISTORY_MONTHS="${EVAL_DIR_HISTORY_MONTHS:-24}"
 # [SES] device: server=cuda(既定), local=mps/cpu
 DEVICE="${DEVICE:-cuda}"
-echo "[SES] DYNAMIC_START=$DYNAMIC_START LABEL_TAIL_MONTHS=${LABEL_TAIL_MONTHS:-none} TRAIN_STARTS=(${TRAIN_STARTS[*]}) EVAL_DIR_HISTORY_MONTHS=$EVAL_DIR_HISTORY_MONTHS DEVICE=$DEVICE"
+echo "[SES] DYNAMIC_START=$DYNAMIC_START LABEL_TAIL_MONTHS=${LABEL_TAIL_MONTHS:-none} TRAIN_STARTS=(${TRAIN_STARTS[*]}) EVAL_DIR_HISTORY_MONTHS=$EVAL_DIR_HISTORY_MONTHS DEVICE=$DEVICE WINDOW_IDX=($WINDOW_IDX)"
 
 # [align系列] extract に渡す tail 引数と、キャッシュ衝突回避用サフィックス
 LABEL_TAIL_ARGS=()
@@ -231,7 +237,7 @@ echo "============================================================"
 # extract_mce_trajectories.py は出力先がすでに存在すればスキップする。
 # 必ず CACHE_DIR (outputs/mce_irl_trajectory_cache) 配下に書き、
 # Focal-supervised の outputs/trajectory_cache/ とは混ざらないようにする。
-for i in 0 1 2 3; do
+for i in $WINDOW_IDX; do
     win="${TRAIN_WINDOWS[$i]}"
     fs="${TRAIN_FS[$i]}"
     fe="${TRAIN_FE[$i]}"
@@ -248,7 +254,7 @@ for i in 0 1 2 3; do
             --train-end "$TRAIN_END" \
             --future-window-start "$fs" \
             --future-window-end "$fe" \
-            --n-jobs -1 \
+            --n-jobs "${EXTRACT_N_JOBS:--1}" \
             --output "$cache_path" \
             "${LABEL_TAIL_ARGS[@]}" \
             "${EXTRA_PATH_FEAT_ARGS[@]}"
@@ -256,8 +262,8 @@ for i in 0 1 2 3; do
     fi
 done
 
-# ── 4訓練窓を逐次訓練（GPU 共有のため） ──
-for i in 0 1 2 3; do
+# ── 訓練窓を逐次訓練（GPU 共有のため） ──
+for i in $WINDOW_IDX; do
     win="${TRAIN_WINDOWS[$i]}"
     fs="${TRAIN_FS[$i]}"
     fe="${TRAIN_FE[$i]}"
@@ -302,7 +308,7 @@ done
 
 # ── 評価: 最大 EVAL_PARALLEL 個ずつ並列実行 ──
 running=0
-for ti in 0 1 2 3; do
+for ti in $WINDOW_IDX; do
     train_win="${TRAIN_WINDOWS[$ti]}"
     model_path="$OUTBASE/$VNAME/train_${train_win}m/mce_irl_model.pt"
 
