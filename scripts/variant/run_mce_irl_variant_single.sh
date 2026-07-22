@@ -34,12 +34,12 @@ OUTBASE="${3:-outputs/mce_irl_variant_comparison_server}"
 GPU_ID="${4:-0}"
 SAVE_IMPORTANCE="${5:-false}"
 
-# MCE-IRL は variant 0/1/2/3 対応 (3 = LSTM Two-tower, 2026-05-15 追加)。
+# MCE-IRL は variant 0/1/2/3/8 対応 (3 = LSTM Two-tower, 8 = GRU 2026-07-13 追加)。
 # multi-task ヘッド (variant 4/5) は持たない。
 case "$VTYPE" in
-    0|1|2|3) ;;
+    0|1|2|3|8) ;;
     *)
-        echo "ERROR: MCE-IRL は variant 0/1/2/3 のみ対応 (指定: $VTYPE)" >&2
+        echo "ERROR: MCE-IRL は variant 0/1/2/3/8 のみ対応 (指定: $VTYPE)" >&2
         exit 1
         ;;
 esac
@@ -76,10 +76,21 @@ TRAIN_END="${TRAIN_END:-2022-01-01}"
 EVAL_CUTOFF="${EVAL_CUTOFF:-2023-01-01}"
 EPOCHS="${EPOCHS:-150}"
 PATIENCE="${PATIENCE:-15}"
+# [SES査読対応] FINAL_STEP_ONLY=1: 損失を最終有効ステップのみに限定（退化版LSTM分類器）。
+# VNAME は別名（例: lstm_final_only）を推奨。軌跡キャッシュは通常IRLと共有される。
+FINAL_STEP_ONLY="${FINAL_STEP_ONLY:-0}"
+final_step_args=()
+[ "$FINAL_STEP_ONLY" = "1" ] && final_step_args=(--final-step-only)
 
 TRAIN_WINDOWS=("0-3" "3-6" "6-9" "9-12")
 TRAIN_FS=(0 3 6 9)
 TRAIN_FE=(3 6 9 12)
+
+# [並行実行] 処理する窓インデックスの部分集合(スペース区切り)。複数サーバで
+# 学習窓を分担する用途 (例: brain-1 で WINDOW_IDX="0 1"、brain-2 で "2 3")。
+# 抽出/学習/評価の3ループすべてがこの部分集合のみを処理する。既定は全窓。
+# 評価は ti ごとに ei>=ti を回す三角構造なので、窓集合の分割で全パターンを分担できる。
+WINDOW_IDX="${WINDOW_IDX:-0 1 2 3}"
 
 # ── [SES 追加] horizon別「動的学習開始日」(②: 特徴量計測期間を全horizonで揃える) ──
 # 後方クリップ (month_end+FE<=train_end) で長horizonほど最新month_endが早まり、
@@ -134,7 +145,7 @@ fi
 EVAL_DIR_HISTORY_MONTHS="${EVAL_DIR_HISTORY_MONTHS:-24}"
 # [SES] device: server=cuda(既定), local=mps/cpu
 DEVICE="${DEVICE:-cuda}"
-echo "[SES] DYNAMIC_START=$DYNAMIC_START LABEL_TAIL_MONTHS=${LABEL_TAIL_MONTHS:-none} TRAIN_STARTS=(${TRAIN_STARTS[*]}) EVAL_DIR_HISTORY_MONTHS=$EVAL_DIR_HISTORY_MONTHS DEVICE=$DEVICE"
+echo "[SES] DYNAMIC_START=$DYNAMIC_START LABEL_TAIL_MONTHS=${LABEL_TAIL_MONTHS:-none} TRAIN_STARTS=(${TRAIN_STARTS[*]}) EVAL_DIR_HISTORY_MONTHS=$EVAL_DIR_HISTORY_MONTHS DEVICE=$DEVICE WINDOW_IDX=($WINDOW_IDX)"
 
 # [align系列] extract に渡す tail 引数と、キャッシュ衝突回避用サフィックス
 LABEL_TAIL_ARGS=()
@@ -226,7 +237,7 @@ echo "============================================================"
 # extract_mce_trajectories.py は出力先がすでに存在すればスキップする。
 # 必ず CACHE_DIR (outputs/mce_irl_trajectory_cache) 配下に書き、
 # Focal-supervised の outputs/trajectory_cache/ とは混ざらないようにする。
-for i in 0 1 2 3; do
+for i in $WINDOW_IDX; do
     win="${TRAIN_WINDOWS[$i]}"
     fs="${TRAIN_FS[$i]}"
     fe="${TRAIN_FE[$i]}"
@@ -243,7 +254,7 @@ for i in 0 1 2 3; do
             --train-end "$TRAIN_END" \
             --future-window-start "$fs" \
             --future-window-end "$fe" \
-            --n-jobs -1 \
+            --n-jobs "${EXTRACT_N_JOBS:--1}" \
             --output "$cache_path" \
             "${LABEL_TAIL_ARGS[@]}" \
             "${EXTRA_PATH_FEAT_ARGS[@]}"
@@ -251,8 +262,8 @@ for i in 0 1 2 3; do
     fi
 done
 
-# ── 4訓練窓を逐次訓練（GPU 共有のため） ──
-for i in 0 1 2 3; do
+# ── 訓練窓を逐次訓練（GPU 共有のため） ──
+for i in $WINDOW_IDX; do
     win="${TRAIN_WINDOWS[$i]}"
     fs="${TRAIN_FS[$i]}"
     fe="${TRAIN_FE[$i]}"
@@ -289,14 +300,15 @@ for i in 0 1 2 3; do
             --trajectories-cache "$CACHE_DIR/mce_traj_${win}_ts${ts}${CACHE_SUFFIX}.pkl" \
             --output "$model_dir" \
             --skip-threshold \
-            "${warm_args[@]}"
+            "${warm_args[@]}" \
+            "${final_step_args[@]}"
         echo "[MCE-IRL $VNAME train_${win}m] 学習完了"
     fi
 done
 
 # ── 評価: 最大 EVAL_PARALLEL 個ずつ並列実行 ──
 running=0
-for ti in 0 1 2 3; do
+for ti in $WINDOW_IDX; do
     train_win="${TRAIN_WINDOWS[$ti]}"
     model_path="$OUTBASE/$VNAME/train_${train_win}m/mce_irl_model.pt"
 

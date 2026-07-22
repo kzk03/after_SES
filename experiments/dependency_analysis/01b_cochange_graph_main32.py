@@ -53,10 +53,17 @@ def file_to_dir_2(fpath: str) -> str | None:
 def build_cochange_graphs(raw_json_paths: list[Path]) -> dict:
     results = {}
     for jp in raw_json_paths:
-        project_full = jp.stem.replace("__", "/")  # "openstack__nova" -> "openstack/nova"
-        print(f"[cochange] {project_full} ...", flush=True)
         with open(jp) as f:
             changes = json.load(f)
+        # project名はファイル名でなくchange本体のprojectフィールドから取る。
+        # 収集ファイル名の接頭辞(aosp__等)に依存させず、DIR_PREFIX_PROJECT=1 の
+        # dirs key (change['project']由来) と必ず一致させるため。
+        # main32はファイル名と中身が一致しているので挙動不変。
+        project_full = next(
+            (c["project"] for c in changes if c.get("project")),
+            jp.stem.replace("__", "/"),  # フォールバック: "openstack__nova" -> "openstack/nova"
+        )
+        print(f"[cochange] {project_full} ...", flush=True)
 
         pair_counts: Counter = Counter()
         neighbors: dict[str, set[str]] = defaultdict(set)

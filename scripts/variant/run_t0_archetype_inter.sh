@@ -23,7 +23,7 @@ shift $(( $# >= 2 ? 2 : 1 ))
 K_GRID=("$@")
 [ ${#K_GRID[@]} -eq 0 ] && K_GRID=(2 3 4 5 6)
 
-SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep_inter}"
+SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep_inter_fs45}"
 T0TAG="${T0//-/}"                       # 2022-10-01 → 20221001
 OUT_DIR="$SWEEP_ROOT/$T0TAG/archetype"
 

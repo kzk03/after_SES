@@ -37,7 +37,9 @@ FEATURE_STEPS="${FEATURE_STEPS:-24}"    # align時の feature 月次ステップ
 
 VNAME="lstm_baseline"
 if [ "$ALIGN" = "1" ]; then
-    SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep_align}"
+    # 出力は step 数を明示した _fs<steps> に分離（fs24=旧 outputs/t0_sweep_align を
+    # 2026-07-02 にリネーム。系列間の上書き事故防止）。
+    SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep_align_fs${FEATURE_STEPS}}"
 else
     SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep}"
 fi

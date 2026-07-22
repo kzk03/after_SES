@@ -2,9 +2,9 @@
 """
 MCE-IRL 用の軌跡抽出スクリプト (joblib 並列化対応)
 
-extract_trajectories.py とほぼ同じ軌跡を出力するが、MCE-IRL 用に二値 action 列
-(step_actions = step_labels の 0/1 化) を併せて pickle にキャッシュする。
-キャッシュ形式は MCEIRLSystem._precompute_trajectories と互換。
+MCE-IRL 用に二値 action 列 (step_actions = step_labels の 0/1 化) を
+併せて pickle にキャッシュする。キャッシュ形式は
+MCEIRLSystem._precompute_trajectories と互換。
 
 使い方:
     uv run python scripts/train/extract_mce_trajectories.py \

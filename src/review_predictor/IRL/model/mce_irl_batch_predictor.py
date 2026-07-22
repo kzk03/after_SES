@@ -1,11 +1,11 @@
 """
 MCE-IRL モデルによるバッチ continuation_prob 推論
 
-batch_predictor.py の MCE-IRL 版。学習済みの MCEIRLSystem (mce_irl_model.pt)
-をロードして、月次シーケンスから π(a=1|s) を継続確率として返す。
-評価スクリプト eval_mce_irl_path_prediction.py から利用する。
+学習済みの MCEIRLSystem (mce_irl_model.pt) をロードして、月次シーケンスから
+π(a=1|s) を継続確率として返す。評価スクリプト eval_mce_irl_path_prediction.py
+から利用する。
 
-月次シーケンス構築ロジックは train_model.py / batch_predictor.py と同一。
+月次シーケンス構築ロジックは train_model.py と同一(重複箇所、要リファクタ)。
 """
 
 from __future__ import annotations

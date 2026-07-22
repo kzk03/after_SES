@@ -49,6 +49,7 @@ from review_predictor.IRL.features.common_features import (
 from review_predictor.IRL.model.irl_predictor_v2 import RetentionIRLSystem
 from review_predictor.IRL.model.network_variants import (
     BaseIRLNetwork,
+    GRUBackbone,
     LSTMBackbone,
     TemporalAttention,
     TransformerBackbone,
@@ -123,6 +124,49 @@ class MCEIRLNetworkLSTM(_MCEIRLBaseNetwork):
         lstm_out, _ = self.backbone(combined, lengths)
         B, L, D = lstm_out.shape
         flat = lstm_out.reshape(-1, D)
+        return self.reward_predictor(flat).view(B, L, self.num_actions)
+
+
+class MCEIRLNetworkGRU(_MCEIRLBaseNetwork):
+    """GRU ベースの MCE-IRL ネットワーク (model_type=8, 2026-07-13 追加)。
+
+    SES査読B-3対応: 代表的な時系列モデル (RNN) との比較用。
+    MCEIRLNetworkLSTM のバックボーンを GRU に差し替えただけの構成。
+    """
+
+    def __init__(
+        self,
+        state_dim: int,
+        action_dim: int,
+        hidden_dim: int = 128,
+        dropout: float = 0.1,
+        num_actions: int = 2,
+    ):
+        super().__init__(state_dim, action_dim, hidden_dim, dropout, num_actions)
+        self.backbone = GRUBackbone(hidden_dim, dropout)
+
+    def forward(
+        self,
+        state: torch.Tensor,
+        action_features: torch.Tensor,
+        lengths: torch.Tensor,
+    ) -> torch.Tensor:
+        """最終ステップの reward logits [B, num_actions] を返す。"""
+        combined = self._encode(state, action_features)
+        _, last_hidden = self.backbone(combined, lengths)
+        return self.reward_predictor(last_hidden)
+
+    def forward_all_steps(
+        self,
+        state: torch.Tensor,
+        action_features: torch.Tensor,
+        lengths: torch.Tensor,
+    ) -> torch.Tensor:
+        """全ステップの reward logits [B, L, num_actions] を返す。"""
+        combined = self._encode(state, action_features)
+        gru_out, _ = self.backbone(combined, lengths)
+        B, L, D = gru_out.shape
+        flat = gru_out.reshape(-1, D)
         return self.reward_predictor(flat).view(B, L, self.num_actions)
 
 
@@ -472,6 +516,7 @@ _MCE_REGISTRY = {
     3: MCEIRLNetworkLSTMTwoTower,  # 2026-05-15 追加 (state-only LSTM + path bypass)
     6: MCEIRLNetworkLSTMHybrid,    # 2026-05-20 追加 (LSTM + Snapshot MLP Hybrid)
     7: MCEIRLNetworkArchetypeAux,  # 2026-05-21 追加 (LSTM + archetype aux classifier)
+    8: MCEIRLNetworkGRU,           # 2026-07-13 追加 (GRU, SES査読B-3のRNN比較用)
 }
 
 
@@ -487,7 +532,7 @@ def create_mce_network(
     if variant not in _MCE_REGISTRY:
         raise ValueError(
             f"MCE-IRL ではバリアント {variant} は未対応 "
-            f"(0/1/2/3/6/7 のみ)"
+            f"(0/1/2/3/6/7/8 のみ)"
         )
     if variant == 3:
         return _MCE_REGISTRY[variant](
@@ -566,13 +611,18 @@ class MCEIRLSystem(RetentionIRLSystem):
         # 0.0 ならば補助損失を加えない (V7 でも主タスクのみ)。
         self.aux_lambda = float(config.get("aux_lambda", 0.0))
 
+        # 2026-07-12: 退化版LSTM分類器アブレーション（SES査読対応）。
+        # True のとき損失を最終有効ステップのみに限定し、全ステップの行動整合を外す。
+        self.final_step_only = bool(config.get("final_step_only", False))
+
         logger.info(
-            "MCE-IRL システムを初期化 (state_dim=%d, action_dim=%d, model_type=%d, path_dim=%d, aux_lambda=%.3f)",
+            "MCE-IRL システムを初期化 (state_dim=%d, action_dim=%d, model_type=%d, path_dim=%d, aux_lambda=%.3f, final_step_only=%s)",
             self.state_dim,
             self.action_dim,
             self.model_type,
             self.path_dim,
             self.aux_lambda,
+            self.final_step_only,
         )
 
     # -----------------------------------------------------------------
@@ -998,6 +1048,11 @@ class MCEIRLSystem(RetentionIRLSystem):
         actions = batch["actions"].long()  # [B, L]
         sample_w = batch["sample_weights"]  # [B, L]
         mask = batch["mask"]  # [B, L]
+        if self.final_step_only:
+            # 退化版LSTM分類器: 最終有効ステップのみを教師にする
+            lengths = batch["lengths"].long()
+            mask = torch.zeros_like(mask)
+            mask[torch.arange(mask.size(0), device=mask.device), lengths - 1] = 1.0
 
         B, L, A = logits.shape
         flat_logits = logits.reshape(B * L, A)
