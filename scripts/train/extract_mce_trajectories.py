@@ -103,6 +103,14 @@ def main():
         "reviewer_email": "email",
         "request_time": "timestamp",
     })
+    # path_extractor は email/timestamp/dirs/label/owner_email しか参照しない。
+    # loky は path_extractor(=この df)を worker ごとに丸ごと pickle コピーするため、
+    # subject 等の巨大テキスト列を落として 1コピーあたりのメモリを削減する
+    # (AOSP 大規模データで n_jobs×フルDF コピーが OOM 原因になっていた)。
+    _pf_cols = [c for c in ["email", "timestamp", "dirs", "label", "owner_email"]
+                if c in df_for_path.columns]
+    df_for_path = df_for_path[_pf_cols].copy()
+    logger.info(f"path_extractor 用 df を {_pf_cols} に絞り込み (メモリ削減)")
     path_extractor = PathFeatureExtractor(
         df_for_path,
         window_days=180,
@@ -146,9 +154,23 @@ def main():
         )
 
     # 保存
+    # pickle.dump は trajectories(巨大)を直列化する際に一時バッファを確保するため、
+    # ここでもう不要な df / dir_map / path_extractor を解放してから書き出す。
+    # (これらを抱えたまま dump すると親プロセスが OOM で落ちる。抽出完走後に
+    #  この保存だけ失敗して 200分超の計算を丸ごと失う事故を防ぐ。)
+    import gc
+    try:
+        del df, df_for_path, path_extractor, cdm
+    except NameError:
+        pass
+    gc.collect()
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "wb") as f:
-        pickle.dump(trajectories, f)
+    # 途中失敗で壊れた pkl を残さないよう一時ファイルに書いてから rename する。
+    tmp_path = output_path.with_suffix(output_path.suffix + ".tmp")
+    with open(tmp_path, "wb") as f:
+        pickle.dump(trajectories, f, protocol=pickle.HIGHEST_PROTOCOL)
+    tmp_path.replace(output_path)
     logger.info(
         f"保存完了 [MCE-IRL]: {output_path} ({len(trajectories)} 軌跡)"
     )
