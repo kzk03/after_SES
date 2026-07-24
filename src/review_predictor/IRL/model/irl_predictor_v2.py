@@ -268,7 +268,15 @@ class RetentionIRLSystem:
         # Focal Loss のパラメータ（デフォルト値、調整: gamma 2.0 → 1.0）
         self.focal_alpha = 0.25  # クラス重み（ポジティブクラスの重み）
         self.focal_gamma = 1.0   # フォーカスパラメータ（学習安定化のため削減）
-        
+
+        # extract_features_tensor() の common 部分 (path/profile/event を除く
+        # STATE_FEATURES + ACTION_FEATURES) のメモ化キャッシュ。呼び出し側
+        # (predict_developer_directories 等) は同じ (email, context_date) を
+        # directory 数分 (平均 10.7 回) 繰り返し呼ぶが、この部分は directory に
+        # 依存しないため毎回 _history_to_df + extract_common_features を
+        # 再計算するのは無駄 (評価が 1 人あたり数十秒〜数分かかる主因だった)。
+        self._common_feat_cache: Dict[tuple, Optional[Tuple[List[float], List[float]]]] = {}
+
         logger.info("継続予測IRLシステムを初期化しました")
     
     def set_focal_loss_params(self, alpha: float, gamma: float):
@@ -447,31 +455,41 @@ class RetentionIRLSystem:
         Returns:
             (state_tensor [state_dim], action_tensor [action_dim])
         """
-        df = self._history_to_df(email, activity_history)
+        # common (state/action) 部分は directory に依存しないので
+        # (email, context_date, total_project_reviews) でメモ化する。
+        cache_key = (email, context_date, total_project_reviews)
+        if cache_key in self._common_feat_cache:
+            cached = self._common_feat_cache[cache_key]
+        else:
+            df = self._history_to_df(email, activity_history)
+            if len(df) == 0:
+                cached = None
+            else:
+                feature_start = df['timestamp'].min()
+                feature_end = pd.Timestamp(context_date)
+                try:
+                    features = extract_common_features(
+                        df, email, feature_start, feature_end,
+                        normalize=True,
+                        total_project_reviews=total_project_reviews,
+                    )
+                    cached = (
+                        [float(features.get(f, 0.0)) for f in STATE_FEATURES],
+                        [float(features.get(f, 0.0)) for f in ACTION_FEATURES],
+                    )
+                except Exception as e:
+                    logger.warning(f"common_features 計算エラー ({email}): {e}")
+                    cached = None
+            self._common_feat_cache[cache_key] = cached
 
-        if len(df) == 0:
+        if cached is None:
             return (
                 torch.zeros(self.state_dim, device=self.device),
                 torch.zeros(self.action_dim, device=self.device),
             )
+        state_common, action_vec = cached
 
-        feature_start = df['timestamp'].min()
-        feature_end = pd.Timestamp(context_date)
-
-        try:
-            features = extract_common_features(
-                df, email, feature_start, feature_end,
-                normalize=True,
-                total_project_reviews=total_project_reviews,
-            )
-        except Exception as e:
-            logger.warning(f"common_features 計算エラー ({email}): {e}")
-            return (
-                torch.zeros(self.state_dim, device=self.device),
-                torch.zeros(self.action_dim, device=self.device),
-            )
-
-        state_vec = [float(features.get(f, 0.0)) for f in STATE_FEATURES]
+        state_vec = list(state_common)
         if path_features_vec is not None:
             state_vec.extend(float(v) for v in path_features_vec)
         if profile_features_vec is not None:
@@ -481,7 +499,6 @@ class RetentionIRLSystem:
                 'event_lines_changed', 'event_response_time',
                 'event_accepted', 'time_since_prev_event',
             ])
-        action_vec = [float(features.get(f, 0.0)) for f in ACTION_FEATURES]
 
         return (
             torch.tensor(state_vec, dtype=torch.float32, device=self.device),
