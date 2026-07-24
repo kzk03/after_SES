@@ -1,18 +1,18 @@
 # Fdb version 4
-["bibtex SES"] 1784787230.44912 "SES.aux" "SES.bbl" "SES" 1784787232.30984 0
+["bibtex ses_main"] 1784869113.87979 "ses_main.aux" "ses_main.bbl" "ses_main" 1784869116.98117 0
   "./Hashimoto.bib" 1784784376.02624 10867 2451fba4aab4844f911f4e2135f7ee27 ""
   "./ipsjunsrt.bst" 1784782650.43938 22227 cbb2032b95dfa40d8ba59fc12567e35c ""
-  "SES.aux" 1784787231.45814 9502 7ac6c1373676621827735e47305ccf3b "latex"
+  "ses_main.aux" 1784869115.64528 11855 fdf013bc50574a231e46e08d29f1b182 "latex"
   (generated)
-  "SES.bbl"
-  "SES.blg"
+  "ses_main.bbl"
+  "ses_main.blg"
   (rewritten before read)
-["dvipdf"] 1784787231.8872 "SES.dvi" "SES.pdf" "SES" 1784787232.31111 0
-  "SES.dvi" 1784787231.45956 85120 d46dde0fcda98e5fb0388bbc8fe99715 "latex"
+["dvipdf"] 1784869116.41827 "ses_main.dvi" "ses_main.pdf" "ses_main" 1784869116.98287 0
+  "ses_main.dvi" 1784869115.64883 123552 1c994f3bfa1386ac94dd60e8857eeb9f "latex"
   (generated)
-  "SES.pdf"
+  "ses_main.pdf"
   (rewritten before read)
-["latex"] 1784787230.57531 "SES.tex" "SES.dvi" "SES" 1784787232.30992 0
+["latex"] 1784869114.02424 "ses_main.tex" "ses_main.dvi" "ses_main" 1784869116.98128 0
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/ptex-fonts/jis/jis.tfm" 1463434352 468 53f854284f6afa6c36aaa2d1090ecc12 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/ptex-fonts/jis/jisg.tfm" 1463434352 468 53f854284f6afa6c36aaa2d1090ecc12 ""
@@ -120,9 +120,6 @@
   "/usr/local/texlive/2025/texmf-dist/web2c/texmf.cnf" 1739380943 42148 61becc7c670cd061bb319c643c27fdd4 ""
   "/usr/local/texlive/2025/texmf-var/web2c/euptex/platex.fmt" 1769490394 3336949 37763e6b97db84795da04a87d334b058 ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
-  "SES.aux" 1784787231.45814 9502 7ac6c1373676621827735e47305ccf3b "latex"
-  "SES.bbl" 1784787230.57231 4522 8c8fe34dd6db57bfe6be5c25119d1ef4 "bibtex SES"
-  "SES.tex" 1784787221.57241 91740 8f9fbddad5db1956e5b62763e610f2e0 ""
   "fig/fig_dev_archetype_profile.pdf" 1781110550 28797 ec52b80284c60941dce9843602051ae9 ""
   "fig/fig_dev_elbow.pdf" 1781110550 9700 5a73eb8dbac9148368f7f12c76dc8757 ""
   "fig/fig_label3.pdf" 1781110550 40637 54fbc730fb6256ca7214925af9b54049 ""
@@ -131,8 +128,11 @@
   "fig/fig_pair_elbow.pdf" 1781110550 10825 680c19eeb0ecda5924f6067afea3c867 ""
   "ipsj.cls" 1781110550 136432 c8614cd863619c761532ceee28629c08 ""
   "ses.sty" 1781110550 6537 ebd864232a34089475b64c64b0ee41c8 ""
+  "ses_main.aux" 1784869115.64528 11855 fdf013bc50574a231e46e08d29f1b182 "latex"
+  "ses_main.bbl" 1784869114.0208 4522 8c8fe34dd6db57bfe6be5c25119d1ef4 "bibtex ses_main"
+  "ses_main.tex" 1784869104.53992 95803 66c4bc3fb26d2f130c281522ecab0eb7 ""
   (generated)
-  "SES.aux"
-  "SES.dvi"
-  "SES.log"
+  "ses_main.aux"
+  "ses_main.dvi"
+  "ses_main.log"
   (rewritten before read)

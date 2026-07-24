@@ -4,8 +4,8 @@ INPUT /usr/local/texlive/2025/texmf-dist/web2c/texmf.cnf
 INPUT /usr/local/texlive/2025/texmf.cnf
 INPUT /usr/local/texlive/2025/texmf-dist/web2c/texmf.cnf
 INPUT /usr/local/texlive/2025/texmf-var/web2c/euptex/platex.fmt
-INPUT SES.tex
-OUTPUT SES.log
+INPUT tmp.tex
+OUTPUT tmp.log
 INPUT ./ipsj.cls
 INPUT ipsj.cls
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/graphics/color.sty
@@ -91,10 +91,10 @@ INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/tools/array.sty
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/tools/array.sty
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-dvipdfmx.def
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-dvipdfmx.def
-INPUT ./SES.aux
-INPUT ./SES.aux
-INPUT SES.aux
-OUTPUT SES.aux
+INPUT ./tmp.aux
+INPUT ./tmp.aux
+INPUT tmp.aux
+OUTPUT tmp.aux
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/ptex-fonts/standard/tmin10.tfm
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/ptex-fonts/jis/jis.tfm
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr10.tfm
@@ -220,7 +220,7 @@ INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr7.tfm
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/ptex-fonts/standard/tmin10.tfm
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/ptex-fonts/jis/jis.tfm
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr10.tfm
-OUTPUT SES.dvi
+OUTPUT tmp.dvi
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/ptex-fonts/standard/tgoth10.tfm
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/ptex-fonts/jis/jisg.tfm
 INPUT ./fig/fig_model.pdf
@@ -283,8 +283,8 @@ INPUT ./fig/fig_dev_archetype_profile.pdf
 INPUT ./fig/fig_dev_archetype_profile.pdf
 INPUT ./fig/fig_dev_archetype_profile.pdf
 INPUT extractbb -B cropbox -O fig/fig_dev_archetype_profile.pdf
-INPUT ./SES.bbl
-INPUT ./SES.bbl
-INPUT SES.bbl
+INPUT ./tmp.bbl
+INPUT ./tmp.bbl
+INPUT tmp.bbl
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmti9.tfm
-INPUT SES.aux
+INPUT tmp.aux

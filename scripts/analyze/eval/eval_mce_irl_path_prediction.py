@@ -39,6 +39,15 @@ from typing import Dict, List, Optional, Set, Tuple
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
+
+# sklearn 推定器 (RF) を自前の joblib Parallel 内で呼ぶと大量に出る無害な警告を抑制。
+import warnings
+warnings.filterwarnings(
+    "ignore",
+    message=r".*sklearn\.utils\.parallel\.delayed.*",
+    category=UserWarning,
+)
+
 _SRC = str(Path(__file__).resolve().parents[2] / "src")
 if _SRC not in sys.path:
     sys.path.insert(0, _SRC)
@@ -753,13 +762,21 @@ def evaluate_single_timepoint(
     logger.info(f"スケール係数: {scale_factor:.2f}")
 
     # 4. ベースライン（Linear, RF）
-    linear_pred = baseline_linear(df, prediction_time, delta_months)
-    rf_pred, rf_probs = baseline_rf(
-        df, prediction_time, delta_months, window_days, dir_developers,
-        future_start_months=rf_future_start_months,
-        rf_train_end=rf_train_end,
-        n_jobs=n_jobs,
-    )
+    # SKIP_RF=1: 別実行(outputs/aosp32/rf_gbdt_1snap 等)で Linear/RF(グローバル)を
+    # 既に出している場合はスキップできる。速度上のボトルネックは RF_Dir 側だが、
+    # 重複計算を避けたい場合用。
+    if os.environ.get("SKIP_RF") == "1":
+        logger.info("Linear/RF(グローバル): SKIP_RF=1 のためスキップ")
+        linear_pred = {}
+        rf_pred, rf_probs = {}, {}
+    else:
+        linear_pred = baseline_linear(df, prediction_time, delta_months)
+        rf_pred, rf_probs = baseline_rf(
+            df, prediction_time, delta_months, window_days, dir_developers,
+            future_start_months=rf_future_start_months,
+            rf_train_end=rf_train_end,
+            n_jobs=n_jobs,
+        )
 
     # 5. Ground truth
     future_start = pred_time_pd + pd.DateOffset(months=future_start_months)
@@ -1061,244 +1078,266 @@ def evaluate_single_timepoint(
             except Exception as e:
                 logger.warning(f"IRL importance 計算で例外: {e}")
 
-    # ── RF_Dir: ディレクトリ単位 RF ──
-    logger.info("RF_Dir: ディレクトリ単位 RF で推論...")
-    if rf_train_end is not None:
-        # IRL と同じ train_end を使う（公平な比較）
-        _rf_base = pd.Timestamp(rf_train_end)
-    else:
-        # デフォルト: prediction_time から逆��
-        _rf_base = pred_time_pd - pd.DateOffset(months=future_start_months + delta_months)
-    rf_dir_train_end = _rf_base
-    if rf_train_start is not None:
-        # dynstart モード: horizon ごとに train_start を前倒し
-        rf_dir_train_start = pd.Timestamp(rf_train_start)
-    else:
-        rf_dir_train_start = rf_dir_train_end - pd.Timedelta(days=window_days)
-    rf_dir_feature_window_days = (rf_dir_train_end - rf_dir_train_start).days
-    rf_dir_label_start = rf_dir_train_end + pd.DateOffset(months=rf_future_start_months)
-    rf_dir_label_end = rf_dir_label_start + pd.DateOffset(months=delta_months)
-    logger.info(
-        f"RF_Dir 学習窓: [{rf_dir_train_start.date()}, {rf_dir_train_end.date()}] "
-        f"({rf_dir_feature_window_days}日)"
-    )
-
-    rf_dir_train_df = extract_features_for_window_directory(
-        df,
-        pd.Timestamp(rf_dir_train_start),
-        pd.Timestamp(rf_dir_train_end),
-        pd.Timestamp(rf_dir_label_start),
-        pd.Timestamp(rf_dir_label_end),
-        path_extractor=path_extractor,
-    )
-    if len(rf_dir_train_df) >= 10 and len(rf_dir_train_df["label"].unique()) >= 2:
-        from sklearn.ensemble import RandomForestClassifier as RFC
-        X_train_dir, y_train_dir = prepare_rf_features_directory(rf_dir_train_df)
-        clf_dir = RFC(n_estimators=100, class_weight="balanced", random_state=777, n_jobs=-1)  # IRL の RANDOM_SEED=777 に統一
-        _weak_w = os.environ.get("RF_WEAK_NEG_WEIGHT", "")
-        if _weak_w and "weak_neg" in rf_dir_train_df.columns:
-            # 依頼なし弱負例へ IRL 損失（式(1)）と同じ重みを掛けて学習目的を揃える
-            sw = np.where(
-                (y_train_dir == 0) & (rf_dir_train_df["weak_neg"].values == 1),
-                float(_weak_w),
-                1.0,
-            )
-            clf_dir.fit(X_train_dir, y_train_dir, sample_weight=sw)
-            logger.info(
-                f"RF_Dir: 弱負例重み {_weak_w} を適用 "
-                f"(weak_neg {int((sw != 1.0).sum())}/{len(sw)} 件)"
-            )
+    # SKIP_RF_DIR=1: 別実行(outputs/aosp32/rf_gbdt_1snap 等)で RF/GBDT を既に
+    # 出している場合、この重い RF_Dir 学習・推論(dev×dir 個別 extract_common_features
+    # 呼び出し)は完全に不要なので丸ごとスキップできる。既定は従来通り実行(0)。
+    skip_rf_dir = os.environ.get("SKIP_RF_DIR") == "1"
+    if not skip_rf_dir:
+        # ── RF_Dir: ディレクトリ単位 RF ──
+        logger.info("RF_Dir: ディレクトリ単位 RF で推論...")
+        if rf_train_end is not None:
+            # IRL と同じ train_end を使う（公平な比較）
+            _rf_base = pd.Timestamp(rf_train_end)
         else:
-            sw = None
-            clf_dir.fit(X_train_dir, y_train_dir)
-
-        # 勾配ブースティングの追加ベースライン。GBDT_DIR にカンマ区切りで指定:
-        #   hist（=1 も後方互換で可）: sklearn HistGradientBoosting
-        #   lgbm: LightGBM本体 / xgb: XGBoost本体（査読A-1で名指しされた2つ）
-        # 例: GBDT_DIR=hist,lgbm,xgb
-        gbdt_models: Dict[str, object] = {}
-        _gbdt_kinds = [
-            k.strip() for k in os.environ.get("GBDT_DIR", "").split(",") if k.strip()
-        ]
-        for _kind in _gbdt_kinds:
-            if _kind in ("1", "hist"):
-                from sklearn.ensemble import HistGradientBoostingClassifier
-                _m = HistGradientBoostingClassifier(
-                    class_weight="balanced", random_state=777, early_stopping=False,
-                )
-                _m.fit(X_train_dir, y_train_dir, sample_weight=sw)
-                gbdt_models["GBDT_Dir"] = _m
-            elif _kind == "lgbm":
-                from lightgbm import LGBMClassifier
-                _m = LGBMClassifier(
-                    class_weight="balanced", random_state=777, n_jobs=-1, verbose=-1,
-                )
-                _m.fit(X_train_dir, y_train_dir, sample_weight=sw)
-                gbdt_models["LGBM_Dir"] = _m
-            elif _kind == "xgb":
-                from xgboost import XGBClassifier
-                from sklearn.utils.class_weight import compute_sample_weight
-                # XGBoost には class_weight が無いので balanced 相当の重みを自前計算し、
-                # RF/hist/lgbm と同じく弱負例重みと乗算して学習目的を揃える
-                _bal = compute_sample_weight("balanced", y_train_dir)
-                _xgb_sw = _bal if sw is None else _bal * sw
-                _m = XGBClassifier(random_state=777, n_jobs=-1, eval_metric="logloss")
-                _m.fit(X_train_dir, y_train_dir, sample_weight=_xgb_sw)
-                gbdt_models["XGB_Dir"] = _m
-            else:
-                logger.warning(f"GBDT_DIR: 不明な種別 '{_kind}' を無視")
-        for _name in gbdt_models:
-            logger.info(
-                f"{_name}: 学習完了 (weak_neg重み={'あり' if sw is not None else 'なし'})"
-            )
-
-        # RF_Dir Gini importance を保存
-        if save_importance and output_dir is not None:
-            from review_predictor.IRL.features.common_features import FEATURE_NAMES_WITH_PATH as _FN_PATH
-            rf_importance = {
-                name: float(val)
-                for name, val in zip(_FN_PATH, clf_dir.feature_importances_)
-            }
-            import json as _json
-            rf_imp_path = Path(output_dir) / "rf_dir_feature_importance.json"
-            with open(rf_imp_path, "w") as f:
-                _json.dump({"feature_importance": rf_importance}, f, indent=2, ensure_ascii=False)
-            logger.info(f"RF_Dir importance を保存: {rf_imp_path}")
-
-        # 推論: 各 (dev, dir) ペアの continuation_prob（並列）
-        from review_predictor.IRL.features.common_features import FEATURE_NAMES_WITH_PATH
-        from review_predictor.IRL.features.path_features import PATH_FEATURE_NAMES
-
-        # 推論特徴窓: dynstart 時は学習窓と同じ長さ、それ以外は --window-days
-        feature_start = prediction_time - pd.Timedelta(days=rf_dir_feature_window_days)
-        rf_dir_agg: Dict[str, float] = {}
-        rf_dir_dev_probs: Dict[str, Dict[str, float]] = {}
-        # モデル名 -> dir -> dev -> prob
-        gbdt_dir_dev_probs: Dict[str, Dict[str, Dict[str, float]]] = {}
-
-        rf_dir_pairs = [(d, dev) for d, devs in dir_developers.items() for dev in devs]
-        logger.info(f"RF_Dir: {len(rf_dir_pairs)} ペアを並列推論 (n_jobs={n_jobs})...")
-
-        def _rf_dir_predict_one(d, dev):
-            common_feats = extract_common_features(
-                df, dev, feature_start, prediction_time, normalize=False,
-            )
-            pf = path_extractor.compute(dev, frozenset({d}), prediction_time)
-            path_feats = {
-                name: float(val) for name, val in zip(PATH_FEATURE_NAMES, pf)
-            }
-            feat_row = {**common_feats, **path_feats}
-            X = np.array([[feat_row.get(f, 0.0) for f in FEATURE_NAMES_WITH_PATH]], dtype=np.float64)
-            prob = float(clf_dir.predict_proba(X)[0, 1])
-            gprobs = {
-                name: float(m.predict_proba(X)[0, 1]) for name, m in gbdt_models.items()
-            }
-            return d, dev, prob, gprobs
-
-        rf_dir_results = Parallel(n_jobs=n_jobs, backend="loky")(
-            delayed(_rf_dir_predict_one)(d, dev) for d, dev in rf_dir_pairs
+            # デフォルト: prediction_time から逆��
+            _rf_base = pred_time_pd - pd.DateOffset(months=future_start_months + delta_months)
+        rf_dir_train_end = _rf_base
+        if rf_train_start is not None:
+            # dynstart モード: horizon ごとに train_start を前倒し
+            rf_dir_train_start = pd.Timestamp(rf_train_start)
+        else:
+            rf_dir_train_start = rf_dir_train_end - pd.Timedelta(days=window_days)
+        rf_dir_feature_window_days = (rf_dir_train_end - rf_dir_train_start).days
+        rf_dir_label_start = rf_dir_train_end + pd.DateOffset(months=rf_future_start_months)
+        rf_dir_label_end = rf_dir_label_start + pd.DateOffset(months=delta_months)
+        logger.info(
+            f"RF_Dir 学習窓: [{rf_dir_train_start.date()}, {rf_dir_train_end.date()}] "
+            f"({rf_dir_feature_window_days}日)"
         )
-        for d, dev, prob, gprobs in rf_dir_results:
-            rf_dir_dev_probs.setdefault(d, {})[dev] = prob
-            rf_dir_agg[d] = rf_dir_agg.get(d, 0.0) + prob
-            for name, gp in gprobs.items():
-                gbdt_dir_dev_probs.setdefault(name, {}).setdefault(d, {})[dev] = gp
 
-        methods["RF_Dir"] = rf_dir_agg
-        metrics = compute_metrics(rf_dir_agg, actual, "RF_Dir")
-        danger = compute_danger_detection(
-            rf_dir_agg, actual,
-            threshold=danger_threshold,
-            danger_actual_threshold=danger_actual_threshold,
-            method_name="RF_Dir",
+        rf_dir_train_df = extract_features_for_window_directory(
+            df,
+            pd.Timestamp(rf_dir_train_start),
+            pd.Timestamp(rf_dir_train_end),
+            pd.Timestamp(rf_dir_label_start),
+            pd.Timestamp(rf_dir_label_end),
+            path_extractor=path_extractor,
         )
-        all_results["RF_Dir"] = {**metrics, **{f"danger_{k}": v for k, v in danger.items()}}
-
-        # RF_Dir 分類評価
-        y_true_rf: List[int] = []
-        y_prob_rf: List[float] = []
-        for d, devs in dir_developers.items():
-            actual_devs = actual_dir_devs.get(d, set())
-            for dev in devs:
-                y_true_rf.append(1 if dev in actual_devs else 0)
-                y_prob_rf.append(rf_dir_dev_probs.get(d, {}).get(dev, 0.5))
-        if y_true_rf:
-            clf_m_rf = compute_per_developer_classification(
-                dir_developers,
-                # compute_per_developer_classification はグローバルprobを期待するので
-                # 直接 y_true/y_prob を使う
-                {}, actual_dir_devs, method_name="RF_Dir",
-            )
-            # 上の関数はグローバルprob前提なので、直接計算する
-            from sklearn.metrics import roc_auc_score, f1_score, precision_score, recall_score, precision_recall_curve
-            from sklearn.metrics import auc as sk_auc
-            y_t = np.array(y_true_rf)
-            y_p = np.array(y_prob_rf)
-            n_p = int(y_t.sum())
-            n_n = len(y_t) - n_p
-            if n_p > 0 and n_n > 0:
-                auc_roc = float(roc_auc_score(y_t, y_p))
-                prec_c, rec_c, thr = precision_recall_curve(y_t, y_p)
-                auc_pr = float(sk_auc(rec_c, prec_c))
-                f1s = 2 * (prec_c * rec_c) / (prec_c + rec_c + 1e-10)
-                bi = np.argmax(f1s)
-                bt = thr[bi] if bi < len(thr) else 0.5
-                yp = (y_p >= bt).astype(int)
-                clf_m = {
-                    "auc_roc": auc_roc, "auc_pr": auc_pr,
-                    "f1": float(f1_score(y_t, yp, zero_division=0)),
-                    "precision": float(precision_score(y_t, yp, zero_division=0)),
-                    "recall": float(recall_score(y_t, yp, zero_division=0)),
-                    "threshold": float(bt),
-                    "n_pairs": float(len(y_t)),
-                    "n_pos": float(n_p), "n_neg": float(n_n),
-                }
-                all_results["RF_Dir"] = {
-                    **all_results.get("RF_Dir", {}),
-                    **{f"clf_{k}": v for k, v in clf_m.items()},
-                }
+        if len(rf_dir_train_df) >= 10 and len(rf_dir_train_df["label"].unique()) >= 2:
+            from sklearn.ensemble import RandomForestClassifier as RFC
+            X_train_dir, y_train_dir = prepare_rf_features_directory(rf_dir_train_df)
+            clf_dir = RFC(n_estimators=100, class_weight="balanced", random_state=777, n_jobs=-1)  # IRL の RANDOM_SEED=777 に統一
+            _weak_w = os.environ.get("RF_WEAK_NEG_WEIGHT", "")
+            if _weak_w and "weak_neg" in rf_dir_train_df.columns:
+                # 依頼なし弱負例へ IRL 損失（式(1)）と同じ重みを掛けて学習目的を揃える
+                sw = np.where(
+                    (y_train_dir == 0) & (rf_dir_train_df["weak_neg"].values == 1),
+                    float(_weak_w),
+                    1.0,
+                )
+                clf_dir.fit(X_train_dir, y_train_dir, sample_weight=sw)
                 logger.info(
-                    f"[RF_Dir classification] "
-                    + " ".join(f"{k}={v:.3f}" for k, v in clf_m.items())
+                    f"RF_Dir: 弱負例重み {_weak_w} を適用 "
+                    f"(weak_neg {int((sw != 1.0).sum())}/{len(sw)} 件)"
+                )
+            else:
+                sw = None
+                clf_dir.fit(X_train_dir, y_train_dir)
+
+            # 勾配ブースティングの追加ベースライン。GBDT_DIR にカンマ区切りで指定:
+            #   hist（=1 も後方互換で可）: sklearn HistGradientBoosting
+            #   lgbm: LightGBM本体 / xgb: XGBoost本体（査読A-1で名指しされた2つ）
+            # 例: GBDT_DIR=hist,lgbm,xgb
+            gbdt_models: Dict[str, object] = {}
+            _gbdt_kinds = [
+                k.strip() for k in os.environ.get("GBDT_DIR", "").split(",") if k.strip()
+            ]
+            for _kind in _gbdt_kinds:
+                if _kind in ("1", "hist"):
+                    from sklearn.ensemble import HistGradientBoostingClassifier
+                    _m = HistGradientBoostingClassifier(
+                        class_weight="balanced", random_state=777, early_stopping=False,
+                    )
+                    _m.fit(X_train_dir, y_train_dir, sample_weight=sw)
+                    gbdt_models["GBDT_Dir"] = _m
+                elif _kind == "lgbm":
+                    from lightgbm import LGBMClassifier
+                    _m = LGBMClassifier(
+                        class_weight="balanced", random_state=777, n_jobs=-1, verbose=-1,
+                    )
+                    _m.fit(X_train_dir, y_train_dir, sample_weight=sw)
+                    gbdt_models["LGBM_Dir"] = _m
+                elif _kind == "xgb":
+                    from xgboost import XGBClassifier
+                    from sklearn.utils.class_weight import compute_sample_weight
+                    # XGBoost には class_weight が無いので balanced 相当の重みを自前計算し、
+                    # RF/hist/lgbm と同じく弱負例重みと乗算して学習目的を揃える
+                    _bal = compute_sample_weight("balanced", y_train_dir)
+                    _xgb_sw = _bal if sw is None else _bal * sw
+                    _m = XGBClassifier(random_state=777, n_jobs=-1, eval_metric="logloss")
+                    _m.fit(X_train_dir, y_train_dir, sample_weight=_xgb_sw)
+                    gbdt_models["XGB_Dir"] = _m
+                else:
+                    logger.warning(f"GBDT_DIR: 不明な種別 '{_kind}' を無視")
+            for _name in gbdt_models:
+                logger.info(
+                    f"{_name}: 学習完了 (weak_neg重み={'あり' if sw is not None else 'なし'})"
                 )
 
-        # GBDT系ベースラインの分類評価（GBDT_DIR 指定時のみ）
-        for _gname, _gprobs in gbdt_dir_dev_probs.items():
-            y_true_g: List[int] = []
-            y_prob_g: List[float] = []
+            # RF_Dir Gini importance を保存
+            if save_importance and output_dir is not None:
+                from review_predictor.IRL.features.common_features import FEATURE_NAMES_WITH_PATH as _FN_PATH
+                rf_importance = {
+                    name: float(val)
+                    for name, val in zip(_FN_PATH, clf_dir.feature_importances_)
+                }
+                import json as _json
+                rf_imp_path = Path(output_dir) / "rf_dir_feature_importance.json"
+                with open(rf_imp_path, "w") as f:
+                    _json.dump({"feature_importance": rf_importance}, f, indent=2, ensure_ascii=False)
+                logger.info(f"RF_Dir importance を保存: {rf_imp_path}")
+
+            # 推論: 各 (dev, dir) ペアの continuation_prob（並列）
+            from review_predictor.IRL.features.common_features import FEATURE_NAMES_WITH_PATH
+            from review_predictor.IRL.features.path_features import PATH_FEATURE_NAMES
+
+            # 推論特徴窓: dynstart 時は学習窓と同じ長さ、それ以外は --window-days
+            feature_start = prediction_time - pd.Timedelta(days=rf_dir_feature_window_days)
+            rf_dir_agg: Dict[str, float] = {}
+            rf_dir_dev_probs: Dict[str, Dict[str, float]] = {}
+            # モデル名 -> dir -> dev -> prob
+            gbdt_dir_dev_probs: Dict[str, Dict[str, Dict[str, float]]] = {}
+
+            rf_dir_pairs = [(d, dev) for d, devs in dir_developers.items() for dev in devs]
+            logger.info(f"RF_Dir: {len(rf_dir_pairs)} ペアを並列推論 (n_jobs={n_jobs})...")
+
+            # extract_common_features(df, dev, feature_start, prediction_time) は
+            # directory に依存しない (feature_start/prediction_time は全ペア共通固定)。
+            # dir ごとに呼ぶと同じ dev に対して平均 dir 数(~10.7)分フルDF再スキャンする
+            # ため、dev でグループ化して 1 回だけ計算する (IRL_Dir と同じ設計)。
+            # backend も loky(プロセス)→threading に変更: path_extractor の内部キャッシュ
+            # (_sub_cache/_window_df_cache) がプロセス跨ぎでは効かないため。sklearn の
+            # predict_proba / pandas 演算は GIL を解放するので threading でも安全に並列化できる。
+            dev_to_dirs_rf: Dict[str, List[str]] = {}
+            for d, dev in rf_dir_pairs:
+                dev_to_dirs_rf.setdefault(dev, []).append(d)
+
+            def _rf_dir_predict_for_dev(dev, dirs):
+                common_feats = extract_common_features(
+                    df, dev, feature_start, prediction_time, normalize=False,
+                )
+                out = []
+                for d in dirs:
+                    pf = path_extractor.compute(dev, frozenset({d}), prediction_time)
+                    path_feats = {
+                        name: float(val) for name, val in zip(PATH_FEATURE_NAMES, pf)
+                    }
+                    feat_row = {**common_feats, **path_feats}
+                    X = np.array([[feat_row.get(f, 0.0) for f in FEATURE_NAMES_WITH_PATH]], dtype=np.float64)
+                    prob = float(clf_dir.predict_proba(X)[0, 1])
+                    gprobs = {
+                        name: float(m.predict_proba(X)[0, 1]) for name, m in gbdt_models.items()
+                    }
+                    out.append((d, dev, prob, gprobs))
+                return out
+
+            grouped_rf_dir = Parallel(n_jobs=n_jobs, backend="threading")(
+                delayed(_rf_dir_predict_for_dev)(dev, dirs) for dev, dirs in dev_to_dirs_rf.items()
+            )
+            rf_dir_results = [item for group in grouped_rf_dir for item in group]
+            for d, dev, prob, gprobs in rf_dir_results:
+                rf_dir_dev_probs.setdefault(d, {})[dev] = prob
+                rf_dir_agg[d] = rf_dir_agg.get(d, 0.0) + prob
+                for name, gp in gprobs.items():
+                    gbdt_dir_dev_probs.setdefault(name, {}).setdefault(d, {})[dev] = gp
+
+            methods["RF_Dir"] = rf_dir_agg
+            metrics = compute_metrics(rf_dir_agg, actual, "RF_Dir")
+            danger = compute_danger_detection(
+                rf_dir_agg, actual,
+                threshold=danger_threshold,
+                danger_actual_threshold=danger_actual_threshold,
+                method_name="RF_Dir",
+            )
+            all_results["RF_Dir"] = {**metrics, **{f"danger_{k}": v for k, v in danger.items()}}
+
+            # RF_Dir 分類評価
+            y_true_rf: List[int] = []
+            y_prob_rf: List[float] = []
             for d, devs in dir_developers.items():
                 actual_devs = actual_dir_devs.get(d, set())
                 for dev in devs:
-                    y_true_g.append(1 if dev in actual_devs else 0)
-                    y_prob_g.append(_gprobs.get(d, {}).get(dev, 0.5))
-            y_t = np.array(y_true_g)
-            y_p = np.array(y_prob_g)
-            n_p = int(y_t.sum())
-            n_n = len(y_t) - n_p
-            if n_p > 0 and n_n > 0:
+                    y_true_rf.append(1 if dev in actual_devs else 0)
+                    y_prob_rf.append(rf_dir_dev_probs.get(d, {}).get(dev, 0.5))
+            if y_true_rf:
+                clf_m_rf = compute_per_developer_classification(
+                    dir_developers,
+                    # compute_per_developer_classification はグローバルprobを期待するので
+                    # 直接 y_true/y_prob を使う
+                    {}, actual_dir_devs, method_name="RF_Dir",
+                )
+                # 上の関数はグローバルprob前提なので、直接計算する
                 from sklearn.metrics import roc_auc_score, f1_score, precision_score, recall_score, precision_recall_curve
                 from sklearn.metrics import auc as sk_auc
-                prec_c, rec_c, thr = precision_recall_curve(y_t, y_p)
-                f1s = 2 * (prec_c * rec_c) / (prec_c + rec_c + 1e-10)
-                bi = np.argmax(f1s)
-                bt = thr[bi] if bi < len(thr) else 0.5
-                yp = (y_p >= bt).astype(int)
-                all_results[_gname] = {
-                    "clf_auc_roc": float(roc_auc_score(y_t, y_p)),
-                    "clf_auc_pr": float(sk_auc(rec_c, prec_c)),
-                    "clf_f1": float(f1_score(y_t, yp, zero_division=0)),
-                    "clf_precision": float(precision_score(y_t, yp, zero_division=0)),
-                    "clf_recall": float(recall_score(y_t, yp, zero_division=0)),
-                    "clf_threshold": float(bt),
-                    "clf_n_pairs": float(len(y_t)),
-                    "clf_n_pos": float(n_p), "clf_n_neg": float(n_n),
-                }
-                logger.info(
-                    f"[{_gname} classification] "
-                    + " ".join(f"{k}={v:.3f}" for k, v in all_results[_gname].items())
-                )
+                y_t = np.array(y_true_rf)
+                y_p = np.array(y_prob_rf)
+                n_p = int(y_t.sum())
+                n_n = len(y_t) - n_p
+                if n_p > 0 and n_n > 0:
+                    auc_roc = float(roc_auc_score(y_t, y_p))
+                    prec_c, rec_c, thr = precision_recall_curve(y_t, y_p)
+                    auc_pr = float(sk_auc(rec_c, prec_c))
+                    f1s = 2 * (prec_c * rec_c) / (prec_c + rec_c + 1e-10)
+                    bi = np.argmax(f1s)
+                    bt = thr[bi] if bi < len(thr) else 0.5
+                    yp = (y_p >= bt).astype(int)
+                    clf_m = {
+                        "auc_roc": auc_roc, "auc_pr": auc_pr,
+                        "f1": float(f1_score(y_t, yp, zero_division=0)),
+                        "precision": float(precision_score(y_t, yp, zero_division=0)),
+                        "recall": float(recall_score(y_t, yp, zero_division=0)),
+                        "threshold": float(bt),
+                        "n_pairs": float(len(y_t)),
+                        "n_pos": float(n_p), "n_neg": float(n_n),
+                    }
+                    all_results["RF_Dir"] = {
+                        **all_results.get("RF_Dir", {}),
+                        **{f"clf_{k}": v for k, v in clf_m.items()},
+                    }
+                    logger.info(
+                        f"[RF_Dir classification] "
+                        + " ".join(f"{k}={v:.3f}" for k, v in clf_m.items())
+                    )
+
+            # GBDT系ベースラインの分類評価（GBDT_DIR 指定時のみ）
+            for _gname, _gprobs in gbdt_dir_dev_probs.items():
+                y_true_g: List[int] = []
+                y_prob_g: List[float] = []
+                for d, devs in dir_developers.items():
+                    actual_devs = actual_dir_devs.get(d, set())
+                    for dev in devs:
+                        y_true_g.append(1 if dev in actual_devs else 0)
+                        y_prob_g.append(_gprobs.get(d, {}).get(dev, 0.5))
+                y_t = np.array(y_true_g)
+                y_p = np.array(y_prob_g)
+                n_p = int(y_t.sum())
+                n_n = len(y_t) - n_p
+                if n_p > 0 and n_n > 0:
+                    from sklearn.metrics import roc_auc_score, f1_score, precision_score, recall_score, precision_recall_curve
+                    from sklearn.metrics import auc as sk_auc
+                    prec_c, rec_c, thr = precision_recall_curve(y_t, y_p)
+                    f1s = 2 * (prec_c * rec_c) / (prec_c + rec_c + 1e-10)
+                    bi = np.argmax(f1s)
+                    bt = thr[bi] if bi < len(thr) else 0.5
+                    yp = (y_p >= bt).astype(int)
+                    all_results[_gname] = {
+                        "clf_auc_roc": float(roc_auc_score(y_t, y_p)),
+                        "clf_auc_pr": float(sk_auc(rec_c, prec_c)),
+                        "clf_f1": float(f1_score(y_t, yp, zero_division=0)),
+                        "clf_precision": float(precision_score(y_t, yp, zero_division=0)),
+                        "clf_recall": float(recall_score(y_t, yp, zero_division=0)),
+                        "clf_threshold": float(bt),
+                        "clf_n_pairs": float(len(y_t)),
+                        "clf_n_pos": float(n_p), "clf_n_neg": float(n_n),
+                    }
+                    logger.info(
+                        f"[{_gname} classification] "
+                        + " ".join(f"{k}={v:.3f}" for k, v in all_results[_gname].items())
+                    )
+        else:
+            logger.warning(f"RF_Dir: 学習データ不足 ({len(rf_dir_train_df)} samples)")
     else:
-        logger.warning(f"RF_Dir: 学習データ不足 ({len(rf_dir_train_df)} samples)")
+        logger.info("RF_Dir: SKIP_RF_DIR=1 のためスキップ")
 
     # 既存手法のグローバル prob による分類評価
     for name, probs in clf_methods.items():
