@@ -92,6 +92,9 @@ TRAIN_FE=(3 6 9 12)
 # 評価は ti ごとに ei>=ti を回す三角構造なので、窓集合の分割で全パターンを分担できる。
 WINDOW_IDX="${WINDOW_IDX:-0 1 2 3}"
 
+# [評価] EVAL_DIAGONAL_ONLY=1 で対角 (train窓==eval窓) のみ評価する。既定は全パターン(三角)。
+EVAL_DIAGONAL_ONLY="${EVAL_DIAGONAL_ONLY:-0}"
+
 # ── [SES 追加] horizon別「動的学習開始日」(②: 特徴量計測期間を全horizonで揃える) ──
 # 後方クリップ (month_end+FE<=train_end) で長horizonほど最新month_endが早まり、
 # 月次ステップ数が 0-3m=33 .. 9-12m=24 とズレる。等化方式は2通り:
@@ -145,7 +148,7 @@ fi
 EVAL_DIR_HISTORY_MONTHS="${EVAL_DIR_HISTORY_MONTHS:-24}"
 # [SES] device: server=cuda(既定), local=mps/cpu
 DEVICE="${DEVICE:-cuda}"
-echo "[SES] DYNAMIC_START=$DYNAMIC_START LABEL_TAIL_MONTHS=${LABEL_TAIL_MONTHS:-none} TRAIN_STARTS=(${TRAIN_STARTS[*]}) EVAL_DIR_HISTORY_MONTHS=$EVAL_DIR_HISTORY_MONTHS DEVICE=$DEVICE WINDOW_IDX=($WINDOW_IDX)"
+echo "[SES] DYNAMIC_START=$DYNAMIC_START LABEL_TAIL_MONTHS=${LABEL_TAIL_MONTHS:-none} TRAIN_STARTS=(${TRAIN_STARTS[*]}) EVAL_DIR_HISTORY_MONTHS=$EVAL_DIR_HISTORY_MONTHS DEVICE=$DEVICE WINDOW_IDX=($WINDOW_IDX) EVAL_DIAGONAL_ONLY=$EVAL_DIAGONAL_ONLY"
 
 # [align系列] extract に渡す tail 引数と、キャッシュ衝突回避用サフィックス
 LABEL_TAIL_ARGS=()
@@ -317,7 +320,14 @@ for ti in $WINDOW_IDX; do
         continue
     fi
 
-    for ei in $(seq $ti 3); do
+    # EVAL_DIAGONAL_ONLY=1: 対角 (train窓==eval窓) のみ評価。論文は対角4パターンのみ
+    # 掲載のため、非対角(短期学習→長期評価)は不要。評価数を大幅削減できる。
+    if [ "$EVAL_DIAGONAL_ONLY" = "1" ]; then
+        eval_idx_list="$ti"
+    else
+        eval_idx_list=$(seq $ti 3)
+    fi
+    for ei in $eval_idx_list; do
         eval_win="${TRAIN_WINDOWS[$ei]}"
         eval_fs="${TRAIN_FS[$ei]}"
         train_fs_val="${TRAIN_FS[$ti]}"

@@ -313,6 +313,15 @@ class PathFeatureExtractor:
         if cochange_neighbors_path is not None:
             self._load_cochange_neighbors(Path(cochange_neighbors_path))
 
+        # compute() のメモ化キャッシュ (self.df は不変前提)。
+        # 呼び出し側 (predict_developer_directories 等) は同じ (developer_id,
+        # current_time) を dir 数ぶん繰り返し compute() するため、window_days
+        # フィルタを毎回フルDF再スキャンすると (dev × ctx_date × dir) 回分の
+        # 無駄になる。sub は task_dirs 非依存、window_df は current_time のみに
+        # 依存するので、それぞれキーでメモ化して結果は変えずに再計算を消す。
+        self._sub_cache: Dict[tuple, pd.DataFrame] = {}
+        self._window_df_cache: Dict[datetime, pd.DataFrame] = {}
+
     def _load_hub_scores(self, path: Path) -> None:
         """hub_scores CSV を読み込み self.hub_score_by_dir に格納."""
         if not path.exists():
@@ -398,13 +407,19 @@ class PathFeatureExtractor:
 
         start = current_time - timedelta(days=self.window_days)
 
-        # 開発者 × ウィンドウ内の全行 (LCP / owner_overlap で使う、task_dirs に絞らない)
-        mask = (
-            (self.df["email"] == developer_id)
-            & (self.df["timestamp"] >= start)
-            & (self.df["timestamp"] < current_time)
-        )
-        sub = self.df.loc[mask]
+        # 開発者 × ウィンドウ内の全行 (LCP / owner_overlap で使う、task_dirs に絞らない)。
+        # task_dirs に依存しないので (developer_id, current_time) でメモ化する
+        # (同じ開発者を複数 directory で呼ぶ呼び出し側で毎回フルDF再スキャンを防ぐ)。
+        sub_key = (developer_id, current_time)
+        sub = self._sub_cache.get(sub_key)
+        if sub is None:
+            mask = (
+                (self.df["email"] == developer_id)
+                & (self.df["timestamp"] >= start)
+                & (self.df["timestamp"] < current_time)
+            )
+            sub = self.df.loc[mask]
+            self._sub_cache[sub_key] = sub
         if sub.empty:
             return np.zeros(PATH_FEATURE_DIM, dtype=np.float32)
 
@@ -455,11 +470,17 @@ class PathFeatureExtractor:
             rev_owners = set()
 
         if "owner_email" in self.df.columns and rev_owners:
-            window_mask = (
-                (self.df["timestamp"] >= start)
-                & (self.df["timestamp"] < current_time)
-            )
-            window_df = self.df.loc[window_mask]
+            # window_df は developer_id/task_dirs に依存せず current_time のみで
+            # 決まる (window_days はインスタンス固定)。全開発者・全 directory で
+            # 共有されるフルDFスキャンなので current_time でメモ化する。
+            window_df = self._window_df_cache.get(current_time)
+            if window_df is None:
+                window_mask = (
+                    (self.df["timestamp"] >= start)
+                    & (self.df["timestamp"] < current_time)
+                )
+                window_df = self.df.loc[window_mask]
+                self._window_df_cache[current_time] = window_df
             td_overlap = window_df[self.dirs_column].map(
                 lambda ds: bool(ds) and not ds.isdisjoint(task_dirs)
             )

@@ -1460,6 +1460,11 @@ def main():
                 'reviewer_email': 'email',
                 'request_time': 'timestamp',
             })
+            # path_extractor は email/timestamp/dirs/label/owner_email のみ参照。
+            # loky worker への pickle コピーを小さくするため巨大テキスト列を落とす。
+            _pf_cols = [c for c in ['email', 'timestamp', 'dirs', 'label', 'owner_email']
+                        if c in df_for_path.columns]
+            df_for_path = df_for_path[_pf_cols].copy()
             path_extractor = PathFeatureExtractor(
                 df_for_path,
                 window_days=180,
