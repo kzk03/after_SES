@@ -615,6 +615,10 @@ class MCEIRLSystem(RetentionIRLSystem):
         # True のとき損失を最終有効ステップのみに限定し、全ステップの行動整合を外す。
         self.final_step_only = bool(config.get("final_step_only", False))
 
+        # extract_features_tensor() (RetentionIRLSystem 継承) の common 部分
+        # メモ化キャッシュ。super().__init__() を呼ばないためここでも初期化する。
+        self._common_feat_cache: Dict[tuple, Optional[Tuple[List[float], List[float]]]] = {}
+
         logger.info(
             "MCE-IRL システムを初期化 (state_dim=%d, action_dim=%d, model_type=%d, path_dim=%d, aux_lambda=%.3f, final_step_only=%s)",
             self.state_dim,
