@@ -860,7 +860,10 @@ def evaluate_single_timepoint(
             for dev, dirs in dev_to_dirs.items():
                 pair_results.extend(_predict_for_dev(dev, dirs))
         else:
-            grouped = Parallel(n_jobs=n_jobs, backend="threading")(
+            # verbose=10: 進捗を "Done N tasks | elapsed: X min" でログに出す。
+            # 従来は開始ログ(N ペアを推論...)だけで進捗が全く見えず、ハングか
+            # 低速処理中か区別できなかった。
+            grouped = Parallel(n_jobs=n_jobs, backend="threading", verbose=10)(
                 delayed(_predict_for_dev)(dev, dirs)
                 for dev, dirs in dev_to_dirs.items()
             )
@@ -1231,7 +1234,7 @@ def evaluate_single_timepoint(
                     out.append((d, dev, prob, gprobs))
                 return out
 
-            grouped_rf_dir = Parallel(n_jobs=n_jobs, backend="threading")(
+            grouped_rf_dir = Parallel(n_jobs=n_jobs, backend="threading", verbose=10)(
                 delayed(_rf_dir_predict_for_dev)(dev, dirs) for dev, dirs in dev_to_dirs_rf.items()
             )
             rf_dir_results = [item for group in grouped_rf_dir for item in group]
