@@ -148,7 +148,7 @@ fi
 EVAL_DIR_HISTORY_MONTHS="${EVAL_DIR_HISTORY_MONTHS:-24}"
 # [SES] device: server=cuda(既定), local=mps/cpu
 DEVICE="${DEVICE:-cuda}"
-echo "[SES] DYNAMIC_START=$DYNAMIC_START LABEL_TAIL_MONTHS=${LABEL_TAIL_MONTHS:-none} TRAIN_STARTS=(${TRAIN_STARTS[*]}) EVAL_DIR_HISTORY_MONTHS=$EVAL_DIR_HISTORY_MONTHS DEVICE=$DEVICE WINDOW_IDX=($WINDOW_IDX) EVAL_DIAGONAL_ONLY=$EVAL_DIAGONAL_ONLY"
+echo "[SES] DYNAMIC_START=$DYNAMIC_START LABEL_TAIL_MONTHS=${LABEL_TAIL_MONTHS:-none} TRAIN_STARTS=(${TRAIN_STARTS[*]}) EVAL_DIR_HISTORY_MONTHS=$EVAL_DIR_HISTORY_MONTHS DEVICE=$DEVICE WINDOW_IDX=($WINDOW_IDX) EVAL_DIAGONAL_ONLY=$EVAL_DIAGONAL_ONLY EVAL_N_JOBS=${EVAL_N_JOBS:-4}"
 
 # [align系列] extract に渡す tail 引数と、キャッシュ衝突回避用サフィックス
 LABEL_TAIL_ARGS=()
@@ -218,7 +218,7 @@ run_eval() {
         --rf-train-end "$TRAIN_END" \
         --dir-history-months "$EVAL_DIR_HISTORY_MONTHS" \
         --device "$DEVICE" \
-        --n-jobs 4 \
+        --n-jobs "${EVAL_N_JOBS:-4}" \
         --output-dir "$eval_dir" \
         --calibrate \
         "${EXTRA_PATH_FEAT_ARGS[@]}" \
