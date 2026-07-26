@@ -45,8 +45,9 @@ def archetype_period_auc(
 ) -> pd.DataFrame:
     """archetype × horizon × model (cold_irl/rf_dir) で pooled AUC を計算。
 
-    n はそのarchetypeに属するユニークな unit (dev or (dev,dir)) の数
-    (horizonに依らず一定)。論文の表8/9の n・AUCと同じ軸。
+    n はそのarchetype×horizonでAUC計算に実際に使われた (dev,dir)ペア
+    レコード数(pairレベル生データの行数)。dev-levelでは1人が複数dirを
+    持つためunitの数(devの数)より大きくなる。論文の表8/9のn・AUCと同じ軸。
     """
     a = long.copy()
     if unit_cols == ["developer"]:
@@ -62,13 +63,15 @@ def archetype_period_auc(
     rows = []
     for j in range(k):
         sub_j = a[a["archetype"] == j]
-        n_units = sub_j[unit_cols].drop_duplicates().shape[0]
         for h in HZ:
-            row = {"archetype": f"A{j + 1}", "horizon": h, "n": n_units}
+            row = {"archetype": f"A{j + 1}", "horizon": h}
+            n_rows = None
             for model in ["cold_irl", "rf_dir"]:
                 sub = sub_j[
                     (sub_j["horizon"] == h) & (sub_j["model"] == model)
                 ][["label", "prob"]].to_numpy()
+                if n_rows is None:
+                    n_rows = len(sub)
                 if len(sub) < 10 or len(np.unique(sub[:, 0])) < 2:
                     auc = np.nan
                 else:
@@ -79,6 +82,7 @@ def archetype_period_auc(
                     except ValueError:
                         auc = np.nan
                 row[f"auc_{model}"] = auc
+            row["n"] = n_rows
             rows.append(row)
     df = pd.DataFrame(rows)
     df["delta_pp"] = (df["auc_cold_irl"] - df["auc_rf_dir"]) * 100

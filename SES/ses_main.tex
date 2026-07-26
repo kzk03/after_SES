@@ -449,7 +449,7 @@ $W_4$ (10--12m) & 811 & 17.9\% \\
 \fixend
 
 \fixstart
-\noindent\textbf{対象リポジトリ（AOSP）：}外的妥当性を高めるため，Android Open Source Project (AOSP) を対象に，OpenStackと同一のパイプライン・評価設定でケーススタディを追加する．\todo{対象repo数・期間・データ規模（change数・依頼行数・レビュアー数）を記載}．
+\noindent\textbf{対象リポジトリ（AOSP）：}外的妥当性を高めるため，Android Open Source Project (AOSP) を対象に，OpenStackと同一のパイプライン・評価設定でケーススタディを追加する．対象は32リポジトリであり，change数は408{,}574件，依頼行数は574{,}810件，レビュアー数（ユニーク開発者数）は8{,}901人である．
 \fixend
 
 \vspace{-2mm}
@@ -461,7 +461,7 @@ $W_4$ (10--12m) & 811 & 17.9\% \\
 
 \fixstart なお，RFが累積統計量ベースの手法の代表として弱すぎる可能性を検証するため，勾配ブースティング決定木（scikit-learnの\texttt{HistGradientBoostingClassifier}，LightGBM系のヒストグラムベース実装）を，RFと同一の37次元特徴量・同一ラベル・同一のクラス重みおよび乱数シードで学習して比較した（その他のハイパーパラメータは既定値）．ペア単位AUC-ROCは1--3か月から順に$0.761$，$0.807$，$0.771$，$0.795$（4期間平均$0.784$）であり，RF（同$0.800$）を上回らなかった．したがって，RFを比較対象とすることは妥当と考える．\fixend
 
-\fixstart\noindent\textbf{AOSPの予測精度：}\todo{AOSP版のIRL/RF AUC-ROC（4評価期間，表\ref{tab:rq1}相当）を記載。軽く触れる程度}\fixend
+\fixstart\noindent\textbf{AOSPの予測精度：}AOSP版のディレクトリ単位AUC-ROCは，IRLが$0.769$（1--3m），$0.693$（4--6m），$0.737$（7--9m），$0.711$（10--12m），RFが$0.763$，$0.761$，$0.757$，$0.765$であった．両モデルの差は最大$6.8$pp（4--6m）であり，OpenStackと同様に大きな精度差は見られなかった．\fixend
 
 次節で両モデルが予測できる開発者の特徴を分析する．
 
@@ -954,7 +954,7 @@ A4（常時活動・低承諾型）は4期間中3期間でIRLが上回る（$\Si
 
 \fixstart
 \paragraph{AOSPの原型分析}
-図\ref{fig:aosp-elbow}は原型数$K$に対する平均残差平方和の推移を示す（OpenStackと同様の手順で$K$を選択）．\todo{選択したK・根拠を記載}
+図\ref{fig:aosp-elbow}は原型数$K$に対する平均残差平方和の推移を示す（OpenStackと同様の手順で$K$を選択）．開発者単位では$k=4$から$k=5$で改善率が$19.0\%$から$12.8\%$へ，ペア単位では$k=4$から$k=5$で$15.1\%$から$10.8\%$へと明確に鈍化するため，OpenStackと同様に$K=4$を採用する．
 
 %---------------------
 \begin{figure}[t]
