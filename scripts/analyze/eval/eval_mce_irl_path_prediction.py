@@ -280,9 +280,26 @@ def baseline_rf(
     for devs in target_dirs.values():
         all_devs.update(devs)
 
+    # extract_common_features は email(reviewer行)/owner_email(author行) を
+    # feature_start/prediction_time(固定窓) でしかフィルタしないため、事前に
+    # 評価窓で絞り込んで email/owner_email でグループ化しておけば email ごとに
+    # フルDF(df 全体)を再スキャンせずに済む。
+    _rf_window_mask = (df["timestamp"] >= feature_start) & (df["timestamp"] < prediction_time)
+    _rf_window_df = df[_rf_window_mask]
+    _rf_reviewer_by_email = dict(tuple(_rf_window_df.groupby("email")))
+    _rf_empty_window = _rf_window_df.iloc[0:0]
+    _rf_owner_by_email = (
+        dict(tuple(_rf_window_df.groupby("owner_email")))
+        if "owner_email" in _rf_window_df.columns else {}
+    )
+
     def _rf_predict_one(email):
+        dev_df = pd.concat([
+            _rf_reviewer_by_email.get(email, _rf_empty_window),
+            _rf_owner_by_email.get(email, _rf_empty_window),
+        ])
         feat_dict = extract_common_features(
-            df, email, feature_start, prediction_time, normalize=False,
+            dev_df, email, feature_start, prediction_time, normalize=False,
         )
         X = np.array([[feat_dict[f] for f in FEATURE_NAMES]], dtype=np.float64)
         return email, float(clf.predict_proba(X)[0, 1])
@@ -1215,9 +1232,27 @@ def evaluate_single_timepoint(
             for d, dev in rf_dir_pairs:
                 dev_to_dirs_rf.setdefault(dev, []).append(d)
 
+            # extract_common_features は email(reviewer行)/owner_email(author行) を
+            # feature_start/prediction_time(固定窓) でしかフィルタしないため、事前に
+            # 評価窓で絞り込んで email/owner_email でグループ化しておけば dev ごとに
+            # フルDF(df 全体)を再スキャンせずに済む(rf_predictor.py の
+            # extract_features_for_window_directory と同じ最適化パターン)。
+            _rf_window_mask = (df["timestamp"] >= feature_start) & (df["timestamp"] < prediction_time)
+            _rf_window_df = df[_rf_window_mask]
+            _rf_reviewer_by_email = dict(tuple(_rf_window_df.groupby("email")))
+            _rf_empty_window = _rf_window_df.iloc[0:0]
+            _rf_owner_by_email = (
+                dict(tuple(_rf_window_df.groupby("owner_email")))
+                if "owner_email" in _rf_window_df.columns else {}
+            )
+
             def _rf_dir_predict_for_dev(dev, dirs):
+                dev_df = pd.concat([
+                    _rf_reviewer_by_email.get(dev, _rf_empty_window),
+                    _rf_owner_by_email.get(dev, _rf_empty_window),
+                ])
                 common_feats = extract_common_features(
-                    df, dev, feature_start, prediction_time, normalize=False,
+                    dev_df, dev, feature_start, prediction_time, normalize=False,
                 )
                 out = []
                 for d in dirs:
