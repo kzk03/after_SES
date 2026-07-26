@@ -119,27 +119,44 @@ def extract_features_for_window_directory(
     label_mask = (df["timestamp"] >= eval_start) & (df["timestamp"] < eval_end)
     label_df = df[label_mask]
 
+    # devごとのフルDF再スキャンを避けるため事前にグループ化する
+    # (train_model.py._process_one_reviewer と同じ最適化パターン)。
+    # extract_common_features は email(reviewer行)/owner_email(author行) の
+    # 両方を email/owner_email + timestamp でしか参照しないため、該当 dev の
+    # 行だけを渡しても結果は変わらない(渡された df をそのまま毎回 email/owner_email
+    # でフィルタしていたのが、devあたり学習窓ぶんのフルスキャンになっていた)。
+    reviewer_by_email = dict(tuple(feature_df.groupby("email")))
+    empty_feature = feature_df.iloc[0:0]
+    owner_by_email = (
+        dict(tuple(feature_df.groupby("owner_email")))
+        if "owner_email" in feature_df.columns else {}
+    )
+    label_by_email = dict(tuple(label_df.groupby("email")))
+    empty_label = label_df.iloc[0:0]
+
     rows: List[Dict] = []
     for email in active_emails:
         # このレビュアーが触ったディレクトリを列挙
-        dev_feature = feature_df[feature_df["email"] == email]
+        dev_feature = reviewer_by_email.get(email, empty_feature)
         dev_dirs = set()
         for dirs in dev_feature[dirs_column]:
             if dirs:
                 dev_dirs.update(d for d in dirs if d != ".")
 
-        # 共通特徴量（25次元）を1回だけ計算
+        # 共通特徴量（25次元）を1回だけ計算。学習窓内の該当 dev 分
+        # (reviewer行+author行)だけ渡し、フルDF再スキャンを避ける。
+        dev_df = pd.concat([dev_feature, owner_by_email.get(email, empty_feature)])
         common_feats = extract_common_features(
-            df, email, train_start, train_end, normalize=False
+            dev_df, email, train_start, train_end, normalize=False
         )
 
+        dev_label = label_by_email.get(email, empty_label)
         for directory in dev_dirs:
             # ラベル: eval期間にこのディレクトリで承諾があったか
-            dev_eval = label_df[
-                (label_df["email"] == email)
-                & (label_df[dirs_column].map(
+            dev_eval = dev_label[
+                dev_label[dirs_column].map(
                     lambda ds: directory in ds if ds else False
-                ))
+                )
             ]
             if len(dev_eval) == 0:
                 label = 0
