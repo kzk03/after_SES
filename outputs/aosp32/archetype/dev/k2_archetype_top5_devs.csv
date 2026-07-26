@@ -1,0 +1,11 @@
+archetype,rank,developer,alpha,auc_cold_irl,auc_rf_dir,auc_ens
+A1,1,yahan@google.com,1.0,,,
+A1,2,alanstokes@google.com,1.0,,,
+A1,3,akailash@google.com,1.0,,,
+A1,4,nuskos@google.com,1.0,,,
+A1,5,ilake@google.com,1.0,,,
+A2,1,Stanley.Chu@mediatek.com,1.0,0.75,1.0,0.75
+A2,2,yomna@google.com,1.0,,,
+A2,3,youkichihosoi@google.com,1.0,,,
+A2,4,yichunli@google.com,1.0,,,
+A2,5,yilunliu@google.com,1.0,,,
