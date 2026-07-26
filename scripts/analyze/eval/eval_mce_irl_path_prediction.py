@@ -304,7 +304,7 @@ def baseline_rf(
         X = np.array([[feat_dict[f] for f in FEATURE_NAMES]], dtype=np.float64)
         return email, float(clf.predict_proba(X)[0, 1])
 
-    results = Parallel(n_jobs=n_jobs, backend="loky")(
+    results = Parallel(n_jobs=n_jobs, backend="threading")(
         delayed(_rf_predict_one)(email) for email in all_devs
     )
     rf_probs: Dict[str, float] = dict(results)
@@ -869,6 +869,24 @@ def evaluate_single_timepoint(
                 head_index=head_index,
             )
             return [(d, dev, dir_probs[d]) for d in dirs]
+
+        # [DEBUG] PROFILE_IRL_DIR=1: 最初の数人だけ cProfile でラップして
+        # ボトルネック箇所を特定し、統計を表示してすぐ終了する(一時的な調査用)。
+        if os.environ.get("PROFILE_IRL_DIR"):
+            import cProfile
+            import pstats
+
+            limit = int(os.environ.get("PROFILE_IRL_DIR_LIMIT", "5"))
+            sample = list(dev_to_dirs.items())[:limit]
+            logger.info(f"[PROFILE_IRL_DIR] {len(sample)} devs をプロファイル中...")
+            profiler = cProfile.Profile()
+            profiler.enable()
+            for dev, dirs in sample:
+                _predict_for_dev(dev, dirs)
+            profiler.disable()
+            stats = pstats.Stats(profiler).sort_stats("cumulative")
+            stats.print_stats(30)
+            sys.exit(0)
 
         # PyTorch forward は GIL を解放するので backend="threading" が安全に効く。
         # n_jobs=1 のときは Parallel オーバーヘッドを避けて直接ループ。
