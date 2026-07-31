@@ -4,7 +4,7 @@ WORKDIR /app
 
 # システム依存関係のインストール
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git build-essential && \
+    apt-get install -y --no-install-recommends git build-essential libgomp1 && \
     rm -rf /var/lib/apt/lists/*
 
 # Install uv

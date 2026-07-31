@@ -1,26 +1,18 @@
 """
 Random Forest baseline for review continuation prediction.
 
-Uses the same 14-dimensional features as IRL (via common_features.py)
+Uses the same 31-dimensional features as IRL (via common_features.py)
 to train a scikit-learn RandomForestClassifier.
 """
 
 from __future__ import annotations
 
 import logging
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import (
-    auc,
-    f1_score,
-    precision_recall_curve,
-    precision_score,
-    recall_score,
-    roc_auc_score,
-)
 
 from review_predictor.IRL.features.common_features import (
     FEATURE_NAMES,
@@ -28,8 +20,6 @@ from review_predictor.IRL.features.common_features import (
 )
 
 logger = logging.getLogger(__name__)
-
-RANDOM_SEED = 42
 
 
 def extract_features_for_window(
@@ -40,7 +30,7 @@ def extract_features_for_window(
     eval_end: pd.Timestamp,
     project_type: str = "multi",
 ) -> pd.DataFrame:
-    """Extract 14-dim features per developer.
+    """Extract 31-dim features per developer.
 
     Feature period: train_start ~ train_end
     Label period: eval_start ~ eval_end
@@ -108,13 +98,13 @@ def extract_features_for_window_directory(
     path_extractor=None,
     dirs_column: str = "dirs",
 ) -> pd.DataFrame:
-    """Extract 28-dim features per (developer, directory) pair.
+    """Extract 37-dim features per (developer, directory) pair.
 
     Feature period: train_start ~ train_end
     Label: developer contributed to directory D in eval period.
 
     Returns:
-        DataFrame with 28 feature columns + 'label' + 'email' + 'directory'.
+        DataFrame with 37 feature columns + 'label' + 'email' + 'directory'.
     """
     from review_predictor.IRL.features.common_features import FEATURE_NAMES_WITH_PATH
     from review_predictor.IRL.features.path_features import PATH_FEATURE_NAMES
@@ -129,32 +119,51 @@ def extract_features_for_window_directory(
     label_mask = (df["timestamp"] >= eval_start) & (df["timestamp"] < eval_end)
     label_df = df[label_mask]
 
+    # devごとのフルDF再スキャンを避けるため事前にグループ化する
+    # (train_model.py._process_one_reviewer と同じ最適化パターン)。
+    # extract_common_features は email(reviewer行)/owner_email(author行) の
+    # 両方を email/owner_email + timestamp でしか参照しないため、該当 dev の
+    # 行だけを渡しても結果は変わらない(渡された df をそのまま毎回 email/owner_email
+    # でフィルタしていたのが、devあたり学習窓ぶんのフルスキャンになっていた)。
+    reviewer_by_email = dict(tuple(feature_df.groupby("email")))
+    empty_feature = feature_df.iloc[0:0]
+    owner_by_email = (
+        dict(tuple(feature_df.groupby("owner_email")))
+        if "owner_email" in feature_df.columns else {}
+    )
+    label_by_email = dict(tuple(label_df.groupby("email")))
+    empty_label = label_df.iloc[0:0]
+
     rows: List[Dict] = []
     for email in active_emails:
         # このレビュアーが触ったディレクトリを列挙
-        dev_feature = feature_df[feature_df["email"] == email]
+        dev_feature = reviewer_by_email.get(email, empty_feature)
         dev_dirs = set()
         for dirs in dev_feature[dirs_column]:
             if dirs:
                 dev_dirs.update(d for d in dirs if d != ".")
 
-        # 共通特徴量（25次元）を1回だけ計算
+        # 共通特徴量（25次元）を1回だけ計算。学習窓内の該当 dev 分
+        # (reviewer行+author行)だけ渡し、フルDF再スキャンを避ける。
+        dev_df = pd.concat([dev_feature, owner_by_email.get(email, empty_feature)])
         common_feats = extract_common_features(
-            df, email, train_start, train_end, normalize=False
+            dev_df, email, train_start, train_end, normalize=False
         )
 
+        dev_label = label_by_email.get(email, empty_label)
         for directory in dev_dirs:
             # ラベル: eval期間にこのディレクトリで承諾があったか
-            dev_eval = label_df[
-                (label_df["email"] == email)
-                & (label_df[dirs_column].map(
+            dev_eval = dev_label[
+                dev_label[dirs_column].map(
                     lambda ds: directory in ds if ds else False
-                ))
+                )
             ]
             if len(dev_eval) == 0:
                 label = 0
+                weak_neg = 1  # 依頼なし＝弱負例（IRL 側の sample_weight=0.5 と同じ区分）
             else:
                 label = 1 if (dev_eval["label"] == 1).any() else 0
+                weak_neg = 0
 
             # パス特徴量（3次元）
             if path_extractor is not None:
@@ -170,13 +179,14 @@ def extract_features_for_window_directory(
 
             row = {**common_feats, **path_feats}
             row["label"] = label
+            row["weak_neg"] = weak_neg
             row["email"] = email
             row["directory"] = directory
             rows.append(row)
 
     if not rows:
         return pd.DataFrame(
-            columns=FEATURE_NAMES_WITH_PATH + ["label", "email", "directory"]
+            columns=FEATURE_NAMES_WITH_PATH + ["label", "weak_neg", "email", "directory"]
         )
 
     result = pd.DataFrame(rows)
@@ -190,7 +200,7 @@ def extract_features_for_window_directory(
 def prepare_rf_features_directory(
     features_df: pd.DataFrame,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Convert directory-level features DataFrame to (X, y) arrays (28-dim)."""
+    """Convert directory-level features DataFrame to (X, y) arrays (37-dim)."""
     from review_predictor.IRL.features.common_features import FEATURE_NAMES_WITH_PATH
 
     X = features_df[FEATURE_NAMES_WITH_PATH].values.astype(float)
@@ -214,85 +224,5 @@ def prepare_rf_features(
     X = features_df[FEATURE_NAMES].values.astype(float)
     y = features_df["label"].values.astype(int)
     return X, y
-
-
-def train_and_evaluate_rf(
-    X_train: np.ndarray,
-    y_train: np.ndarray,
-    X_eval: np.ndarray,
-    y_eval: np.ndarray,
-    n_estimators: int = 100,
-    max_depth: Optional[int] = None,
-    random_state: int = RANDOM_SEED,
-    **kwargs,
-) -> Dict:
-    """Train RF and evaluate. Returns metrics dict with same keys as IRL metrics.json.
-
-    Args:
-        X_train: Training features.
-        y_train: Training labels.
-        X_eval: Evaluation features.
-        y_eval: Evaluation labels.
-        n_estimators: Number of trees.
-        max_depth: Max tree depth (None = unlimited).
-        random_state: Random seed.
-
-    Returns:
-        Dict with keys: auc_roc, auc_pr, precision, recall, f1_score,
-        positive_count, negative_count, total_count.
-        Returns None if evaluation fails.
-    """
-    if len(np.unique(y_train)) < 2:
-        logger.warning("Training set has only one class; skipping RF.")
-        return None
-    if len(np.unique(y_eval)) < 2:
-        logger.warning("Eval set has only one class; skipping RF.")
-        return None
-
-    clf = RandomForestClassifier(
-        n_estimators=n_estimators,
-        max_depth=max_depth,
-        random_state=random_state,
-        class_weight="balanced",
-        n_jobs=-1,
-    )
-    clf.fit(X_train, y_train)
-
-    y_prob = clf.predict_proba(X_eval)[:, 1]
-
-    # Find optimal threshold via F1 on eval (same approach as IRL)
-    precision_curve, recall_curve, thresholds = precision_recall_curve(y_eval, y_prob)
-    f1_scores = 2 * (precision_curve * recall_curve) / (precision_curve + recall_curve + 1e-10)
-    best_idx = np.argmax(f1_scores)
-    best_threshold = thresholds[best_idx] if best_idx < len(thresholds) else 0.5
-
-    y_pred_binary = (y_prob >= best_threshold).astype(int)
-
-    try:
-        auc_roc_val = float(roc_auc_score(y_eval, y_prob))
-    except ValueError:
-        auc_roc_val = 0.0
-
-    auc_pr_val = float(auc(recall_curve, precision_curve))
-
-    # Feature importance from trained RF
-    importance = {
-        name: float(val)
-        for name, val in zip(FEATURE_NAMES, clf.feature_importances_)
-    }
-
-    return {
-        "auc_roc": auc_roc_val,
-        "auc_pr": auc_pr_val,
-        "precision": float(precision_score(y_eval, y_pred_binary, zero_division=0)),
-        "recall": float(recall_score(y_eval, y_pred_binary, zero_division=0)),
-        "f1_score": float(f1_score(y_eval, y_pred_binary, zero_division=0)),
-        "optimal_threshold": float(best_threshold),
-        "positive_count": int(y_eval.sum()),
-        "negative_count": int((1 - y_eval).sum()),
-        "total_count": int(len(y_eval)),
-        "feature_importance": importance,
-        "predictions": y_prob.tolist(),
-    }
 
 

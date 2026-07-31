@@ -34,7 +34,22 @@ MODE="${2:?Usage: $0 <t0> <irl|rf|verify|all> [gpu_id]}"
 GPU_ID="${3:-0}"
 
 VNAME="lstm_baseline"
-SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep_inter}"
+# FEATURE_STEPS: 1 horizon あたりの月次 step 数（学習系列長）。
+#   未指定(既定) = 従来動作: TRAIN_START=t0-48 → 45 step (約3.75年)。出力 outputs/t0_sweep_inter_fs45/
+#                  (旧 outputs/t0_sweep_inter を 2026-07-02 にリネーム。グリッド外の参考系列)
+#   24 指定      = 学習2年:  TRAIN_START=t0-27 → 24 step。出力 outputs/t0_sweep_inter_fs24/
+#   36 指定      = 学習3年:  TRAIN_START=t0-39 → 36 step。出力 outputs/t0_sweep_inter_fs36/
+#                  (36 は論文本文「訓練期間3年」＋図1「bufferなし」に最も忠実な設計)
+# step 数の規則: 最新 month_end = t0-FE, DYNAMIC_START=1 の後方延長で全 horizon
+#   steps = months(TRAIN_START→t0) − 3 に等化される（Phase B が 48-12-3=33 になるのと同じ規則）。
+FEATURE_STEPS="${FEATURE_STEPS:-}"
+if [ -n "$FEATURE_STEPS" ]; then
+    SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep_inter_fs${FEATURE_STEPS}}"
+    TRAIN_BACK_MONTHS=$(( FEATURE_STEPS + 3 ))
+else
+    SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep_inter_fs45}"
+    TRAIN_BACK_MONTHS=48
+fi
 T0TAG="${T0//-/}"                       # 2022-10-01 → 20221001
 IRL_OUTBASE="$SWEEP_ROOT/$T0TAG/irl"
 RF_OUTBASE="$SWEEP_ROOT/$T0TAG/rf"
@@ -42,20 +57,20 @@ RF_OUTBASE="$SWEEP_ROOT/$T0TAG/rf"
 HUB_SCORES_CSV="${HUB_SCORES_CSV:-experiments/dependency_analysis/results/hub_scores_main32.csv}"
 COCHANGE_NEIGHBORS_CSV="${COCHANGE_NEIGHBORS_CSV:-experiments/dependency_analysis/results/cochange_neighbors_main32.csv}"
 
-# 中間設計: train_end=t0 (buffer消去), train_start=t0-48, tail未指定(horizon依存FE)
+# 中間設計: train_end=t0 (buffer消去), train_start=t0-TRAIN_BACK_MONTHS, tail未指定(horizon依存FE)
 read -r TRAIN_START TRAIN_END < <(uv run python -c "
 from datetime import date
 from dateutil.relativedelta import relativedelta
 t0 = date.fromisoformat('$T0')
-print((t0 - relativedelta(months=48)).isoformat(), t0.isoformat())
+print((t0 - relativedelta(months=$TRAIN_BACK_MONTHS)).isoformat(), t0.isoformat())
 ")
 IRL_DYNAMIC_START=1
 IRL_LABEL_TAIL=""
-IRL_CACHE_TAG="t0inter_${T0TAG}"
+IRL_CACHE_TAG="t0inter_${T0TAG}${FEATURE_STEPS:+_s${FEATURE_STEPS}}"
 EVAL_CUTOFF="$T0"
 
 echo "============================================================"
-echo "  [t0掃引・中間] t0=$T0  mode=$MODE"
+echo "  [t0掃引・中間] t0=$T0  mode=$MODE  FEATURE_STEPS=${FEATURE_STEPS:-45(既定,t0-48)}"
 echo "  TRAIN_START=$TRAIN_START  TRAIN_END=$TRAIN_END (=t0, buffer消去)  EVAL_CUTOFF=$EVAL_CUTOFF"
 echo "  DYNAMIC_START=$IRL_DYNAMIC_START  LABEL_TAIL=${IRL_LABEL_TAIL:-none}(horizon依存)"
 echo "  IRL_OUTBASE=$IRL_OUTBASE"
@@ -75,7 +90,7 @@ run_irl() {
 }
 
 run_rf() {
-    echo ">>> RF 再学習＋評価 (中間 1snap: train_end=t0, train_start=t0-48, tail未指定, 両端shiftで leak回避, seed777)"
+    echo ">>> RF 再学習＋評価 (中間 1snap: train_end=t0, train_start=t0-${TRAIN_BACK_MONTHS}, tail未指定, 両端shiftで leak回避, seed777)"
     PREDICTION_TIME="$EVAL_CUTOFF" \
         BASE_TRAIN_START="$TRAIN_START" BASE_TRAIN_END="$TRAIN_END" \
         LABEL_TAIL_MONTHS="$IRL_LABEL_TAIL" \

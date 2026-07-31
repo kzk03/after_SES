@@ -151,6 +151,35 @@ class GerritDataFetcher:
         Returns:
             Change 辞書のリスト（1要素 = 1つの PR/Change）
         """
+
+        all_changes = self._fetch_changes_range(project, start_date, end_date, limit)
+
+        # 期間二分割の境界(同日深夜のupdated)で重複しうるので change id で重複排除
+        seen: set = set()
+        deduped: List[Dict[str, Any]] = []
+        for c in all_changes:
+            cid = c.get("id") or c.get("_number")
+            if cid in seen:
+                continue
+            seen.add(cid)
+            deduped.append(c)
+        if len(deduped) != len(all_changes):
+            logger.info(f"  境界重複を排除: {len(all_changes)} -> {len(deduped)}")
+
+        logger.info(f"Total changes fetched: {len(deduped)}")
+        return deduped
+
+    def _fetch_changes_range(self,
+                             project: str,
+                             start_date: datetime,
+                             end_date: datetime,
+                             limit: int = 500) -> List[Dict[str, Any]]:
+        """
+        1つの期間ウィンドウを取得する。オフセット上限のあるホスト
+        (AOSP: S>=1000でHTTP 400、Wikimedia: 429)でページ取得に失敗したら、
+        期間を日単位で二分割して再帰的に取得する。
+        opendevのように深いオフセットが通るホストでは従来と同じ1クエリ動作。
+        """
         all_changes = []
         start = 0  # ページネーションのオフセット（何件目から取得するか）
 
@@ -178,24 +207,50 @@ class GerritDataFetcher:
             try:
                 changes = self._make_request("changes/", params)
 
-                if not changes:
-                    break  # 0件なら終了
-
-                all_changes.extend(changes)
-                logger.info(f"  Fetched {len(all_changes)} changes so far...")
-
-                # 最後の要素に _more_changes がなければ全件取得完了
-                if not changes[-1].get("_more_changes", False):
-                    break
-
-                # 次のページへ（offset をずらす）
-                start += limit
-
             except Exception as e:
-                logger.error(f"Error fetching changes: {e}")
+                # 期間が2日以上あれば二分割して再帰(オフセット上限・一時エラーの両対応)
+                if (end_date - start_date).days >= 2:
+                    mid = start_date + (end_date - start_date) / 2
+                    mid = datetime(mid.year, mid.month, mid.day)
+                    if start_date < mid < end_date:
+                        logger.warning(
+                            f"  offset={start} で取得失敗 ({e}) → 期間を二分割: "
+                            f"{start_str}〜{mid:%Y-%m-%d}〜{end_str}"
+                        )
+                        return (self._fetch_changes_range(project, start_date, mid, limit)
+                                + self._fetch_changes_range(project, mid, end_date, limit))
+                # これ以上分割できない場合は部分データを黙って返さず失敗させる
+                logger.error(f"Error fetching changes (分割不能): {e}")
+                raise
+
+            if not changes:
+                break  # 0件なら終了
+
+            all_changes.extend(changes)
+            logger.info(f"  Fetched {len(all_changes)} changes so far...")
+
+            # 最後の要素に _more_changes がなければ全件取得完了
+            if not changes[-1].get("_more_changes", False):
                 break
 
-        logger.info(f"Total changes fetched: {len(all_changes)}")
+            # 次のページへ（offset をずらす）
+            start += limit
+
+        # googlesource系は結果ウィンドウ約10,000件を超えると _more_changes を
+        # 立てずに静かに打ち切る(実測: S=10000は1件だけ返り、S=10500は空)。
+        # エラーにならず上の二分割が発火しないため、件数がウィンドウ上限に
+        # 達していたら打ち切りとみなして期間を二分割して取り直す。
+        if len(all_changes) >= 10000 and (end_date - start_date).days >= 2:
+            mid = start_date + (end_date - start_date) / 2
+            mid = datetime(mid.year, mid.month, mid.day)
+            if start_date < mid < end_date:
+                logger.warning(
+                    f"  {len(all_changes)}件取得で結果ウィンドウ上限に到達の疑い → "
+                    f"期間を二分割して取り直し: {start_str}〜{mid:%Y-%m-%d}〜{end_str}"
+                )
+                return (self._fetch_changes_range(project, start_date, mid, limit)
+                        + self._fetch_changes_range(project, mid, end_date, limit))
+
         return all_changes
 
 

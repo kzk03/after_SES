@@ -73,6 +73,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import random
 import sys
 from pathlib import Path
@@ -509,8 +510,9 @@ def extract_review_acceptance_trajectories(
 
 def _process_one_reviewer(
     reviewer,
-    df,
-    history_df,
+    reviewer_requests,
+    reviewer_authored,
+    total_proj_by_month_end,
     path_extractor,
     train_start,
     train_end,
@@ -532,11 +534,19 @@ def _process_one_reviewer(
     month_end + label_tail_months <= train_end の月のみステップ採用するため、
     最新 month_end = train_end - label_tail_months で全 horizon が揃う
     （Phase B の train_start 後方延長が不要になる）。
+
+    reviewer_requests / reviewer_authored / total_proj_by_month_end は
+    呼び出し元 (extract_directory_level_trajectories) で df 全体から
+    レビュアー単位・月単位に事前分割/事前集計したもの。各ワーカーに
+    全体 df をそのまま渡すとタスクごとに丸ごと再pickleされ、48並列時に
+    メモリ圧迫でworkerが落ちる(loky "worker stopped" 警告)ため分割している。
     """
     history_start = train_start
     history_end = train_end
 
-    reviewer_history = history_df[history_df[reviewer_col] == reviewer]
+    reviewer_history = reviewer_requests[
+        (reviewer_requests[date_col] >= history_start) & (reviewer_requests[date_col] < history_end)
+    ]
 
     reviewer_dirs = set()
     for dirs in reviewer_history[dirs_column]:
@@ -550,15 +560,74 @@ def _process_one_reviewer(
 
     MULTITASK_WINDOWS = [(0, 3), (3, 6), (6, 9), (9, 12)]
 
+    # ── reviewer 単位の per-month データを一度だけ構築 (directory 非依存) ──
+    # monthly_activity_histories / step_context_dates / step_total_project_reviews は
+    # reviewer_history/authored と月のみで決まり directory に依存しない。従来は
+    # directory ごとに再構築し別オブジェクトとして保存していたため、1 reviewer が
+    # D 個の dir を持つと同一の巨大履歴が D 個複製され、pickle 時 (worker→親 /
+    # cache 保存) にメモリが D 倍に膨張して OOM の主因になっていた。ここで 1 回だけ
+    # 作り各 trajectory から同一オブジェクトを参照させる。pickle は 1 回の dump 内の
+    # 共有参照を 1 度しか直列化しないため pkl も D 分の 1 になる (挙動は不変)。
+    # skip 条件 (label_tail / future_start>=train_end) は directory 非依存なので
+    # 採用月は全 directory で同一。
+    history_months = pd.date_range(start=history_start, end=history_end, freq='MS')
+    active_month_ends = []
+    shared_context_dates = []
+    shared_total_project_reviews = []
+    shared_monthly_activity_histories = []
+    for month_start in history_months[:-1]:
+        month_end = month_start + pd.DateOffset(months=1)
+        if label_tail_months is not None:
+            if month_end + pd.DateOffset(months=label_tail_months) > train_end:
+                continue
+        else:
+            if month_end + pd.DateOffset(months=future_window_start_months) >= train_end:
+                continue
+        active_month_ends.append(month_end)
+        shared_context_dates.append(month_end)
+        shared_total_project_reviews.append(total_proj_by_month_end[month_end])
+
+        month_history = reviewer_history[reviewer_history[date_col] < month_end]
+        monthly_activities = []
+        for _, row in month_history.iterrows():
+            monthly_activities.append({
+                'timestamp': row[date_col],
+                'action_type': 'review',
+                'project': row.get('project', 'unknown'),
+                'project_id': row.get('project', 'unknown'),
+                'request_time': row.get('request_time', row[date_col]),
+                'response_time': row.get('first_response_time'),
+                'accepted': row.get(label_col, 0) == 1,
+                'owner_email': row.get('owner_email', ''),
+                'is_cross_project': row.get('is_cross_project', False),
+                'files_changed': row.get('change_files_count', 0),
+                'lines_added': row.get('change_insertions', 0),
+                'lines_deleted': row.get('change_deletions', 0),
+            })
+        authored_history = reviewer_authored[
+            (reviewer_authored[date_col] >= history_start) &
+            (reviewer_authored[date_col] < month_end)
+        ]
+        for _, row in authored_history.iterrows():
+            monthly_activities.append({
+                'action_type': 'authored',
+                'timestamp': row[date_col],
+                'owner_email': reviewer,
+                'reviewer_email': row.get('email', row.get('reviewer_email', '')),
+                'files_changed': row.get('change_files_count', 0),
+                'lines_added': row.get('change_insertions', 0),
+                'lines_deleted': row.get('change_deletions', 0),
+            })
+        shared_monthly_activity_histories.append(monthly_activities)
+
     for directory in sorted(reviewer_dirs):
         label_start = train_end + pd.DateOffset(months=future_window_start_months)
         label_end = train_end + pd.DateOffset(months=future_window_end_months)
 
-        label_df = df[
-            (df[date_col] >= label_start) &
-            (df[date_col] < label_end) &
-            (df[reviewer_col] == reviewer) &
-            (df[dirs_column].map(lambda ds: directory in ds if ds else False))
+        label_df = reviewer_requests[
+            (reviewer_requests[date_col] >= label_start) &
+            (reviewer_requests[date_col] < label_end) &
+            (reviewer_requests[dirs_column].map(lambda ds: directory in ds if ds else False))
         ]
 
         if len(label_df) == 0:
@@ -577,39 +646,22 @@ def _process_one_reviewer(
         else:
             negative_count += 1
 
-        history_months = pd.date_range(start=history_start, end=history_end, freq='MS')
-
         step_labels = []
         step_labels_per_window = {"0-3": [], "3-6": [], "6-9": [], "9-12": []} if multitask else None
-        monthly_activity_histories = []
-        step_context_dates = []
-        step_total_project_reviews = []
         path_features_per_step = []
 
-        for month_start in history_months[:-1]:
-            month_end = month_start + pd.DateOffset(months=1)
-
+        # active_month_ends は reviewer 単位で確定済み (directory 非依存の skip 条件)。
+        # ここでは directory 依存の label と path 特徴量のみ計算する。
+        for month_end in active_month_ends:
             future_start = month_end + pd.DateOffset(months=future_window_start_months)
             future_end = month_end + pd.DateOffset(months=future_window_end_months)
+            if label_tail_months is None and future_end > train_end:
+                future_end = train_end
 
-            if label_tail_months is not None:
-                # align系列: 全 horizon 共通の label tail を確保。
-                # month_end + label_tail <= train_end の月のみ採用 → 最新 month_end が
-                # train_end - label_tail で全 horizon 揃う。tail 内に収まるので
-                # future_end は train_end を超えず、クリップ不要。
-                if month_end + pd.DateOffset(months=label_tail_months) > train_end:
-                    continue
-            else:
-                if future_end > train_end:
-                    future_end = train_end
-                if future_start >= train_end:
-                    continue
-
-            month_future_df = df[
-                (df[date_col] >= future_start) &
-                (df[date_col] < future_end) &
-                (df[reviewer_col] == reviewer) &
-                (df[dirs_column].map(lambda ds: directory in ds if ds else False))
+            month_future_df = reviewer_requests[
+                (reviewer_requests[date_col] >= future_start) &
+                (reviewer_requests[date_col] < future_end) &
+                (reviewer_requests[dirs_column].map(lambda ds: directory in ds if ds else False))
             ]
 
             if len(month_future_df) == 0:
@@ -632,11 +684,10 @@ def _process_one_reviewer(
                     if mt_future_start >= train_end:
                         step_labels_per_window[f"{fw_s}-{fw_e}"].append(0)
                         continue
-                    mt_df = df[
-                        (df[date_col] >= mt_future_start) &
-                        (df[date_col] < mt_future_end) &
-                        (df[reviewer_col] == reviewer) &
-                        (df[dirs_column].map(lambda ds: directory in ds if ds else False))
+                    mt_df = reviewer_requests[
+                        (reviewer_requests[date_col] >= mt_future_start) &
+                        (reviewer_requests[date_col] < mt_future_end) &
+                        (reviewer_requests[dirs_column].map(lambda ds: directory in ds if ds else False))
                     ]
                     if len(mt_df) == 0:
                         mt_label = 0
@@ -646,44 +697,6 @@ def _process_one_reviewer(
                         else:
                             mt_label = 1 if len(mt_df[mt_df[label_col] == 1]) > 0 else 0
                     step_labels_per_window[f"{fw_s}-{fw_e}"].append(mt_label)
-            step_context_dates.append(month_end)
-
-            total_proj = len(df[(df[date_col] >= history_start) & (df[date_col] < month_end)])
-            step_total_project_reviews.append(total_proj)
-
-            month_history = reviewer_history[reviewer_history[date_col] < month_end]
-            monthly_activities = []
-            for _, row in month_history.iterrows():
-                monthly_activities.append({
-                    'timestamp': row[date_col],
-                    'action_type': 'review',
-                    'project': row.get('project', 'unknown'),
-                    'project_id': row.get('project', 'unknown'),
-                    'request_time': row.get('request_time', row[date_col]),
-                    'response_time': row.get('first_response_time'),
-                    'accepted': row.get(label_col, 0) == 1,
-                    'owner_email': row.get('owner_email', ''),
-                    'is_cross_project': row.get('is_cross_project', False),
-                    'files_changed': row.get('change_files_count', 0),
-                    'lines_added': row.get('change_insertions', 0),
-                    'lines_deleted': row.get('change_deletions', 0),
-                })
-            authored_history = df[
-                (df['owner_email'] == reviewer) &
-                (df[date_col] >= history_start) &
-                (df[date_col] < month_end)
-            ]
-            for _, row in authored_history.iterrows():
-                monthly_activities.append({
-                    'action_type': 'authored',
-                    'timestamp': row[date_col],
-                    'owner_email': reviewer,
-                    'reviewer_email': row.get('email', row.get('reviewer_email', '')),
-                    'files_changed': row.get('change_files_count', 0),
-                    'lines_added': row.get('change_insertions', 0),
-                    'lines_deleted': row.get('change_deletions', 0),
-                })
-            monthly_activity_histories.append(monthly_activities)
 
             pf = path_extractor.compute(
                 reviewer, frozenset({directory}), month_end.to_pydatetime()
@@ -714,9 +727,11 @@ def _process_one_reviewer(
             'developer_info': developer_info,
             'directory': directory,
             'activity_history': [],
-            'monthly_activity_histories': monthly_activity_histories,
-            'step_context_dates': step_context_dates,
-            'step_total_project_reviews': step_total_project_reviews,
+            # reviewer 単位で 1 度だけ構築した共有オブジェクトを参照 (directory 間で
+            # コピーせず共有 → pickle が 1 度しか直列化しない = メモリ D 分の 1)。
+            'monthly_activity_histories': shared_monthly_activity_histories,
+            'step_context_dates': shared_context_dates,
+            'step_total_project_reviews': shared_total_project_reviews,
             'path_features_per_step': path_features_per_step,
             'context_date': train_end,
             'step_labels': step_labels,
@@ -730,6 +745,54 @@ def _process_one_reviewer(
         results.append(trajectory)
 
     return results, positive_count, negative_count, skipped_count
+
+
+def _cap_n_jobs_by_memory(requested: int) -> int:
+    """cgroup メモリ上限と現プロセス RSS から安全な n_jobs を算出し、requested を
+    上回らない範囲に絞る(減らす方向のみ)。上限が取れない/余裕がある場合は requested
+    をそのまま返す。MEM_CAP_DISABLE=1 で無効化。MEM_CAP_FRACTION で使用率(既定0.8)。"""
+    if os.environ.get("MEM_CAP_DISABLE") == "1":
+        return requested
+    resolved = requested if requested and requested > 0 else (os.cpu_count() or 1)
+    # cgroup v2 → v1 の順でメモリ上限を読む
+    limit = None
+    for path in ("/sys/fs/cgroup/memory.max",
+                 "/sys/fs/cgroup/memory/memory.limit_in_bytes"):
+        try:
+            with open(path) as f:
+                raw = f.read().strip()
+            if raw and raw != "max":
+                v = int(raw)
+                # v1 は上限なしを巨大値で表すため現実的な範囲のみ採用
+                if 0 < v < (1 << 62):
+                    limit = v
+                    break
+        except (OSError, ValueError):
+            continue
+    if limit is None:
+        logger.info("[mem-cap] cgroup メモリ上限を取得できず → n_jobs 据え置き")
+        return resolved
+    # 現プロセス RSS を 1 worker あたりのコピー量の目安とする(保守的)
+    per_worker = None
+    try:
+        with open("/proc/self/status") as f:
+            for line in f:
+                if line.startswith("VmRSS:"):
+                    per_worker = int(line.split()[1]) * 1024
+                    break
+    except OSError:
+        pass
+    if not per_worker:
+        return resolved
+    fraction = float(os.environ.get("MEM_CAP_FRACTION", "0.8"))
+    budget = int(limit * fraction)
+    safe = max(1, budget // per_worker)
+    capped = min(resolved, safe)
+    logger.info(
+        f"[mem-cap] limit={limit/1e9:.1f}GB × {fraction:.2f} = {budget/1e9:.1f}GB, "
+        f"per_worker≈{per_worker/1e9:.2f}GB → safe={safe}, n_jobs {resolved}→{capped}"
+    )
+    return capped
 
 
 def extract_directory_level_trajectories(
@@ -778,10 +841,50 @@ def extract_directory_level_trajectories(
     active_reviewers = history_df[reviewer_col].unique()
     logger.info(f"特徴量計算期間内のレビュアー数: {len(active_reviewers)}")
 
-    # レビュアー単位で並列処理
+    # MIN_REVIEWER_CHANGES: 訓練期間内の change 数がこれ未満のレビュアーをスキップ。
+    # AOSP など大規模データでタスク数を削減しメモリ・時間を節約する。デフォルト=1(全件)。
+    min_reviewer_changes = int(os.environ.get("MIN_REVIEWER_CHANGES", "1"))
+    if min_reviewer_changes > 1:
+        counts = history_df[reviewer_col].value_counts()
+        active_reviewers = counts[counts >= min_reviewer_changes].index.to_numpy()
+        logger.info(
+            f"MIN_REVIEWER_CHANGES={min_reviewer_changes} フィルタ後: {len(active_reviewers)} レビュアー"
+        )
+
+    # レビュアー単位に事前分割 + 月次カウントを事前計算する。
+    # 全体 df/history_df をタスクごとにそのまま渡すと、各ワーカーで毎回
+    # 全表スキャン + 丸ごと再pickleが発生し、48並列時にメモリ圧迫で
+    # workerが落ちる (loky "A worker stopped..." 警告) 原因になるため、
+    # ここで一度だけ分割・集計してから各ワーカーには小さいスライスのみ渡す。
+    reviewer_requests_by_id = dict(tuple(df.groupby(reviewer_col)))
+    reviewer_authored_by_id = dict(tuple(df.groupby('owner_email')))
+    empty_df = df.iloc[0:0]
+
+    total_proj_by_month_end = {}
+    for month_start in pd.date_range(start=history_start, end=history_end, freq='MS')[:-1]:
+        month_end = month_start + pd.DateOffset(months=1)
+        if month_end not in total_proj_by_month_end:
+            total_proj_by_month_end[month_end] = len(
+                df[(df[date_col] >= history_start) & (df[date_col] < month_end)]
+            )
+
+    # ── メモリ連動 n_jobs 自動キャップ ──────────────────────────────────
+    # loky は path_extractor(全 df + co-change グラフ)を worker ごとに pickle
+    # コピーするため、ピークメモリは n_jobs にほぼ比例する。AOSP 大規模グラフ
+    # では指定 n_jobs が多いと OOM で worker が SIGKILL され全体が死ぬ。
+    # ここで cgroup メモリ上限と現プロセス RSS(≒1コピー分)から安全な worker 数
+    # を計算し、指定値を上回らない範囲に絞る(減らす方向のみ。OpenStack 等の
+    # 小グラフでは余裕があり発動しない=従来挙動)。MEM_CAP_DISABLE=1 で無効化。
+    n_jobs = _cap_n_jobs_by_memory(n_jobs)
+
+    # threading バックエンド: スレッド間でメモリを共有するため
     batch_results = Parallel(n_jobs=n_jobs, backend="loky", verbose=10)(
         delayed(_process_one_reviewer)(
-            reviewer, df, history_df, path_extractor,
+            reviewer,
+            reviewer_requests_by_id.get(reviewer, empty_df),
+            reviewer_authored_by_id.get(reviewer, empty_df),
+            total_proj_by_month_end,
+            path_extractor,
             train_start, train_end,
             future_window_start_months, future_window_end_months,
             reviewer_col, date_col, label_col, dirs_column, multitask,

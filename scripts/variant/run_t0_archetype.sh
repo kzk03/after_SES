@@ -32,7 +32,7 @@ K_GRID=("$@")
 # [align系列] ALIGN=1 で outputs/t0_sweep_align/ を参照し、base(2023-01) も align 再学習物を使う。
 ALIGN="${ALIGN:-0}"
 if [ "$ALIGN" = "1" ]; then
-    SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep_align}"
+    SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep_align_fs24}"
 else
     SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep}"
 fi

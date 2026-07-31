@@ -1,11 +1,11 @@
 """
 MCE-IRL モデルによるバッチ continuation_prob 推論
 
-batch_predictor.py の MCE-IRL 版。学習済みの MCEIRLSystem (mce_irl_model.pt)
-をロードして、月次シーケンスから π(a=1|s) を継続確率として返す。
-評価スクリプト eval_mce_irl_path_prediction.py から利用する。
+学習済みの MCEIRLSystem (mce_irl_model.pt) をロードして、月次シーケンスから
+π(a=1|s) を継続確率として返す。評価スクリプト eval_mce_irl_path_prediction.py
+から利用する。
 
-月次シーケンス構築ロジックは train_model.py / batch_predictor.py と同一。
+月次シーケンス構築ロジックは train_model.py と同一(重複箇所、要リファクタ)。
 """
 
 from __future__ import annotations
@@ -68,6 +68,11 @@ class MCEBatchContinuationPredictor:
 
         # IRL システムを遅延ロード
         self._irl_system: Optional[Any] = None
+
+        # total_proj_by_month_end (プロジェクト全体レビュー数) は開発者に依存せず
+        # month_end のみで決まる。開発者ごとにフルDFを月×人ぶん再スキャンすると
+        # 評価が数時間かかるため、prediction_time ごとに 1 度だけ計算してキャッシュする。
+        self._total_proj_cache: Dict[Any, Dict[Any, int]] = {}
 
     def _load_model(self) -> None:
         """MCE-IRL モデルをロード（初回のみ）。"""
@@ -188,26 +193,43 @@ class MCEBatchContinuationPredictor:
         history_months = pd.date_range(
             start=history_start, end=pred_time, freq="MS"
         )
+        month_ends = [
+            (ms + pd.DateOffset(months=1)) for ms in history_months[:-1]
+            if (ms + pd.DateOffset(months=1)) <= pred_time
+        ]
+
+        # total_proj_by_month_end: 開発者非依存。prediction_time ごとに 1 度だけ
+        # 計算してキャッシュ (searchsorted で全 month_end を一括算出)。従来は
+        # 開発者×月ぶんフルDFを再スキャンしており評価の主要な律速だった。
+        total_proj_by_month_end = self._total_proj_cache.get(pred_time)
+        if total_proj_by_month_end is None:
+            all_dates = np.sort(
+                df.loc[
+                    (df[self.date_col] >= history_start)
+                    & (df[self.date_col] < pred_time),
+                    self.date_col,
+                ].values
+            )
+            total_proj_by_month_end = {
+                me: int(np.searchsorted(all_dates, np.datetime64(pd.Timestamp(me))))
+                for me in month_ends
+            }
+            self._total_proj_cache[pred_time] = total_proj_by_month_end
+
+        # authored 履歴も開発者ごとに 1 度だけフィルタ (従来は月ごとにフルDF再抽出)。
+        authored_all = df[
+            (df["owner_email"] == email)
+            & (df[self.date_col] >= history_start)
+            & (df[self.date_col] < pred_time)
+        ]
 
         monthly_activity_histories: List[List[Dict[str, Any]]] = []
         step_context_dates: List[datetime] = []
         step_total_project_reviews: List[int] = []
 
-        for month_start in history_months[:-1]:
-            month_end = month_start + pd.DateOffset(months=1)
-            if month_end > pred_time:
-                break
-
+        for month_end in month_ends:
             step_context_dates.append(month_end.to_pydatetime())
-
-            # プロジェクト全体のレビュー依頼数
-            total_proj = len(
-                df[
-                    (df[self.date_col] >= history_start)
-                    & (df[self.date_col] < month_end)
-                ]
-            )
-            step_total_project_reviews.append(total_proj)
+            step_total_project_reviews.append(total_proj_by_month_end[month_end])
 
             # この月時点までの活動履歴（レビュー）
             month_history = reviewer_history[
@@ -232,10 +254,8 @@ class MCEBatchContinuationPredictor:
                 monthly_activities.append(activity)
 
             # 自分が作成した PR（authored）の履歴も追加
-            authored_history = df[
-                (df["owner_email"] == email)
-                & (df[self.date_col] >= history_start)
-                & (df[self.date_col] < month_end)
+            authored_history = authored_all[
+                authored_all[self.date_col] < month_end
             ]
             for _, row in authored_history.iterrows():
                 monthly_activities.append(

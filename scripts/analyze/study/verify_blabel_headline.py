@@ -71,47 +71,50 @@ def load_df_with_dirs(
 
 def compute_headline(
     df_dirs: pd.DataFrame, irl_base: str, rf_base: str, t0,
-    delta: int = 3, assign: bool = False,
+    delta: int = 3, assign: bool = False, rf_extra_cols: tuple = (),
 ) -> pd.DataFrame:
     """IRL(diagonal)/RF の cold 予測を align し、B定義(or アサイン)ラベルで
-    horizon 別＋pooled の AUC-ROC/PR を返す。"""
+    horizon 別＋pooled の AUC-ROC/PR を返す。
+
+    rf_extra_cols: RF 側 pair_predictions.csv の追加確率列（例: gbdt_dir_prob）。
+    指定列の AUC-ROC/PR も列として付く。
+    """
     t0 = pd.Timestamp(t0)
     rows, pooled = [], []
+
+    def _make_row(m: pd.DataFrame, horizon: str) -> dict:
+        y = m["label"].to_numpy()
+        pi, pr = m["irl_dir_prob"].to_numpy(), m["rf_dir_prob"].to_numpy()
+        pe = (pi + pr) / 2
+        row = {
+            "horizon": horizon, "n": len(m), "pos": int(y.sum()), "posrate": y.mean(),
+            "IRL_roc": roc_auc_score(y, pi), "RF_roc": roc_auc_score(y, pr),
+            "Ens_roc": roc_auc_score(y, pe),
+            "IRL_pr": average_precision_score(y, pi),
+            "RF_pr": average_precision_score(y, pr),
+            "Ens_pr": average_precision_score(y, pe),
+        }
+        for c in rf_extra_cols:
+            pc = m[c].to_numpy()
+            row[f"{c}_roc"] = roc_auc_score(y, pc)
+            row[f"{c}_pr"] = average_precision_score(y, pc)
+        return row
+
     for h in HZ:
         irl = pd.read_csv(f"{irl_base}/train_{h}m/eval_{h}m/pair_predictions.csv")
         rf = pd.read_csv(f"{rf_base}/fs_{h.replace('-', '_to_')}m/pair_predictions.csv")
         m = irl[["developer", "directory", "irl_dir_prob"]].merge(
-            rf[["developer", "directory", "rf_dir_prob"]],
+            rf[["developer", "directory", "rf_dir_prob", *rf_extra_cols]],
             on=["developer", "directory"], how="inner")
         dir_devs = recompute_blabel(df_dirs, t0, FS[h], delta, assign)
         m["label"] = [
             1 if dev in dir_devs.get(d, set()) else 0
             for dev, d in zip(m["developer"], m["directory"])
         ]
-        y = m["label"].to_numpy()
-        pi, pr = m["irl_dir_prob"].to_numpy(), m["rf_dir_prob"].to_numpy()
-        pe = (pi + pr) / 2
-        rows.append({
-            "horizon": h, "n": len(m), "pos": int(y.sum()), "posrate": y.mean(),
-            "IRL_roc": roc_auc_score(y, pi), "RF_roc": roc_auc_score(y, pr),
-            "Ens_roc": roc_auc_score(y, pe),
-            "IRL_pr": average_precision_score(y, pi),
-            "RF_pr": average_precision_score(y, pr),
-            "Ens_pr": average_precision_score(y, pe),
-        })
+        rows.append(_make_row(m, h))
         mm = m.copy(); mm["horizon"] = h; pooled.append(mm)
     P = pd.concat(pooled, ignore_index=True)
-    y = P["label"].to_numpy()
-    pi, pr = P["irl_dir_prob"].to_numpy(), P["rf_dir_prob"].to_numpy()
-    pe = (pi + pr) / 2
-    rows.append({
-        "horizon": "pooled", "n": len(P), "pos": int(y.sum()), "posrate": y.mean(),
-        "IRL_roc": roc_auc_score(y, pi), "RF_roc": roc_auc_score(y, pr),
-        "Ens_roc": roc_auc_score(y, pe),
-        "IRL_pr": average_precision_score(y, pi),
-        "RF_pr": average_precision_score(y, pr),
-        "Ens_pr": average_precision_score(y, pe),
-    })
+    rows.append(_make_row(P, "pooled"))
     return pd.DataFrame(rows)
 
 
@@ -126,12 +129,15 @@ def main() -> None:
     p.add_argument("--dir-depth", type=int, default=2)
     p.add_argument("--assign", action="store_true",
                    help="承諾でなくアサイン定義（label 不問）で集計（焼き込み label 相当）")
+    p.add_argument("--rf-extra-col", action="append", default=[],
+                   help="RF 側 pair_predictions.csv の追加確率列（例: gbdt_dir_prob）。複数指定可")
     p.add_argument("--out-csv", default=None)
     args = p.parse_args()
 
     df = load_df_with_dirs(args.data, args.raw_json_list, args.dir_depth)
     out = compute_headline(df, args.irl_base, args.rf_base, args.prediction_time,
-                           delta=args.delta_months, assign=args.assign)
+                           delta=args.delta_months, assign=args.assign,
+                           rf_extra_cols=tuple(args.rf_extra_col))
     label_kind = "ASSIGN(アサイン)" if args.assign else "B定義(承諾)"
     print(f"\n=== t0={args.prediction_time}  label={label_kind} ===")
     pd.set_option("display.width", 160)
