@@ -66,7 +66,7 @@ def archetype_period_auc(
         for h in HZ:
             row = {"archetype": f"A{j + 1}", "horizon": h}
             n_rows = None
-            for model in ["cold_irl", "rf_dir"]:
+            for model in ["cold_irl", "rf_dir", "ens"]:
                 sub = sub_j[
                     (sub_j["horizon"] == h) & (sub_j["model"] == model)
                 ][["label", "prob"]].to_numpy()
@@ -86,6 +86,7 @@ def archetype_period_auc(
             rows.append(row)
     df = pd.DataFrame(rows)
     df["delta_pp"] = (df["auc_cold_irl"] - df["auc_rf_dir"]) * 100
+    df["ens_gain_pp"] = (df["auc_ens"] - df[["auc_cold_irl", "auc_rf_dir"]].max(axis=1)) * 100
     return df
 
 

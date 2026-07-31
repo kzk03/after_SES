@@ -234,10 +234,9 @@ def panel_signature(ax, df: pd.DataFrame, topn: int = 5,
     ax.invert_yaxis()
     ax.set_xlabel("特徴量値 − 他archetypeの平均", fontsize=xlabel_fs,
                   fontweight=label_w)
-    title = (f"archetype別の特徴的な特徴量（上位{topn}）"
-             if standalone
-             else f"(C) archetype別の特徴的な特徴量（上位{topn}）")
-    ax.set_title(title, fontsize=title_fs, fontweight=label_w)
+    if not standalone:
+        title = f"(C) archetype別の特徴的な特徴量（上位{topn}）"
+        ax.set_title(title, fontsize=title_fs, fontweight=label_w)
     ax.grid(axis="x", alpha=0.3)
     ax.set_axisbelow(True)
     # archetype labels on right

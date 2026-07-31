@@ -1,0 +1,102 @@
+{
+  "Naive": {
+    "mae": 5.9621689785624215,
+    "rmse": 11.309416447293389,
+    "pearson_r": 0.933047293837893,
+    "spearman_r": 0.6901470186424832,
+    "n_dirs": 1586.0,
+    "danger_precision": 0.22330097087378642,
+    "danger_recall": 0.10849056603773585,
+    "danger_f1": 0.146031746031746,
+    "danger_tp": 23.0,
+    "danger_fp": 80.0,
+    "danger_fn": 189.0,
+    "danger_tn": 1294.0
+  },
+  "Linear": {
+    "mae": NaN,
+    "rmse": NaN,
+    "n_dirs": 0,
+    "danger_precision": 0.0,
+    "danger_recall": 0.0,
+    "danger_f1": 0.0
+  },
+  "RF": {
+    "mae": NaN,
+    "rmse": NaN,
+    "n_dirs": 0,
+    "danger_precision": 0.0,
+    "danger_recall": 0.0,
+    "danger_f1": 0.0
+  },
+  "IRL_VariantA": {
+    "mae": NaN,
+    "rmse": NaN,
+    "n_dirs": 0,
+    "danger_precision": 0.0,
+    "danger_recall": 0.0,
+    "danger_f1": 0.0
+  },
+  "IRL_VariantA_scaled": {
+    "mae": NaN,
+    "rmse": NaN,
+    "n_dirs": 0,
+    "danger_precision": 0.0,
+    "danger_recall": 0.0,
+    "danger_f1": 0.0
+  },
+  "IRL_VariantB": {
+    "mae": NaN,
+    "rmse": NaN,
+    "n_dirs": 0,
+    "danger_precision": 0.0,
+    "danger_recall": 0.0,
+    "danger_f1": 0.0
+  },
+  "IRL_Dir": {
+    "mae": 7.592429029633195,
+    "rmse": 13.854713267819555,
+    "pearson_r": 0.920572981934791,
+    "spearman_r": 0.6450401950140836,
+    "n_dirs": 1586.0,
+    "danger_precision": 0.16446858029480219,
+    "danger_recall": 1.0,
+    "danger_f1": 0.28247834776815456,
+    "danger_tp": 212.0,
+    "danger_fp": 1077.0,
+    "danger_fn": 0.0,
+    "danger_tn": 297.0,
+    "clf_auc_roc": 0.7254883918119821,
+    "clf_auc_pr": 0.5586476466826877,
+    "clf_f1": 0.5232198142414861,
+    "clf_precision": 0.5230655858511423,
+    "clf_recall": 0.5233741336086123,
+    "clf_threshold": 0.06860648095607758,
+    "clf_n_pairs": 26830.0,
+    "clf_n_pos": 6781.0,
+    "clf_n_neg": 20049.0
+  },
+  "IRL_Dir_calibrated": {
+    "mae": 5.317888841596107,
+    "rmse": 9.392203947523003,
+    "pearson_r": 0.940985852847627,
+    "spearman_r": 0.683641428121997,
+    "n_dirs": 1586.0,
+    "danger_precision": 0.23596938775510204,
+    "danger_recall": 0.8726415094339622,
+    "danger_f1": 0.3714859437751004,
+    "danger_tp": 185.0,
+    "danger_fp": 599.0,
+    "danger_fn": 27.0,
+    "danger_tn": 775.0,
+    "clf_auc_roc": 0.7283364391660135,
+    "clf_auc_pr": 0.5622235629718679,
+    "clf_f1": 0.5219129404797157,
+    "clf_precision": 0.5240077300431099,
+    "clf_recall": 0.5198348326205574,
+    "clf_threshold": 0.26339285714285715,
+    "clf_n_pairs": 26830.0,
+    "clf_n_pos": 6781.0,
+    "clf_n_neg": 20049.0
+  }
+}

@@ -283,6 +283,14 @@ INPUT ./fig/fig_dev_archetype_profile.pdf
 INPUT ./fig/fig_dev_archetype_profile.pdf
 INPUT ./fig/fig_dev_archetype_profile.pdf
 INPUT extractbb -B cropbox -O fig/fig_dev_archetype_profile.pdf
+INPUT ./fig/fig_aosp_pair_archetype_profile.pdf
+INPUT ./fig/fig_aosp_pair_archetype_profile.pdf
+INPUT ./fig/fig_aosp_pair_archetype_profile.pdf
+INPUT extractbb -B cropbox -O fig/fig_aosp_pair_archetype_profile.pdf
+INPUT ./fig/fig_aosp_dev_archetype_profile.pdf
+INPUT ./fig/fig_aosp_dev_archetype_profile.pdf
+INPUT ./fig/fig_aosp_dev_archetype_profile.pdf
+INPUT extractbb -B cropbox -O fig/fig_aosp_dev_archetype_profile.pdf
 INPUT ./ses_main.bbl
 INPUT ./ses_main.bbl
 INPUT ses_main.bbl

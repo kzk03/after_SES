@@ -41,6 +41,7 @@
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 特徴量リスト}}{3}{}\protected@file@percent }
 \newlabel{tab:features}{{1}{3}{}{table.1}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.1}{特徴量}}{3}{}\protected@file@percent }
+\newlabel{sec:feat-detail}{{3.2.1}{3}{}{subsubsection.3.2.1}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.2}{行動軌跡}}{3}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.3}{ラベル}}{3}{}\protected@file@percent }
 \newlabel{eq:label}{{1}{3}{}{equation.1}{}}
@@ -61,71 +62,65 @@
 \@writefile{toc}{\contentsline {section}{\numberline {5}\hskip 1zw{ケーススタディ}}{4}{}\protected@file@percent }
 \newlabel{sec:case}{{5}{4}{}{section.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1}{実験設定}}{4}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces データセット統計（bot除外後）と評価期間別の正例数}}{5}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces  データセット統計（bot除外後）と評価期間別正例数}}{5}{}\protected@file@percent }
 \newlabel{tab:dataset}{{2}{5}{}{table.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2}{予測モデルの評価結果}}{5}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces 開発者-ディレクトリペア単位AUC-ROC（$n=4{,}534$）}}{5}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces  開発者-ディレクトリペア単位AUC-ROC（OpenStack $n=4{,}534$；AOSP $n=26{,}830$）}}{5}{}\protected@file@percent }
 \newlabel{tab:rq1}{{3}{5}{}{table.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces 開発者単位AUC-ROC（$N=436$)}}{5}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces  開発者単位AUC-ROC（OpenStack $N=436$；AOSP $N=2{,}508$)}}{5}{}\protected@file@percent }
 \newlabel{tab:rq1-1}{{4}{5}{}{table.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}{追加実験：時系列符号化の寄与を分離するアブレーション}}{5}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces  IRLと比較モデルのAUC-ROC比較}}{5}{}\protected@file@percent }
+\newlabel{tab:ablation}{{5}{5}{}{table.5}{}}
+\newlabel{fig:pair-elbow}{{3a}{5}{}{subfigure.3.1}{}}
+\newlabel{sub@fig:pair-elbow}{{a}{5}{}{subfigure.3.1}{}}
+\newlabel{fig:dev-elbow}{{3b}{5}{}{subfigure.3.2}{}}
+\newlabel{sub@fig:dev-elbow}{{b}{5}{}{subfigure.3.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces 原型数$K$に対する平均残差平方和の推移．}}{5}{}\protected@file@percent }
+\newlabel{fig:rss}{{3}{5}{}{figure.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}{時系列符号化の寄与を分離するアブレーション}}{5}{}\protected@file@percent }
 \newlabel{sec:ablation}{{5.3}{5}{}{subsection.5.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.4}{モデルが予測できるペア・開発者の分析結果}}{5}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces IRLと比較モデル（教師信号を最終時点のみに制限したモデル）のpooled AUC-ROC比較}}{6}{}\protected@file@percent }
-\newlabel{tab:ablation}{{5}{6}{}{table.5}{}}
-\newlabel{fig:pair-elbow}{{3a}{6}{}{subfigure.3.1}{}}
-\newlabel{sub@fig:pair-elbow}{{a}{6}{}{subfigure.3.1}{}}
-\newlabel{fig:dev-elbow}{{3b}{6}{}{subfigure.3.2}{}}
-\newlabel{sub@fig:dev-elbow}{{b}{6}{}{subfigure.3.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces 原型数$K$に対する平均残差平方和の推移．}}{6}{}\protected@file@percent }
-\newlabel{fig:rss}{{3}{6}{}{figure.3}{}}
-\@writefile{toc}{\contentsline {paragraph}{\numberline {5.4.0.1}{OpenStackの原型分析}}{6}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.1}{ペア単位の分析}}{6}{}\protected@file@percent }
-\newlabel{sec:pair-arch}{{5.4.1}{6}{}{subsubsection.5.4.1}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.2}{開発者単位の分析}}{6}{}\protected@file@percent }
-\newlabel{sec:dev-arch}{{5.4.2}{6}{}{subsubsection.5.4.2}{}}
-\@writefile{toc}{\contentsline {paragraph}{\numberline {5.4.2.1}{AOSPの原型分析}}{6}{}\protected@file@percent }
+\newlabel{sec:model-analysis}{{5.4}{5}{}{subsection.5.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.1}{OpenStackの原型分析}}{5}{}\protected@file@percent }
+\newlabel{sec:pair-arch}{{5.4.1}{5}{}{subsubsection.5.4.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.2}{AOSPの原型分析}}{6}{}\protected@file@percent }
+\newlabel{sec:aosp-arch}{{5.4.2}{6}{}{subsubsection.5.4.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.5}{追加実験：アンサンブルモデル}}{6}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces 4 ペアarchetype の解釈名（$n=3{,}677$）}}{7}{}\protected@file@percent }
+\newlabel{sec:ensemble}{{5.5}{6}{}{subsection.5.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces 4 ペアarchetype の解釈名}}{7}{}\protected@file@percent }
 \newlabel{tab:pair-arch}{{6}{7}{}{table.6}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces ペア単位の原型分析における特徴的な特徴量}}{7}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces ペア単位の原型分析における主要な特徴量}}{7}{}\protected@file@percent }
 \newlabel{fig:pair-profile}{{4}{7}{}{figure.4}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces ペア単位の4原型における評価期間別AUC}}{7}{}\protected@file@percent }
 \newlabel{tab:pair-arch-delta}{{7}{7}{}{table.7}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces 4原型の解釈名（$N=289$）}}{7}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces 4原型の解釈名}}{7}{}\protected@file@percent }
 \newlabel{tab:archetypes}{{8}{7}{}{table.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces 開発者単位の原型分析における特徴的な特徴量}}{7}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces 開発者単位の原型分析における主要な特徴量}}{7}{}\protected@file@percent }
 \newlabel{fig:dev-profile}{{5}{7}{}{figure.5}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces 開発者単位の4原型における評価期間別AUC}}{7}{}\protected@file@percent }
 \newlabel{tab:dev-arch}{{9}{7}{}{table.9}{}}
-\newlabel{fig:aosp-pair-elbow}{{6a}{8}{}{subfigure.6.1}{}}
-\newlabel{sub@fig:aosp-pair-elbow}{{a}{8}{}{subfigure.6.1}{}}
-\newlabel{fig:aosp-dev-elbow}{{6b}{8}{}{subfigure.6.2}{}}
-\newlabel{sub@fig:aosp-dev-elbow}{{b}{8}{}{subfigure.6.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces AOSP：原型数$K$に対する平均残差平方和}}{8}{}\protected@file@percent }
-\newlabel{fig:aosp-elbow}{{6}{8}{}{figure.6}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces IRL，RF，アンサンブルによるモデルの精度比較結果と，bootstrapによる95\%信頼区間．}}{8}{}\protected@file@percent }
-\newlabel{tab:rq3}{{14}{8}{}{table.14}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces ペア単位の4原型におけるアンサンブルモデルを用いた評価期間別のAUC差（アンサンブル$-$最良単独）}}{8}{}\protected@file@percent }
-\newlabel{tab:pair-gain}{{15}{8}{}{table.15}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces 開発者単位の4原型におけるアンサンブルモデルを用いた評価期間別のAUC差（アンサンブル$-$最良単独）}}{8}{}\protected@file@percent }
-\newlabel{tab:dev-gain}{{16}{8}{}{table.16}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}\hskip 1zw{考察}}{8}{}\protected@file@percent }
-\newlabel{sec:discuss}{{6}{8}{}{section.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}{IRLとRFの補完性に関する考察}}{8}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}{アンサンブルの有効性に関する考察}}{8}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces AOSP：ペア単位の原型の解釈名（プレースホルダ）}}{9}{}\protected@file@percent }
-\newlabel{tab:aosp-pair-name}{{10}{9}{}{table.10}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces AOSP：ペア単位の原型分析における特徴的な特徴量（プレースホルダ）}}{9}{}\protected@file@percent }
-\newlabel{fig:aosp-pair-profile}{{7}{9}{}{figure.7}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces AOSP：ペア単位の4原型における評価期間別AUC（プレースホルダ）}}{9}{}\protected@file@percent }
-\newlabel{tab:aosp-pair-arch}{{11}{9}{}{table.11}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces AOSP：開発者単位の原型の解釈名（プレースホルダ）}}{9}{}\protected@file@percent }
-\newlabel{tab:aosp-dev-name}{{12}{9}{}{table.12}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces AOSP：開発者単位の原型分析における特徴的な特徴量（プレースホルダ）}}{9}{}\protected@file@percent }
-\newlabel{fig:aosp-dev-profile}{{8}{9}{}{figure.8}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces AOSP：開発者単位の4原型における評価期間別AUC（プレースホルダ）}}{9}{}\protected@file@percent }
-\newlabel{tab:aosp-dev-arch}{{13}{9}{}{table.13}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}\hskip 1zw{考察}}{7}{}\protected@file@percent }
+\newlabel{sec:discuss}{{6}{7}{}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}{IRLとRFの補完性に関する考察}}{7}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces  AOSP：ペア単位の原型の解釈名}}{8}{}\protected@file@percent }
+\newlabel{tab:aosp-pair-name}{{10}{8}{}{table.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  AOSP:ペア単位の原型分析における主要な特徴量}}{8}{}\protected@file@percent }
+\newlabel{fig:aosp-pair-profile}{{6}{8}{}{figure.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces  AOSP:ペア単位の4原型における評価期間別AUC}}{8}{}\protected@file@percent }
+\newlabel{tab:aosp-pair-arch}{{11}{8}{}{table.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces  AOSP：開発者単位の原型の解釈名}}{8}{}\protected@file@percent }
+\newlabel{tab:aosp-dev-name}{{12}{8}{}{table.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces  AOSP:開発者単位の原型分析における主要な特徴量}}{8}{}\protected@file@percent }
+\newlabel{fig:aosp-dev-profile}{{7}{8}{}{figure.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces  AOSP:開発者単位の4原型における評価期間別AUC}}{8}{}\protected@file@percent }
+\newlabel{tab:aosp-dev-arch}{{13}{8}{}{table.13}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces  IRL，RF，アンサンブルによるモデルの精度比較結果と，bootstrapによる95\%信頼区間}}{9}{}\protected@file@percent }
+\newlabel{tab:rq3}{{14}{9}{}{table.14}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces  ペア単位の4原型におけるアンサンブルモデルを用いた評価期間別のAUC差（アンサンブル$-$最良単独）}}{9}{}\protected@file@percent }
+\newlabel{tab:pair-gain}{{15}{9}{}{table.15}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces  開発者単位の4原型におけるアンサンブルモデルを用いた評価期間別のAUC差(アンサンブル$-$最良単独)}}{9}{}\protected@file@percent }
+\newlabel{tab:dev-gain}{{16}{9}{}{table.16}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}{アンサンブルの有効性に関する考察}}{9}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {7}\hskip 1zw{妥当性への脅威}}{9}{}\protected@file@percent }
 \newlabel{sec:validity}{{7}{9}{}{section.7}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {7.1}{内的妥当性}}{9}{}\protected@file@percent }
