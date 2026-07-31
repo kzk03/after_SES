@@ -1,0 +1,52 @@
+This is upBibTeX, Version 0.99d-j0.36-u2.00 (utf8.euc) (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: IPSJjournal2026_Hashimoto.aux
+The style file: ipsjunsrt.bst
+Database file #1: Hashimoto.bib
+Warning--there's no number and/or volumeiaffaldano
+Warning--Missing required argument pages in iaffaldano
+Warning--there's no number and/or volumeadam
+Warning--Missing required argument pages in adam
+You've used 21 entries,
+            2334 wiz_defined-function locations,
+            694 strings with 8286 characters,
+and the built_in function-call counts, 7731 in all, are:
+= -- 649
+> -- 219
+< -- 19
++ -- 87
+- -- 66
+* -- 513
+:= -- 910
+add.period$ -- 21
+call.type$ -- 21
+change.case$ -- 0
+chr.to.int$ -- 0
+cite$ -- 25
+duplicate$ -- 486
+empty$ -- 729
+format.name$ -- 132
+if$ -- 1922
+int.to.chr$ -- 0
+int.to.str$ -- 21
+missing$ -- 21
+newline$ -- 66
+num.names$ -- 21
+pop$ -- 130
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 419
+stack$ -- 0
+substring$ -- 570
+swap$ -- 190
+text.length$ -- 19
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 4
+while$ -- 74
+width$ -- 23
+write$ -- 174
+is.kanji.str$ -- 199
+(There were 4 warnings)
