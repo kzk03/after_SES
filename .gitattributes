@@ -1,0 +1,16 @@
+# チェックアウト時の改行を LF に固定する。
+# Windows/WSL 経由でサーバへ rsync するとき、CRLF が混ざると
+# bash スクリプトが $'\r': command not found で即死するため。
+* text=auto eol=lf
+
+# バイナリは変換対象から外す
+*.pkl     binary
+*.parquet binary
+*.pt      binary
+*.npy     binary
+*.pdf     binary
+*.png     binary
+*.jpg     binary
+*.xlsx    binary
+*.zip     binary
+*.gz      binary
