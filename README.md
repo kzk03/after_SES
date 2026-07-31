@@ -498,17 +498,3 @@ Master_research/
 - 従来の静的なレビュアー推薦ではなく、時間的変化を伴うシミュレーション評価を実施
 
 
----
-### memo
---skip-threshold フラグ。メイン評価指標は          
-  AUC/Spearman で閾値非依存（CLAUDE.md にも「IRL 出力は未校正スコア」「clf_auc_roc / spearman
-  が本来の評価指標」とある）ので、run_mce_irl_variant_single.sh:192-205 の uv run python            
-  scripts/train/train_mce_irl.py ... 行に --skip-threshold                                        
-  を足せば閾値計算ステップ自体が消えます。F1
-  ベースの閾値が要らない実験なら、これが一番手っ取り早い。
-
-  ④ 4 訓練窓を並列実行                                                                              
-   
-  run_mce_irl_variant_single.sh:170 の for i in 0 1 2 3 が GPU                                      
-  共有のため逐次ですが、①でメモリ余裕ができれば & + wait で 2〜4 並列に出来ます（同 GPU           
-  上で複数プロセス）。                                                      

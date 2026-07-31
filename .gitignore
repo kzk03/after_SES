@@ -28,6 +28,8 @@ archive/**
 
 @IPSJjournal2026_Hashimoto/
 
+~$*
+
 # event版sweepの巨大出力(GitHubの100MB制限超過)
 outputs/rl/sweep/*_event/dataset/event_transitions.parquet
 outputs/rl/sweep/*_event/*/eval/pair_predictions.csv
