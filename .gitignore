@@ -1,6 +1,7 @@
 .venv/
 __pycache__/
 *.pyc
+.DS_Store
 writing/*.aux
 writing/*.dvi
 writing/*.log
@@ -17,8 +18,16 @@ logs/**
 
 data/raw_json/
 data/refetch_20260615/
-archive/
+data/aosp/raw_json/
+
+Claude.md
+.claude
+.claude/
+
+archive/**
 
 @IPSJjournal2026_Hashimoto/
 
-.claude/
+# event版sweepの巨大出力(GitHubの100MB制限超過)
+outputs/rl/sweep/*_event/dataset/event_transitions.parquet
+outputs/rl/sweep/*_event/*/eval/pair_predictions.csv
