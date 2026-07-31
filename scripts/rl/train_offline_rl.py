@@ -64,6 +64,21 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--tau", type=float, default=0.9, help="IQL expectile パラメータ")
     p.add_argument("--beta", type=float, default=3.0, help="IQL advantage-weight 温度")
     p.add_argument(
+        "--polyak", type=float, default=0.005,
+        help="target Q の soft update 係数。0 で旧挙動 (target_update_freq ごとの hard copy)",
+    )
+    p.add_argument(
+        "--adv-clip", type=float, default=10.0, help="advantage のクリップ上限",
+    )
+    p.add_argument(
+        "--exp-clip-log", type=float, default=6.0,
+        help="advantage weight exp(β·adv) の指数部の上限 (π の NaN 防止)",
+    )
+    p.add_argument(
+        "--divergence-threshold", type=float, default=1e4,
+        help="この epoch 平均 V loss を超えたら発散とみなし学習を打ち切る",
+    )
+    p.add_argument(
         "--reward-shaping",
         type=float,
         default=None,
@@ -152,7 +167,11 @@ def main() -> None:
         gamma=args.gamma,
         tau=args.tau,
         beta=args.beta,
+        adv_clip=args.adv_clip,
         lr=args.lr,
+        polyak=args.polyak,
+        exp_clip_log=args.exp_clip_log,
+        divergence_threshold=args.divergence_threshold,
         device=args.device,
     )
 
@@ -179,6 +198,11 @@ def main() -> None:
         iql_stats["q_losses"][-1],
         iql_stats["pi_losses"][-1],
     )
+    if iql_stats.get("diverged"):
+        logger.error(
+            "IQL は発散して epoch %d で打ち切られた。この run の V/Q/π は評価に使えない",
+            iql_stats.get("epochs_run", -1),
+        )
     logger.info("チェックポイント保存先: %s", output_dir)
 
 

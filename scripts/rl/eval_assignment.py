@@ -371,6 +371,10 @@ def calibrate_isotonic(
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """IsotonicRegression による校正。
 
+    学習が発散した手法 (iql_pi など) はスコアが NaN になりうる。その場合は
+    校正だけをスキップして素のスコアを返す。ここで例外を投げると掃引スクリプト
+    (set -e) が止まり、残りの λ 条件が巻き添えで実行されなくなるため。
+
     Returns:
         calibrated_test_scores, breakpoints_x, breakpoints_y
     """
@@ -378,9 +382,29 @@ def calibrate_isotonic(
         from sklearn.isotonic import IsotonicRegression
     except ImportError:
         return score_test, np.array([]), np.array([])
+
+    score_train = np.asarray(score_train, dtype=float)
+    score_test = np.asarray(score_test, dtype=float)
+    y_train = np.asarray(y_train, dtype=float)
+
+    train_ok = np.isfinite(score_train) & np.isfinite(y_train)
+    if int(train_ok.sum()) < 2 or len(np.unique(y_train[train_ok])) < 2:
+        logger.warning(
+            "校正をスキップ: 有効な train スコアが不足 (finite=%d/%d, ラベル種類=%d)",
+            int(train_ok.sum()), len(score_train),
+            len(np.unique(y_train[train_ok])) if train_ok.any() else 0,
+        )
+        return score_test.astype(np.float32), np.array([]), np.array([])
+
     ir = IsotonicRegression(out_of_bounds="clip")
-    ir.fit(score_train, y_train)
-    calibrated = ir.transform(score_test)
+    ir.fit(score_train[train_ok], y_train[train_ok])
+    # test 側の NaN は変換せず NaN のまま返す (下流の指標計算は NaN 耐性がある)
+    test_ok = np.isfinite(score_test)
+    calibrated = np.full(len(score_test), np.nan, dtype=float)
+    if test_ok.any():
+        calibrated[test_ok] = ir.transform(score_test[test_ok])
+    else:
+        logger.warning("校正をスキップ: test スコアが全て非有限")
     breakpoints_x = ir.X_thresholds_ if hasattr(ir, "X_thresholds_") else np.array([])
     breakpoints_y = ir.y_thresholds_ if hasattr(ir, "y_thresholds_") else np.array([])
     return calibrated.astype(np.float32), breakpoints_x, breakpoints_y

@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import copy
 import logging
+import math
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
@@ -104,9 +105,12 @@ class IQLAgent:
         gamma: float = 0.99,
         tau: float = 0.9,
         beta: float = 3.0,
-        adv_clip: float = 100.0,
+        adv_clip: float = 10.0,
         lr: float = 3e-4,
         target_update_freq: int = 100,
+        polyak: float = 0.005,
+        exp_clip_log: float = 6.0,
+        divergence_threshold: float = 1e4,
         device: str = "cpu",
     ) -> None:
         """
@@ -119,7 +123,16 @@ class IQLAgent:
             beta: advantage-weighted BC の温度パラメータ
             adv_clip: advantage のクリップ上限
             lr: 学習率
-            target_update_freq: target ネットワーク更新頻度（ステップ数）
+            target_update_freq: target ネットワークの hard copy 頻度
+                （polyak=0 のときのみ使用。旧挙動の再現用）
+            polyak: target ネットワークの soft update 係数。>0 なら毎ステップ
+                q_target ← (1-polyak)·q_target + polyak·q_net で更新する。
+                hard copy (100ステップごと全置換) は V↔Q の相互ブートストラップを
+                増幅して V を発散させたため、既定を soft update にしている。
+            exp_clip_log: advantage-weighted BC の重み exp(β·adv) の指数部の上限。
+                adv_clip だけでは β 倍後に exp が overflow し、π が NaN になる。
+            divergence_threshold: この値を超える epoch 平均 V loss を発散とみなし、
+                学習を打ち切る（全 epoch 走ってから壊れていると気づくのを防ぐ）
             device: torch デバイス文字列
         """
         self.obs_dim = obs_dim
@@ -131,6 +144,9 @@ class IQLAgent:
         self.lr = lr
         self.device = torch.device(device)
         self.target_update_freq = target_update_freq
+        self.polyak = polyak
+        self.exp_clip_log = exp_clip_log
+        self.divergence_threshold = divergence_threshold
 
         self.v_net = ValueNetwork(obs_dim, hidden_dim).to(self.device)
         self.q_net = QNetwork(obs_dim, n_actions, hidden_dim).to(self.device)
@@ -202,7 +218,9 @@ class IQLAgent:
             # v は直前の V 更新を反映した最新値を使う (IQL のセマンティクス)
             v = self.v_net(states)                       # [B]
             adv = (q_sa - v).clamp(max=self.adv_clip)
-            weight = torch.exp(self.beta * adv)
+            # exp は指数部で頭打ちにする。adv_clip だけだと β 倍で overflow し
+            # weight が inf → 損失が NaN → 政策が丸ごと壊れる
+            weight = torch.exp((self.beta * adv).clamp(max=self.exp_clip_log))
             weight = weight / weight.mean().clamp(min=1e-6)
 
         logits = self.policy(states)                     # [B, A]
@@ -254,7 +272,11 @@ class IQLAgent:
         self.pi_opt.step()
 
         self._train_step += 1
-        if self._train_step % self.target_update_freq == 0:
+        if self.polyak > 0.0:
+            with torch.no_grad():
+                for p_t, p in zip(self.q_target.parameters(), self.q_net.parameters()):
+                    p_t.mul_(1.0 - self.polyak).add_(p, alpha=self.polyak)
+        elif self._train_step % self.target_update_freq == 0:
             self.q_target.load_state_dict(self.q_net.state_dict())
 
         return {
@@ -293,6 +315,7 @@ class IQLAgent:
 
         logger.info("IQL 訓練開始 (epochs=%d, dataset=%d)", epochs, len(dataset))
 
+        diverged = False
         for epoch in range(epochs):
             epoch_v, epoch_q, epoch_pi, n_b = 0.0, 0.0, 0.0, 0
             for batch in loader:
@@ -312,8 +335,28 @@ class IQLAgent:
                     epoch, v_losses[-1], q_losses[-1], pi_losses[-1],
                 )
 
-        logger.info("IQL 訓練完了 (steps=%d)", self._train_step)
-        return {"v_losses": v_losses, "q_losses": q_losses, "pi_losses": pi_losses}
+            # 発散検知: 残り epoch を走らせても壊れた値関数が育つだけなので打ち切る
+            latest = [v_losses[-1], q_losses[-1], pi_losses[-1]]
+            if any(not math.isfinite(x) for x in latest):
+                logger.error("IQL 発散を検知 (epoch %d, 非有限な loss): V=%s Q=%s π=%s → 打ち切り",
+                             epoch, v_losses[-1], q_losses[-1], pi_losses[-1])
+                diverged = True
+            elif v_losses[-1] > self.divergence_threshold:
+                logger.error("IQL 発散を検知 (epoch %d): V loss %.3e > 閾値 %.3e → 打ち切り",
+                             epoch, v_losses[-1], self.divergence_threshold)
+                diverged = True
+            if diverged:
+                break
+
+        logger.info("IQL 訓練完了 (steps=%d, epochs=%d/%d, diverged=%s)",
+                    self._train_step, len(v_losses), epochs, diverged)
+        return {
+            "v_losses": v_losses,
+            "q_losses": q_losses,
+            "pi_losses": pi_losses,
+            "diverged": diverged,
+            "epochs_run": len(v_losses),
+        }
 
     # ------------------------------------------------------------------
     # 推論
@@ -359,6 +402,9 @@ class IQLAgent:
                     "adv_clip": self.adv_clip,
                     "lr": self.lr,
                     "target_update_freq": self.target_update_freq,
+                    "polyak": self.polyak,
+                    "exp_clip_log": self.exp_clip_log,
+                    "divergence_threshold": self.divergence_threshold,
                     "hidden_dim": self.v_net.net[0].out_features,
                 },
             },
@@ -380,6 +426,11 @@ class IQLAgent:
             adv_clip=cfg.get("adv_clip", 100.0),
             lr=cfg.get("lr", 3e-4),
             target_update_freq=cfg.get("target_update_freq", 100),
+            # 旧チェックポイント (これらのキーが無い) は hard copy 時代のものなので
+            # polyak=0 = 旧挙動で復元し、当時の学習条件を取り違えないようにする
+            polyak=cfg.get("polyak", 0.0),
+            exp_clip_log=cfg.get("exp_clip_log", float("inf")),
+            divergence_threshold=cfg.get("divergence_threshold", float("inf")),
             device=device,
         )
         agent.v_net.load_state_dict(ckpt["v_net"])
