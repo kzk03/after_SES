@@ -16,7 +16,7 @@ writing/*
 *.log
 logs/**
 
-data/raw_json/
+data/raw_json
 data/refetch_20260615/
 data/aosp/raw_json/
 
