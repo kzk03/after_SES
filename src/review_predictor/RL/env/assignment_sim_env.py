@@ -134,6 +134,7 @@ class AssignmentSimEnv(gym.Env):
         w_retention: float = 0.0,
         load_clip: Optional[float] = None,
         retention_fn: Optional[Callable[[str, pd.Timestamp], float]] = None,
+        force_logged_outcome: bool = False,
         feature_window_days: int = 180,
         seed: Optional[int] = None,
     ) -> None:
@@ -155,6 +156,11 @@ class AssignmentSimEnv(gym.Env):
             w_retention: 継続スコアの係数。0 なら継続性の項を使わない (既定)
             load_clip: 負荷超過の頭打ち。None ならクリップしない (既定)。
                 旧実装の 2.0 相当を再現したいときだけ指定する
+            force_logged_outcome: **検証専用**。ログと同じレビュアーを選んだときに
+                承諾をサンプリングせず実際のラベルをそのまま使う。学習には使わない。
+                直近30日の承諾率などの特徴量はサンプル結果に依存するため、
+                「特徴量計算そのものがズレているのか、サンプリングでズレるのか」を
+                切り分けるために使う
             retention_fn: (email, 時点) を受けて継続スコアを返す関数。None なら 0。
                 候補プール全員の平均ではなく「選んだ人」の値を使う。プール平均だと
                 母集団もキーもエピソード中固定なので定数になり勾配が消えるため
@@ -175,6 +181,7 @@ class AssignmentSimEnv(gym.Env):
         self.w_retention = w_retention
         self.load_clip = load_clip
         self.retention_fn = retention_fn
+        self.force_logged_outcome = force_logged_outcome
         self.feature_window_days = feature_window_days
 
         self.feat_dim = int(state_builder.state_dim)
@@ -188,10 +195,35 @@ class AssignmentSimEnv(gym.Env):
         # 「直近30日の承諾率」「最後の活動からの経過日数」といった特徴量が
         # 学習時とまったく違う値になる (実測で候補の 51% が直近承諾率 0 になり、
         # 承諾モデルの予測平均が 0.61 → 0.19 に落ちていた)。
+        # 各開発者の履歴には「レビュアーとしての行」だけでなく
+        # 「本人が PR オーナーの行」も入れる。`extract_common_features` は
+        # total_changes / reciprocity_score を df[owner_email == 本人] から数えるため、
+        # レビュアー行しか渡さないと total_changes が常に 0 になる
+        # (学習データでは平均 0.5909 / 非ゼロ 65% なので、渡さないと学習時と食い違う)。
+        # IRL 側の `_history_to_df` も action_type=='authored' の行を
+        # owner_email=本人 で入れており、それと同じ形に揃えている。
+        hist = history.sort_values("timestamp", kind="mergesort")
+        per_dev: Dict[str, List[pd.DataFrame]] = {}
+        for email, grp in hist.groupby("email"):
+            per_dev.setdefault(str(email), []).append(grp)
+        if "owner_email" in hist.columns:
+            owned = hist[hist["owner_email"].astype(str) != ""]
+            for owner, grp in owned.groupby("owner_email"):
+                per_dev.setdefault(str(owner), []).append(grp)
+
+        # total_project_reviews に渡す「プロジェクト全体のレビュー数」は
+        # 生の行を重複なく数えたもの。開発者ごとのリストを合算すると、
+        # 上で owner 行を 2 人ぶんに複製したぶんが二重計上され、分母が約 2 倍になる
+        # (実測で core_reviewer_ratio が parquet の 0.0541 に対し 0.0278 になっていた)。
+        # IRL 側 (`mce_irl_batch_predictor`) も期間内の全行数を数えている。
+        self._all_ts = np.sort(hist["timestamp"].to_numpy())
+
         self._base_events: Dict[str, List[Dict[str, Any]]] = {}
         self._base_ts: Dict[str, np.ndarray] = {}
-        for email, grp in history.sort_values("timestamp").groupby("email"):
-            key = str(email)
+        for key, parts in per_dev.items():
+            grp = parts[0] if len(parts) == 1 else pd.concat(parts, ignore_index=True)
+            if len(parts) > 1:
+                grp = grp.sort_values("timestamp", kind="mergesort")
             self._base_events[key] = grp.to_dict("records")
             self._base_ts[key] = grp["timestamp"].to_numpy()
 
@@ -225,9 +257,61 @@ class AssignmentSimEnv(gym.Env):
         self._cand_p_accept = np.zeros(n_candidates, dtype=np.float64)
         self._pool: List[str] = []
 
+        # 応答遅延の経験分布。追記イベントの first_response_time を実データに
+        # 合わせるために使う。定数を入れると concurrent_open_reviews_7d と
+        # response_time_trend が学習時とずれる (実測: 承諾は中央値 0.83 日で
+        # ほぼ即応答、拒否は 24.7% が無応答・残りも中央値 67 日と大きく異なる)。
+        # 標本はエピソード期間より前の履歴だけから取り、未来を覗かない。
+        self._lat_accept, self._lat_reject, self._reject_no_resp = self._fit_latency(
+            history, episodes
+        )
+
     # ------------------------------------------------------------------
     # 特徴量
     # ------------------------------------------------------------------
+
+    @staticmethod
+    def _fit_latency(
+        history: pd.DataFrame, episodes: List[Dict[str, Any]]
+    ) -> Tuple[np.ndarray, np.ndarray, float]:
+        """応答遅延 (日) の経験分布を履歴から作る。
+
+        Returns:
+            承諾時の遅延標本、拒否時の遅延標本、拒否が無応答で終わる割合
+        """
+        fallback = (np.array([1.0]), np.array([60.0]), 0.25)
+        if "first_response_time" not in history.columns or not episodes:
+            return fallback
+        cut = min(pd.Timestamp(e["start"]) for e in episodes)
+        h = history[history["timestamp"] < cut]
+        if h.empty:
+            return fallback
+        frt = pd.to_datetime(h["first_response_time"], errors="coerce")
+        lat = (frt - h["timestamp"]).dt.total_seconds() / 86400.0
+        acc = lat[(h["label"] == 1) & lat.notna() & (lat >= 0)].to_numpy()
+        rej_all = h["label"] == 0
+        rej = lat[rej_all & lat.notna() & (lat >= 0)].to_numpy()
+        no_resp = float((rej_all & lat.isna()).sum() / max(1, int(rej_all.sum())))
+        if acc.size == 0:
+            acc = fallback[0]
+        if rej.size == 0:
+            rej = fallback[1]
+        logger.info(
+            "応答遅延の経験分布: 承諾 n=%d 中央値 %.2f 日 / 拒否 n=%d 中央値 %.2f 日 "
+            "/ 拒否の無応答率 %.3f",
+            acc.size, float(np.median(acc)), rej.size, float(np.median(rej)), no_resp,
+        )
+        return acc, rej, no_resp
+
+    def _sample_response_time(self, now: pd.Timestamp, accepted: bool):
+        """追記イベントの first_response_time を経験分布から引く。"""
+        if accepted:
+            d = float(self._rng.choice(self._lat_accept))
+        else:
+            if self._rng.random() < self._reject_no_resp:
+                return pd.NaT          # 最後まで応答が返らない
+            d = float(self._rng.choice(self._lat_reject))
+        return now + pd.Timedelta(days=d)
 
     def _dev(self, email: str) -> _DevState:
         st = self._devs.get(email)
@@ -391,11 +475,11 @@ class AssignmentSimEnv(gym.Env):
         self._ep_start = pd.Timestamp(ep["start"])
         cut = np.datetime64(self._ep_start)
         self._devs = {}
-        self._total_events = 0
         for email, evs in self._base_events.items():
             k = int(np.searchsorted(self._base_ts[email], cut, side="left"))
             self._devs[email] = _DevState(email, evs[:k].copy())
-            self._total_events += k
+        # 重複なしの行数 (開発者ごとの合算ではない)
+        self._total_events = int(np.searchsorted(self._all_ts, cut, side="left"))
 
         # 集中度を測る母集団 = このエピソードで一度でも候補になった開発者。
         # 全開発者 (履歴に出る数百人) で測るとゼロが多すぎてジニ係数が 0.96-0.99 に
@@ -455,7 +539,11 @@ class AssignmentSimEnv(gym.Env):
         # 承諾確率は _build_obs で候補全員ぶん計算済み。obs を作った時点の
         # 状態に対する確率なので、行動と同じ時点の値になる。
         p_accept = float(self._cand_p_accept[action])
-        accepted = bool(self._rng.random() < p_accept)
+        if self.force_logged_outcome and chosen == str(req.get("logged_reviewer", "")):
+            # 検証専用: ログと同じ人を選んだ場合だけ実際の結果を使う
+            accepted = bool(int(req.get("logged_label", 0)))
+        else:
+            accepted = bool(self._rng.random() < p_accept)
 
         # ── 2. 結果を履歴に書き戻す ───────────────────────────
         # ここが旧実装に無かった部分。承諾率・time_since_last_reject などの
@@ -468,7 +556,11 @@ class AssignmentSimEnv(gym.Env):
             "change_insertions": req.get("change_insertions", 0),
             "change_deletions": req.get("change_deletions", 0),
             "change_files_count": req.get("change_files_count", 0),
-            "first_response_time": None,
+            # 未設定 (None) にすると concurrent_open_reviews_7d が
+            # 「直近7日の未応答レビュー数」として全件を数えてしまう。
+            # 定数を入れるのも実態と合わない (承諾は中央値 0.83 日でほぼ即応答、
+            # 拒否は 24.7% が無応答) ので経験分布から引く。
+            "first_response_time": self._sample_response_time(now, accepted),
         })
         st.n_assigned += 1
         self._total_events += 1
