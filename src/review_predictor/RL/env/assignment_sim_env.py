@@ -182,6 +182,9 @@ class AssignmentSimEnv(gym.Env):
         self.load_clip = load_clip
         self.retention_fn = retention_fn
         self.force_logged_outcome = force_logged_outcome
+        self._project_prior_days = int(
+            getattr(acceptance_model, "project_prior_days", 0) or 0
+        )
         self.feature_window_days = feature_window_days
 
         self.feat_dim = int(state_builder.state_dim)
@@ -218,6 +221,19 @@ class AssignmentSimEnv(gym.Env):
         # IRL 側 (`mce_irl_batch_predictor`) も期間内の全行数を数えている。
         self._all_ts = np.sort(hist["timestamp"].to_numpy())
 
+        # プロジェクトごとの (時刻, ラベル) 累積。承諾モデルが「直近 N 日の
+        # プロジェクト承諾率」を特徴量に使うため、環境でも同じ量を計算する。
+        # プロジェクトの承諾率は年跨ぎでも年内でも動くので固定値では追従できない。
+        self._proj_ts: Dict[str, np.ndarray] = {}
+        self._proj_cum: Dict[str, np.ndarray] = {}
+        if "project" in hist.columns:
+            for proj, grp in hist.groupby("project"):
+                g = grp.sort_values("timestamp", kind="mergesort")
+                self._proj_ts[str(proj)] = g["timestamp"].to_numpy()
+                self._proj_cum[str(proj)] = np.concatenate(
+                    [[0.0], np.cumsum(g["label"].to_numpy(dtype=np.float64))]
+                )
+
         self._base_events: Dict[str, List[Dict[str, Any]]] = {}
         self._base_ts: Dict[str, np.ndarray] = {}
         for key, parts in per_dev.items():
@@ -247,6 +263,9 @@ class AssignmentSimEnv(gym.Env):
         self._ptr = 0
         self._now: Optional[pd.Timestamp] = None
         self._ep_start: Optional[pd.Timestamp] = None
+        self._ep_project: str = ""
+        self._ep_n_assigned = 0
+        self._ep_n_accepted = 0
         self._prev_gini = 0.0
         self._feat_cache: Dict[Tuple[str, int, int], np.ndarray] = {}
         # 未介入の開発者の特徴量。エピソードを跨いで再利用するので reset で消さない
@@ -440,7 +459,12 @@ class AssignmentSimEnv(gym.Env):
         n = len(cands)
         self._cand_p_accept = np.zeros(self.n_candidates, dtype=np.float64)
         if n:
-            self._cand_p_accept[:n] = self.acceptance_model.predict_proba(cand_mat[:n])
+            # プロジェクトを渡すと承諾モデル側で事前分布の列が付く
+            # (その特徴量を使わないモデルなら無視される)
+            self._cand_p_accept[:n] = self.acceptance_model.predict_proba(
+                cand_mat[:n], project=self._ep_project,
+                project_rate=self._project_rate(self._now),
+            )
 
         return {
             "candidates": cand_mat,
@@ -473,6 +497,9 @@ class AssignmentSimEnv(gym.Env):
         # 開発者状態を「このエピソードの開始時刻」に巻き戻す (履歴は複製して汚さない)。
         # 期間全体の開始時点ではなくエピソード開始時点であることが重要。
         self._ep_start = pd.Timestamp(ep["start"])
+        self._ep_project = str(ep.get("project", ""))
+        self._ep_n_assigned = 0
+        self._ep_n_accepted = 0
         cut = np.datetime64(self._ep_start)
         self._devs = {}
         for email, evs in self._base_events.items():
@@ -503,6 +530,27 @@ class AssignmentSimEnv(gym.Env):
 
     def _pool_gini(self, attr: str) -> float:
         return _gini(self._pool_counts(attr))
+
+    def _project_rate(self, now: pd.Timestamp) -> Optional[float]:
+        """このエピソードのプロジェクトの、直近 window 日の承諾率。
+
+        エピソード開始前は実ログから、開始後はエージェント自身の割り当て結果から
+        数える (環境がその時点で知りうる情報だけを使う)。窓より短いエピソードでは
+        期限切れが起きないため、エピソード内は累積を足すだけでよい。
+        """
+        ts = self._proj_ts.get(self._ep_project)
+        if ts is None or self._project_prior_days <= 0:
+            return None
+        cum = self._proj_cum[self._ep_project]
+        cut = np.datetime64(now)
+        lo_t = cut - np.timedelta64(self._project_prior_days, "D")
+        hi = int(np.searchsorted(ts, cut, side="left"))
+        lo = int(np.searchsorted(ts, lo_t, side="left"))
+        n = (hi - lo) + self._ep_n_assigned
+        if n <= 0:
+            return None
+        s = float(cum[hi] - cum[lo]) + self._ep_n_accepted
+        return s / n
 
     def _retention_score(self, email: str, now: pd.Timestamp) -> float:
         """選んだ開発者の継続スコア。retention_fn 未設定か w_retention=0 なら 0。
@@ -564,6 +612,9 @@ class AssignmentSimEnv(gym.Env):
         })
         st.n_assigned += 1
         self._total_events += 1
+        self._ep_n_assigned += 1
+        if accepted:
+            self._ep_n_accepted += 1
 
         load_before = st.open_load(now)
         if accepted:

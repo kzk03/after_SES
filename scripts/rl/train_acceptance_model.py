@@ -79,6 +79,22 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-leaf-nodes", type=int, default=63)
     p.add_argument("--min-samples-leaf", type=int, default=200)
     p.add_argument("--seed", type=int, default=42)
+    p.add_argument(
+        "--project-prior-days", type=int, default=90,
+        help=(
+            "プロジェクト事前分布を直近何日の実績から計算するか。0 で静的な"
+            "(fit split 全体の) 値。プロジェクトの承諾率は年跨ぎでも年内でも"
+            "動くため既定は 90 日"
+        ),
+    )
+    p.add_argument(
+        "--raw-csv", default=None,
+        help=(
+            "プロジェクト単位の事前承諾率を特徴量に足す場合に指定する生 CSV。"
+            "開発者状態 26 次元にはプロジェクトを識別する情報が無いため、"
+            "指定しないと neutron (実測 0.82) と keystone (0.14) を区別できない"
+        ),
+    )
     return p.parse_args()
 
 
@@ -113,6 +129,7 @@ def load_split(
     """parquet から (states, actions, メタ列) を読み出す。"""
     cols = ["state", "action", "feature_end", "email", "r_theta"]
     df = pd.read_parquet(path, columns=cols)
+    df["feature_end"] = pd.to_datetime(df["feature_end"])
     if subsample and subsample < len(df):
         df = df.sample(n=subsample, random_state=seed)
         logger.info("subsample: %d 件に絞る", len(df))
@@ -122,9 +139,70 @@ def load_split(
     if use_first_dims:
         X = X[:, :use_first_dims]
     y = df["action"].astype(np.int8).to_numpy()
-    meta = df[["feature_end", "email", "r_theta"]]
+    meta = df[["feature_end", "email", "r_theta"]].copy()
     logger.info("%s: n=%d, dim=%d, 承諾率=%.4f", Path(path).name, len(y), X.shape[1], y.mean())
     return X, y, meta
+
+
+def attach_project(meta: pd.DataFrame, raw_csv: str) -> pd.Series:
+    """(email, feature_end) で生 CSV を突き合わせてプロジェクト名を得る。
+
+    parquet にプロジェクト列が無いため生データから引く。時刻は parquet が
+    datetime64[us]、生 CSV のパースは ns になるので秒精度の文字列で揃える。
+    """
+    raw = pd.read_csv(raw_csv, usecols=["email", "timestamp", "project"], low_memory=False)
+    raw["timestamp"] = pd.to_datetime(raw["timestamp"], errors="coerce")
+    raw = raw.dropna(subset=["timestamp"])
+    raw["key"] = (
+        raw["email"].astype(str) + "|" + raw["timestamp"].dt.strftime("%Y-%m-%d %H:%M:%S")
+    )
+    m = raw.drop_duplicates("key").set_index("key")["project"]
+    key = (
+        meta["email"].astype(str) + "|"
+        + pd.to_datetime(meta["feature_end"]).dt.strftime("%Y-%m-%d %H:%M:%S")
+    )
+    proj = key.map(m)
+    logger.info(
+        "プロジェクト付与: %d / %d 行が一致 (%.1f%%)",
+        int(proj.notna().sum()), len(proj), 100 * proj.notna().mean(),
+    )
+    return proj.fillna("")
+
+
+def trailing_project_rate(
+    proj: np.ndarray, when: np.ndarray, raw_csv: str, window_days: int
+) -> np.ndarray:
+    """各行の時点から遡った window_days のプロジェクト承諾率を返す。
+
+    その時点で既に観測済みのイベントだけを使うためリークにならない。
+    プロジェクトの承諾率は年をまたいでも年内でも動く (実測: neutron は
+    2019-2021 の 0.6803 から 2022 に 0.7706、nova は 0.5732 から 0.5036、
+    さらに nova は 2022 年内でも通年 0.5036 に対し後半 0.3244) ため、
+    固定値では追従できない。
+    """
+    raw = pd.read_csv(raw_csv, usecols=["project", "timestamp", "label"], low_memory=False)
+    raw["timestamp"] = pd.to_datetime(raw["timestamp"], errors="coerce")
+    raw = raw.dropna(subset=["timestamp"]).sort_values("timestamp", kind="mergesort")
+
+    out = np.full(len(proj), np.nan, dtype=np.float64)
+    win = np.timedelta64(window_days, "D")
+    when = pd.to_datetime(pd.Series(when)).to_numpy()
+
+    for p, g in raw.groupby("project"):
+        idx = np.flatnonzero(proj == p)
+        if idx.size == 0:
+            continue
+        ts = g["timestamp"].to_numpy()
+        lab = g["label"].fillna(0).to_numpy(dtype=np.float64)
+        csum = np.concatenate([[0.0], np.cumsum(lab)])
+        q = when[idx]
+        hi = np.searchsorted(ts, q, side="left")        # 自分自身は含めない
+        lo = np.searchsorted(ts, q - win, side="left")
+        n = hi - lo
+        s = csum[hi] - csum[lo]
+        with np.errstate(invalid="ignore", divide="ignore"):
+            out[idx] = np.where(n > 0, s / np.maximum(n, 1), np.nan)
+    return out
 
 
 def baseline_metrics(
@@ -175,6 +253,52 @@ def main() -> None:
         len(y_cal), meta["feature_end"].iloc[split] if n_cal else "-",
     )
 
+    # ── プロジェクト事前分布 ─────────────────────────────────
+    # fit split だけから計算する。cal を含めると較正が、test を含めると評価が
+    # 甘くなる (答えを一部教えることになる)。
+    project_prior: dict = {}
+    prior_default = 0.0
+    prior_days = args.project_prior_days
+    if args.raw_csv:
+        proj = attach_project(meta, args.raw_csv).to_numpy()
+        prior_default = float(y_fit.mean())
+        # 未知プロジェクトや履歴が足りない時点のフォールバックとして
+        # 静的な値も残す (fit split だけから計算する)
+        s = pd.DataFrame({"p": proj[:split], "y": y_fit})
+        s = s[s["p"] != ""]
+        g = s.groupby("p")["y"].agg(["mean", "size"])
+        g = g[g["size"] >= 50]
+        project_prior = {str(k): float(v) for k, v in g["mean"].items()}
+
+        if prior_days > 0:
+            col_all = trailing_project_rate(
+                proj, meta["feature_end"].to_numpy(), args.raw_csv, prior_days
+            )
+            n_nan = int(np.isnan(col_all).sum())
+            fb = np.array(
+                [project_prior.get(str(p), prior_default) for p in proj], dtype=np.float64
+            )
+            col_all = np.where(np.isnan(col_all), fb, col_all)
+            logger.info(
+                "プロジェクト事前分布: 直近%d日の実績 (静的値へのフォールバック %d 行 = %.2f%%), "
+                "範囲 %.4f〜%.4f",
+                prior_days, n_nan, 100 * n_nan / len(col_all),
+                float(col_all.min()), float(col_all.max()),
+            )
+        else:
+            col_all = np.array(
+                [project_prior.get(str(p), prior_default) for p in proj], dtype=np.float64
+            )
+            logger.info(
+                "プロジェクト事前分布: 静的 %d プロジェクト (既定 %.4f), 範囲 %.4f〜%.4f",
+                len(project_prior), prior_default,
+                float(col_all.min()), float(col_all.max()),
+            )
+
+        X_fit = np.hstack([X_fit, col_all[:split].astype(np.float32).reshape(-1, 1)])
+        X_cal = np.hstack([X_cal, col_all[split:].astype(np.float32).reshape(-1, 1)])
+        feat_dim = X_fit.shape[1]
+
     # ── 学習 ─────────────────────────────────────────────────
     model = AcceptanceModel(
         obs_dim=feat_dim,
@@ -184,6 +308,9 @@ def main() -> None:
         min_samples_leaf=args.min_samples_leaf,
         seed=args.seed,
     )
+    model.project_prior = project_prior
+    model.project_prior_default = prior_default
+    model.project_prior_days = prior_days if args.raw_csv else 0
     model.fit(X_fit, y_fit, X_cal, y_cal)
 
     results: dict = {
@@ -206,6 +333,19 @@ def main() -> None:
         Xt, yt, meta_t = load_split(
             args.test_dataset, args.obs_dim, 0, args.seed, args.use_first_dims
         )
+        if args.raw_csv:
+            proj_t = attach_project(meta_t, args.raw_csv).to_numpy()
+            fb_t = np.array(
+                [project_prior.get(str(p), prior_default) for p in proj_t], dtype=np.float64
+            )
+            if prior_days > 0:
+                col_t = trailing_project_rate(
+                    proj_t, meta_t["feature_end"].to_numpy(), args.raw_csv, prior_days
+                )
+                col_t = np.where(np.isnan(col_t), fb_t, col_t)
+            else:
+                col_t = fb_t
+            Xt = np.hstack([Xt, col_t.astype(np.float32).reshape(-1, 1)])
         model.evaluate(Xt, yt, tag="test")
         results["baselines_test"] = baseline_metrics(
             yt, meta_t["r_theta"].to_numpy(), prior

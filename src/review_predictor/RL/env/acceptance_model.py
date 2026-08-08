@@ -146,6 +146,15 @@ class AcceptanceModel:
     calibrator: Any = field(default=None, repr=False)
     metrics: Dict[str, Any] = field(default_factory=dict, repr=False)
 
+    # プロジェクト単位の事前承諾率。開発者状態 26 次元にはプロジェクトを識別する
+    # 情報が無く (n_projects / cross_project_review_share は開発者の属性であって
+    # プロジェクトの識別ではない)、実態は neutron 0.82 / keystone 0.14 と 6 倍
+    # 違うため、モデルが原理的に区別できなかった。fit split だけから計算する。
+    project_prior: Dict[str, float] = field(default_factory=dict, repr=False)
+    project_prior_default: float = 0.0
+    #: 直近何日の実績から事前分布を計算したか。0 なら静的な値を使う
+    project_prior_days: int = 0
+
     # ------------------------------------------------------------------
 
     def _new_clf(self):
@@ -205,10 +214,48 @@ class AcceptanceModel:
 
         return self
 
-    def predict_proba(self, X: np.ndarray) -> np.ndarray:
-        """承諾確率 [N] を返す (較正済みなら較正後の値)。"""
+    @property
+    def uses_project_prior(self) -> bool:
+        """プロジェクト事前分布を特徴量に含むモデルか。"""
+        return bool(self.project_prior)
+
+    def augment(
+        self,
+        X: np.ndarray,
+        project: Optional[str],
+        project_rate: Optional[float] = None,
+    ) -> np.ndarray:
+        """状態行列にプロジェクト事前分布の列を付ける。
+
+        学習時に使っていないモデル (project_prior が空) では何もしない。
+        `project_rate` (呼び出し側が計算した直近実績) があればそれを使い、
+        無ければ静的な値、それも無ければ全体の承諾率で埋める。
+        """
+        X = np.asarray(X, dtype=np.float32)
+        if not self.uses_project_prior:
+            return X
+        if project_rate is not None and np.isfinite(project_rate):
+            v = float(project_rate)
+        else:
+            v = self.project_prior.get(str(project), self.project_prior_default)
+        col = np.full((X.shape[0], 1), v, dtype=np.float32)
+        return np.hstack([X, col])
+
+    def predict_proba(
+        self,
+        X: np.ndarray,
+        project: Optional[str] = None,
+        project_rate: Optional[float] = None,
+    ) -> np.ndarray:
+        """承諾確率 [N] を返す (較正済みなら較正後の値)。
+
+        `project` を渡すと事前分布の列を自動で付ける。既に付いた行列を
+        渡す場合 (学習・評価時) は project=None のままでよい。
+        """
         if self.clf is None:
             raise RuntimeError("fit() または load() を先に呼んでください")
+        if project is not None:
+            X = self.augment(X, project, project_rate)
         p = self.clf.predict_proba(np.asarray(X, dtype=np.float32))[:, 1]
         if self.calibrator is not None:
             p = self.calibrator.predict(p)
@@ -248,6 +295,9 @@ class AcceptanceModel:
                 "calibrator": self.calibrator,
                 "obs_dim": self.obs_dim,
                 "metrics": self.metrics,
+                "project_prior": self.project_prior,
+                "project_prior_default": self.project_prior_default,
+                "project_prior_days": self.project_prior_days,
                 "params": {
                     "max_iter": self.max_iter,
                     "learning_rate": self.learning_rate,
@@ -270,5 +320,8 @@ class AcceptanceModel:
         model = cls(obs_dim=obj["obs_dim"], **params)
         model.clf = obj["clf"]
         model.calibrator = obj.get("calibrator")
+        model.project_prior = obj.get("project_prior", {}) or {}
+        model.project_prior_default = float(obj.get("project_prior_default", 0.0))
+        model.project_prior_days = int(obj.get("project_prior_days", 0) or 0)
         model.metrics = obj.get("metrics", {})
         return model
