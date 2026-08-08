@@ -91,9 +91,32 @@ extract_common_features() は feature_start〜feature_end の範囲のデータ�
 """
 
 from datetime import datetime, timedelta
-from typing import Dict
+from typing import Dict, Set
+import logging
 import math
 import pandas as pd
+
+logger = logging.getLogger(__name__)
+
+#: 欠けている入力列を一度だけ警告するための記録
+_WARNED_COLUMNS: Set[str] = set()
+
+
+def _warn_missing_column(column: str) -> None:
+    """特徴量の入力列が無いことを一度だけ警告する。
+
+    この関数群は列が無いと 0 を返すフォールバックを持つ。例外にならないため
+    配線ミスが静かに通ってしまい、実際に n_projects /
+    cross_project_review_share が全サンプル 0 のまま学習された事故があった。
+    """
+    if column in _WARNED_COLUMNS:
+        return
+    _WARNED_COLUMNS.add(column)
+    logger.warning(
+        "特徴量の入力列 '%s' が activity_df にありません。"
+        "この列に依存する特徴量は 0 になります (学習・評価の結果が変わります)",
+        column,
+    )
 
 from review_predictor.IRL.features.path_features import PATH_FEATURE_NAMES
 
@@ -599,6 +622,14 @@ def extract_common_features(
             proj_set.update(owner_data['project'].dropna().unique())
         n_projects = float(len(proj_set))
     else:
+        # 列が無いと黙って 0 を返す作りだったため、2026-05-14 に n_projects を
+        # 追加した後も呼び出し側 (IRL の _extract_one / _history_to_df,
+        # RL の to_activity_frame) が project 列を渡しておらず、
+        # n_projects と cross_project_review_share が全サンプルで 0 のまま
+        # 学習・評価されていた (RF 側は生 DataFrame を渡すため非ゼロで、
+        # IRL と RF で使える特徴量が食い違っていた)。
+        # 同じ事故を繰り返さないよう、一度だけ警告する。
+        _warn_missing_column("project")
         n_projects = 0.0
 
     # 21. cross_project_review_share: ホームプロジェクト外でのレビュー比率

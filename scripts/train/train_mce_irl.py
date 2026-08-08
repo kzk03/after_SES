@@ -464,6 +464,7 @@ def extract_review_acceptance_trajectories(
             for _, row in authored_history.iterrows():
                 monthly_activities.append({
                     'action_type': 'authored',
+                    'project': row.get('project', ''),
                     'timestamp': row[date_col],
                     'owner_email': reviewer,           # 自分がowner
                     'reviewer_email': row.get('email', row.get('reviewer_email', '')),
@@ -500,6 +501,7 @@ def extract_review_acceptance_trajectories(
         for _, row in authored_all.iterrows():
             activity_history.append({
                 'action_type': 'authored',
+                'project': row.get('project', ''),
                 'timestamp': row[date_col],
                 'owner_email': reviewer,
                 'reviewer_email': row.get('email', row.get('reviewer_email', '')),
@@ -732,6 +734,7 @@ def _process_one_reviewer(
             for _, row in authored_history.iterrows():
                 monthly_activities.append({
                     'action_type': 'authored',
+                    'project': row.get('project', ''),
                     'timestamp': row[date_col],
                     'owner_email': reviewer,
                     'reviewer_email': row.get('email', row.get('reviewer_email', '')),
@@ -1036,6 +1039,7 @@ def extract_evaluation_trajectories(
         for _, row in authored_all.iterrows():
             activity_history.append({
                 'action_type': 'authored',
+                'project': row.get('project', ''),
                 'timestamp': row[date_col],
                 'owner_email': reviewer,
                 'reviewer_email': row.get('email', row.get('reviewer_email', '')),
@@ -1090,6 +1094,7 @@ def extract_evaluation_trajectories(
             for _, row in authored_month.iterrows():
                 monthly_acts.append({
                     'action_type': 'authored',
+                    'project': row.get('project', ''),
                     'timestamp': row[date_col],
                     'owner_email': reviewer,
                     'reviewer_email': row.get('email', row.get('reviewer_email', '')),

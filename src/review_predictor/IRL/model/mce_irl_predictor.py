@@ -1180,6 +1180,10 @@ class MCEIRLSystem(RetentionIRLSystem):
                                 else ts,
                                 "label": 0,
                                 "owner_email": email,
+                                # project を落とすと extract_common_features の
+                                # n_projects / cross_project_review_share が
+                                # 列なしフォールバックで常に 0 になる
+                                "project": act.get("project", ""),
                                 "change_insertions": act.get(
                                     "lines_added", act.get("change_insertions", 0)
                                 )
@@ -1204,6 +1208,7 @@ class MCEIRLSystem(RetentionIRLSystem):
                                 else ts,
                                 "label": 1 if act.get("accepted", False) else 0,
                                 "owner_email": act.get("owner_email", ""),
+                                "project": act.get("project", ""),
                                 "change_insertions": act.get(
                                     "lines_added", act.get("change_insertions", 0)
                                 )

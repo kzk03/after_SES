@@ -261,6 +261,7 @@ class MCEBatchContinuationPredictor:
                 monthly_activities.append(
                     {
                         "action_type": "authored",
+                        "project": row.get("project", ""),
                         "timestamp": row[self.date_col],
                         "owner_email": email,
                         "reviewer_email": row.get(

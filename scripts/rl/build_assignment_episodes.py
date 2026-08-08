@@ -49,6 +49,9 @@ ACTIVITY_COLUMNS = [
     "timestamp",
     "label",
     "owner_email",
+    # project を落とすと extract_common_features の n_projects /
+    # cross_project_review_share が列なしフォールバックで常に 0 になる
+    "project",
     "change_insertions",
     "change_deletions",
     "change_files_count",
@@ -134,6 +137,7 @@ def to_activity_frame(df: pd.DataFrame) -> pd.DataFrame:
         "timestamp": df["timestamp"],
         "label": df["label"].astype(int),
         "owner_email": df["owner_email"].astype(str),
+        "project": df["project"].astype(str) if "project" in df.columns else "",
         "change_insertions": df["change_insertions"].astype(int),
         "change_deletions": df["change_deletions"].astype(int),
         "change_files_count": df["change_files_count"].astype(int),

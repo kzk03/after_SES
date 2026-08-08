@@ -416,6 +416,9 @@ class RetentionIRLSystem:
                     'timestamp': pd.Timestamp(ts) if not isinstance(ts, pd.Timestamp) else ts,
                     'label': 0,
                     'owner_email': email,  # 自分がオーナー
+                    # project を落とすと n_projects / cross_project_review_share が
+                    # 列なしフォールバックで常に 0 になる
+                    'project': act.get('project', ''),
                     'change_insertions': act.get('lines_added', act.get('change_insertions', 0)) or 0,
                     'change_deletions': act.get('lines_deleted', act.get('change_deletions', 0)) or 0,
                     'change_files_count': act.get('files_changed', act.get('change_files_count', 0)) or 0,
@@ -427,6 +430,7 @@ class RetentionIRLSystem:
                     'timestamp': pd.Timestamp(ts) if not isinstance(ts, pd.Timestamp) else ts,
                     'label': 1 if act.get('accepted', False) else 0,
                     'owner_email': act.get('owner_email', ''),
+                    'project': act.get('project', ''),
                     'change_insertions': act.get('lines_added', act.get('change_insertions', 0)) or 0,
                     'change_deletions': act.get('lines_deleted', act.get('change_deletions', 0)) or 0,
                     'change_files_count': act.get('files_changed', act.get('change_files_count', 0)) or 0,
