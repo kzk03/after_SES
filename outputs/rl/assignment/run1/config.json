@@ -1,0 +1,35 @@
+{
+  "args": {
+    "episodes": "outputs/rl/assignment/nova_2021_2022.pkl",
+    "acceptance_model": "outputs/rl/acceptance_model_s26/acceptance_model.joblib",
+    "output_dir": "outputs/rl/assignment/run1",
+    "state_dim": 26,
+    "n_candidates": 20,
+    "n_test_episodes": 6,
+    "total_timesteps": 60000,
+    "n_steps": 512,
+    "batch_size": 128,
+    "lr": 0.0003,
+    "hidden": 64,
+    "ent_coef": 0.01,
+    "seed": 42,
+    "service_days": 6.0,
+    "load_cap": 5,
+    "w_accept": 1.0,
+    "w_reject": 0.3,
+    "w_load": 0.5,
+    "w_gini": 2.0,
+    "skip_ppo": false
+  },
+  "meta": {
+    "project": "openstack/nova",
+    "start": "2021-01-01 00:00:00",
+    "end": "2022-12-01 00:00:00",
+    "episode_days": 30,
+    "n_candidates": 20,
+    "active_window_days": 90,
+    "n_episodes": 24,
+    "n_requests": 7760,
+    "logged_accept_rate": 0.5347938144329897
+  }
+}

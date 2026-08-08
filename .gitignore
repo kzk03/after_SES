@@ -33,4 +33,9 @@ archive/**
 # event版sweepの巨大出力(GitHubの100MB制限超過)
 outputs/rl/sweep/*_event/dataset/event_transitions.parquet
 outputs/rl/sweep/*_event/*/eval/pair_predictions.csv
+
+# 柱2(レビュアー割り当て)の再生成可能なバイナリ。metrics/csvのみ追跡する
+outputs/rl/acceptance_model*/*.joblib
+outputs/rl/assignment/*.pkl
+outputs/rl/assignment/*/*.zip
 tmp/
