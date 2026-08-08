@@ -33,7 +33,7 @@ import pickle
 import sys
 import time
 from pathlib import Path
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -96,6 +96,10 @@ def parse_args() -> argparse.Namespace:
         help="参照表に無い (開発者,月) の埋め方",
     )
     p.add_argument("--skip-ppo", action="store_true", help="ベースラインのみ評価する")
+    p.add_argument(
+        "--dump-step-log", action="store_true",
+        help="ステップ単位のログを step_log.csv に保存する (重みの感度分析用)",
+    )
     return p.parse_args()
 
 
@@ -183,8 +187,15 @@ def evaluate_policy(
     ep_indices: List[int],
     seed: int,
     name: str,
+    step_logs: Optional[List[pd.DataFrame]] = None,
 ) -> pd.DataFrame:
-    """各テストエピソードで方策を走らせ、エピソード単位の指標を返す。"""
+    """各テストエピソードで方策を走らせ、エピソード単位の指標を返す。
+
+    step_logs を渡すとステップ単位のログも溜める。ログには accepted /
+    load_excess / gini / retention が入っているので、**再実行せずに**
+    任意の重みで報酬を計算し直せる (1 run 1.6 時間かかるため、重みの
+    感度分析はオフラインで回す)。
+    """
     rows = []
     t0 = time.time()
     for ep in ep_indices:
@@ -194,6 +205,11 @@ def evaluate_policy(
         while not done:
             a = policy(env, obs, rng)
             obs, _, done, _, info = env.step(a)
+        if step_logs is not None:
+            d = env.episode_log()
+            d["episode"] = ep
+            d["policy"] = name
+            step_logs.append(d)
         s = dict(info["episode_summary"])
         s["episode"] = ep
         s["policy"] = name
@@ -203,8 +219,17 @@ def evaluate_policy(
 
 
 def evaluate_ppo(
-    env: AssignmentSimEnv, model, ep_indices: List[int], seed: int
+    env: AssignmentSimEnv, model, ep_indices: List[int], seed: int,
+    deterministic: bool = False,
 ) -> pd.DataFrame:
+    """学習済み PPO をテストエピソードで評価する。
+
+    **既定は確率的 (deterministic=False)。** 負荷分散を目的とする本課題では
+    決定的方策が構造的に不利になる: 候補集合と状態がほとんど変わらないまま
+    argmax を取ると同じ人が選ばれ続け、集中を罰する報酬なのに集中してしまう。
+    実測でも同一モデルで報酬/step が決定的 +0.0665 に対し確率的 +0.3480、
+    有効レビュアーが 2.87 対 9.53 と大きく変わった。
+    """
     from sb3_contrib.common.maskable.utils import get_action_masks
 
     rows = []
@@ -214,11 +239,11 @@ def evaluate_ppo(
         done = False
         while not done:
             masks = get_action_masks(env)
-            a, _ = model.predict(obs, action_masks=masks, deterministic=True)
+            a, _ = model.predict(obs, action_masks=masks, deterministic=deterministic)
             obs, _, done, _, info = env.step(int(a))
         s = dict(info["episode_summary"])
         s["episode"] = ep
-        s["policy"] = "ppo"
+        s["policy"] = "ppo" if not deterministic else "ppo_deterministic"
         rows.append(s)
     logger.info("[ppo] %d エピソード評価 (%.0fs)", len(ep_indices), time.time() - t0)
     return pd.DataFrame(rows)
@@ -236,9 +261,19 @@ def main() -> None:
     logger.info("エピソード %d 本, meta=%s", len(episodes), data["meta"])
 
     model = AcceptanceModel.load(args.acceptance_model)
-    if model.obs_dim != args.state_dim:
+    # プロジェクト事前分布を使うモデルは、環境が作る状態次元より 1 だけ大きい
+    # (その列は predict_proba 側で付ける)
+    expected = model.obs_dim - (1 if model.uses_project_prior else 0)
+    if expected != args.state_dim:
         raise SystemExit(
-            f"承諾モデルの次元 {model.obs_dim} と --state-dim {args.state_dim} が不一致"
+            f"承諾モデルの入力次元 {model.obs_dim}"
+            f"{' (うちプロジェクト事前分布 1)' if model.uses_project_prior else ''}"
+            f" と --state-dim {args.state_dim} が不一致"
+        )
+    if model.uses_project_prior:
+        logger.info(
+            "承諾モデルはプロジェクト事前分布を使用 (%d プロジェクト, 既定 %.4f)",
+            len(model.project_prior), model.project_prior_default,
         )
 
     n_test = args.n_test_episodes
@@ -258,13 +293,16 @@ def main() -> None:
 
     # ── ベースライン ─────────────────────────────────────────
     results = []
+    step_logs: Optional[List[pd.DataFrame]] = [] if args.dump_step_log else None
     for name, fn in [
         ("logged", policy_logged),
         ("random", policy_random),
         ("greedy_accept", policy_greedy_accept),
         ("least_load", policy_least_load),
     ]:
-        results.append(evaluate_policy(eval_env, fn, test_idx, args.seed, name))
+        results.append(
+            evaluate_policy(eval_env, fn, test_idx, args.seed, name, step_logs)
+        )
 
     # ── PPO ──────────────────────────────────────────────────
     ppo_model = None
@@ -296,7 +334,11 @@ def main() -> None:
         ppo_model.learn(total_timesteps=args.total_timesteps, progress_bar=False)
         logger.info("PPO 学習完了 (%.0fs)", time.time() - t0)
         ppo_model.save(str(out_dir / "ppo_assignment"))
+        # 確率的・決定的の両方を出す (既定の比較対象は確率的な方)
         results.append(evaluate_ppo(eval_env, ppo_model, test_idx, args.seed))
+        results.append(
+            evaluate_ppo(eval_env, ppo_model, test_idx, args.seed, deterministic=True)
+        )
 
     # ── 集約 ─────────────────────────────────────────────────
     df = pd.concat(results, ignore_index=True)
@@ -318,6 +360,9 @@ def main() -> None:
     with open(out_dir / "config.json", "w", encoding="utf-8") as f:
         json.dump({"args": vars(args), "meta": data["meta"]}, f, indent=2,
                   ensure_ascii=False, default=str)
+    if step_logs:
+        pd.concat(step_logs, ignore_index=True).to_csv(out_dir / "step_log.csv", index=False)
+        logger.info("ステップログを保存: %s", out_dir / "step_log.csv")
     logger.info("結果を保存: %s", out_dir)
 
 
