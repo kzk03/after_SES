@@ -75,8 +75,45 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--w-reject", type=float, default=0.3)
     p.add_argument("--w-load", type=float, default=0.5)
     p.add_argument("--w-gini", type=float, default=2.0)
+    p.add_argument(
+        "--load-clip", type=float, default=None,
+        help="負荷超過の頭打ち。既定 (None) はクリップなし。旧挙動の再現は 2.0",
+    )
+    p.add_argument(
+        "--w-retention", type=float, default=0.0,
+        help="継続スコアの係数。0 (既定) で継続性の項を使わない",
+    )
+    p.add_argument(
+        "--retention-parquet", nargs="*", default=None,
+        help="R_θ 参照表を作る event transitions parquet。--w-retention と併用",
+    )
+    p.add_argument(
+        "--retention-transform", choices=["rank", "identity"], default="rank",
+        help="R_θ の変換。rank=訓練分布の百分位 (既定) / identity=生の値",
+    )
+    p.add_argument(
+        "--retention-missing", choices=["median", "low", "zero"], default="median",
+        help="参照表に無い (開発者,月) の埋め方",
+    )
     p.add_argument("--skip-ppo", action="store_true", help="ベースラインのみ評価する")
     return p.parse_args()
+
+
+def build_retention_fn(args: argparse.Namespace):
+    """継続スコア関数を組み立てる。--w-retention が 0 なら None。"""
+    if args.w_retention == 0.0:
+        return None
+    if not args.retention_parquet:
+        raise SystemExit("--w-retention を使うなら --retention-parquet が要ります")
+    from review_predictor.RL.env.retention_score import RetentionTable
+
+    tbl = RetentionTable.from_parquet(
+        args.retention_parquet,
+        transform=args.retention_transform,
+        missing=args.retention_missing,
+    )
+    logger.info("継続スコア参照表: %s", tbl.describe())
+    return tbl
 
 
 def make_env(
@@ -85,6 +122,7 @@ def make_env(
     model: AcceptanceModel,
     args: argparse.Namespace,
     seed: int,
+    retention_fn=None,
 ) -> AssignmentSimEnv:
     sb = RLStateBuilder(
         state_dim=args.state_dim, action_dim=5, include_assign_count=False
@@ -101,6 +139,9 @@ def make_env(
         w_reject=args.w_reject,
         w_load=args.w_load,
         w_gini=args.w_gini,
+        w_retention=args.w_retention,
+        load_clip=args.load_clip,
+        retention_fn=retention_fn,
         seed=seed,
     )
 
@@ -209,8 +250,10 @@ def main() -> None:
         len(test_eps), test_eps[0]["start"].date(), test_eps[-1]["end"].date(),
     )
 
+    retention_fn = build_retention_fn(args)
+
     # 評価用 env は全エピソードを持たせ、ep_idx で test を指す
-    eval_env = make_env(episodes, history, model, args, args.seed)
+    eval_env = make_env(episodes, history, model, args, args.seed, retention_fn)
     test_idx = list(range(len(episodes) - n_test, len(episodes)))
 
     # ── ベースライン ─────────────────────────────────────────
@@ -233,7 +276,9 @@ def main() -> None:
         from review_predictor.RL.agent.set_policy import SetMaskablePolicy
 
         train_env = DummyVecEnv([
-            lambda: Monitor(make_env(train_eps, history, model, args, args.seed))
+            lambda: Monitor(
+                make_env(train_eps, history, model, args, args.seed, retention_fn)
+            )
         ])
         ppo_model = MaskablePPO(
             SetMaskablePolicy,

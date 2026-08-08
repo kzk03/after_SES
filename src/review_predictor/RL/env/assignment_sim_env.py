@@ -43,7 +43,7 @@ from __future__ import annotations
 
 import logging
 from collections import deque
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 import gymnasium as gym
 import numpy as np
@@ -131,6 +131,9 @@ class AssignmentSimEnv(gym.Env):
         w_reject: float = 0.3,
         w_load: float = 0.5,
         w_gini: float = 2.0,
+        w_retention: float = 0.0,
+        load_clip: Optional[float] = None,
+        retention_fn: Optional[Callable[[str, pd.Timestamp], float]] = None,
         feature_window_days: int = 180,
         seed: Optional[int] = None,
     ) -> None:
@@ -146,8 +149,14 @@ class AssignmentSimEnv(gym.Env):
             w_accept: 承諾されたときの報酬
             w_reject: 拒否されたときのペナルティ (再依頼コスト)
             w_load: 負荷ペナルティの係数
-            w_gini: レビュー集中度 (ジニ係数) の悪化に対するペナルティ係数。
+            w_gini: レビュー集中度 (ジニ係数) のペナルティ係数。
                 バス係数の代理指標として使う
+            w_retention: 継続スコアの係数。0 なら継続性の項を使わない (既定)
+            load_clip: 負荷超過の頭打ち。None ならクリップしない (既定)。
+                旧実装の 2.0 相当を再現したいときだけ指定する
+            retention_fn: (email, 時点) を受けて継続スコアを返す関数。None なら 0。
+                候補プール全員の平均ではなく「選んだ人」の値を使う。プール平均だと
+                母集団もキーもエピソード中固定なので定数になり勾配が消えるため
             feature_window_days: 特徴量抽出窓
             seed: 乱数シード
         """
@@ -162,6 +171,9 @@ class AssignmentSimEnv(gym.Env):
         self.w_reject = w_reject
         self.w_load = w_load
         self.w_gini = w_gini
+        self.w_retention = w_retention
+        self.load_clip = load_clip
+        self.retention_fn = retention_fn
         self.feature_window_days = feature_window_days
 
         self.feat_dim = int(state_builder.state_dim)
@@ -383,6 +395,19 @@ class AssignmentSimEnv(gym.Env):
     def _pool_gini(self, attr: str) -> float:
         return _gini(self._pool_counts(attr))
 
+    def _retention_score(self, email: str, now: pd.Timestamp) -> float:
+        """選んだ開発者の継続スコア。retention_fn 未設定か w_retention=0 なら 0。
+
+        候補プール全員の平均にはしない。参照表方式では値のキーが
+        (開発者, 年月) で、1 エピソードは 30 日 = ほぼ 1 ヶ月、候補プールも
+        エピソード中固定なので、平均は「どの行動を選んでも同じ定数」になり
+        勾配が消える。行動が直接動かせるのは「誰を選んだか」だけなので、
+        選んだ人の値をそのまま使う。
+        """
+        if self.retention_fn is None or self.w_retention == 0.0:
+            return 0.0
+        return float(self.retention_fn(email, now))
+
     def step(
         self, action: int
     ) -> Tuple[Dict[str, np.ndarray], float, bool, bool, Dict[str, Any]]:
@@ -432,17 +457,35 @@ class AssignmentSimEnv(gym.Env):
             st.n_rejected += 1
 
         # ── 3. 報酬 (プロジェクト側の指標) ────────────────────
+        #
+        # 全項を「1ステップあたりの水準」で揃える。差分 (前ステップとの変化量) で
+        # 入れた項は 1 エピソードで (終了時 - 開始時) に畳み込まれてしまい、
+        # ステップ数に比例して積み上がる承諾報酬に対して無視できる大きさになる。
         r_accept = self.w_accept if accepted else 0.0
         r_reject = -self.w_reject if not accepted else 0.0
-        # 負荷: 既に load_cap 件抱えている人に更に振ると線形にペナルティ
+
+        # 負荷: load_cap を超えて抱えている人に更に振ると線形にペナルティ。
+        # 旧実装は min(load_excess, 2.0) で頭打ちにしていたが、上限が
+        # -w_load*2.0 = -1.0 と w_accept=1.0 に等しく、「承諾さえされれば
+        # 何人ぶん抱えさせても差し引き 0 以上」になっていたためクリップを外した。
         load_excess = max(0, load_before - self.load_cap) / self.load_cap
-        r_load = -self.w_load * min(load_excess, 2.0)
-        # 集中度: 候補プール内の承諾件数のジニ係数の悪化分を罰する (バス係数の代理)
+        if self.load_clip is not None:
+            load_excess = min(load_excess, self.load_clip)
+        r_load = -self.w_load * load_excess
+
+        # 集中度: 候補プール内の承諾件数のジニ係数 (バス係数の代理)。
+        # 旧実装は前ステップとの差分を罰していたため、437 ステップのエピソードでも
+        # 合計 -w_gini*(gini_終 - gini_初) ≒ -2 にしかならず効かなかった。水準で罰する。
         gini_now = self._pool_gini("n_accepted")
-        r_gini = -self.w_gini * (gini_now - self._prev_gini)
+        r_gini = -self.w_gini * gini_now
         self._prev_gini = gini_now
 
-        reward = r_accept + r_reject + r_load + r_gini
+        # 継続性: 継続しそうな人を選ぶことをプロジェクト側 KPI として評価する。
+        # ジニと同じ理由で差分ではなく水準で入れる。
+        retention = self._retention_score(chosen, now)
+        r_retention = self.w_retention * retention
+
+        reward = r_accept + r_reject + r_load + r_gini + r_retention
 
         self._ep_log.append({
             "step": self._ptr,
@@ -452,7 +495,9 @@ class AssignmentSimEnv(gym.Env):
             "p_accept": p_accept,
             "accepted": int(accepted),
             "load_before": load_before,
+            "load_excess": load_excess,
             "gini": gini_now,
+            "retention": retention,
             "reward": reward,
         })
 
@@ -468,10 +513,12 @@ class AssignmentSimEnv(gym.Env):
             "accepted": accepted,
             "load_before": load_before,
             "gini": gini_now,
+            "retention": retention,
             "r_accept": r_accept,
             "r_reject": r_reject,
             "r_load": r_load,
             "r_gini": r_gini,
+            "r_retention": r_retention,
         }
         if terminated:
             info["episode_summary"] = self.episode_summary()
@@ -536,6 +583,7 @@ class AssignmentSimEnv(gym.Env):
                 np.mean([r["matched_logged"] for r in self._ep_log])
             ),
             "mean_p_accept": float(np.mean([r["p_accept"] for r in self._ep_log])),
+            "mean_retention": float(np.mean([r["retention"] for r in self._ep_log])),
             "total_reward": float(np.sum([r["reward"] for r in self._ep_log])),
         }
 
