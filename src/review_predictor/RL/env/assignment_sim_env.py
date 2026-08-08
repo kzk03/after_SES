@@ -140,7 +140,8 @@ class AssignmentSimEnv(gym.Env):
         """
         Args:
             episodes: build_assignment_episodes.py が出力した episodes
-            history: エピソード開始前の全イベント (activity 行形式 DataFrame)
+            history: 実ログの全イベント (activity 行形式 DataFrame)。期間全体を
+                渡してよい。reset がエピソード開始時刻で切って初期状態にする
             acceptance_model: AcceptanceModel — P(accept | dev state)
             state_builder: RLStateBuilder — 特徴量抽出
             n_candidates: 固定候補数 (観測形状を決める)
@@ -179,10 +180,20 @@ class AssignmentSimEnv(gym.Env):
         self.feat_dim = int(state_builder.state_dim)
         self.task_dim = len(TASK_FEATURE_NAMES)
 
-        # エピソード開始前の履歴を開発者ごとに分けておく (reset のたびに複製する)
+        # 実ログを開発者ごとに時刻順で持っておく。reset では「そのエピソードの
+        # 開始時刻より前」の部分だけを切り出して初期状態にする。
+        #
+        # 全エピソードを同じ初期状態 (期間全体の開始時点) から始めてはいけない。
+        # 2022 年のエピソードでも開発者の履歴が 2021 年 1 月で止まることになり、
+        # 「直近30日の承諾率」「最後の活動からの経過日数」といった特徴量が
+        # 学習時とまったく違う値になる (実測で候補の 51% が直近承諾率 0 になり、
+        # 承諾モデルの予測平均が 0.61 → 0.19 に落ちていた)。
         self._base_events: Dict[str, List[Dict[str, Any]]] = {}
+        self._base_ts: Dict[str, np.ndarray] = {}
         for email, grp in history.sort_values("timestamp").groupby("email"):
-            self._base_events[str(email)] = grp.to_dict("records")
+            key = str(email)
+            self._base_events[key] = grp.to_dict("records")
+            self._base_ts[key] = grp["timestamp"].to_numpy()
 
         self.observation_space = gym.spaces.Dict({
             "candidates": gym.spaces.Box(
@@ -203,6 +214,7 @@ class AssignmentSimEnv(gym.Env):
         self._requests: List[Dict[str, Any]] = []
         self._ptr = 0
         self._now: Optional[pd.Timestamp] = None
+        self._ep_start: Optional[pd.Timestamp] = None
         self._prev_gini = 0.0
         self._feat_cache: Dict[Tuple[str, int, int], np.ndarray] = {}
         # 未介入の開発者の特徴量。エピソードを跨いで再利用するので reset で消さない
@@ -220,8 +232,15 @@ class AssignmentSimEnv(gym.Env):
     def _dev(self, email: str) -> _DevState:
         st = self._devs.get(email)
         if st is None:
-            # 履歴を持たない開発者 (初出) も候補になりうる
-            st = _DevState(email, list(self._base_events.get(email, [])))
+            # 履歴を持たない開発者 (初出) も候補になりうる。
+            # reset で全員ぶん作るので通常ここは空リストになる
+            evs = self._base_events.get(email, [])
+            if evs and self._ep_start is not None:
+                k = int(np.searchsorted(
+                    self._base_ts[email], np.datetime64(self._ep_start), side="left"
+                ))
+                evs = evs[:k]
+            st = _DevState(email, list(evs))
             self._devs[email] = st
         return st
 
@@ -231,8 +250,10 @@ class AssignmentSimEnv(gym.Env):
         特徴量は日単位の粒度しか持たないので、同じ日のうちは再計算しない。
         キャッシュはエージェントが介入したかどうかで 2 段に分ける:
 
-        - 未介入 (n_assigned == 0): 履歴は初期履歴そのもので、どのエピソード・
-          どの学習エポックでも同一。よって (email, 日付) で**永続**キャッシュできる。
+        - 未介入 (n_assigned == 0): 履歴は初期履歴そのもの。エピソードごとに
+          切り出し位置は変わるが、全プロジェクトが同じ 30 日グリッドを使うため
+          「ある日付」が属するエピソードは一意で、切り出し位置も一意に決まる。
+          よって (email, 日付) で**永続**キャッシュしてよい。
           学習は同じエピソード集合を何度も回すため、ここの再利用が効く。
         - 介入済み: 履歴の中身がエピソードごと (承諾サンプリングの乱数ごと) に
           変わるため永続化できない。エピソード内限定のキャッシュに
@@ -365,12 +386,16 @@ class AssignmentSimEnv(gym.Env):
         self._feat_cache = {}
         self._ep_log = []
 
-        # 開発者状態をエピソード開始時点に巻き戻す (履歴は複製して汚さない)
+        # 開発者状態を「このエピソードの開始時刻」に巻き戻す (履歴は複製して汚さない)。
+        # 期間全体の開始時点ではなくエピソード開始時点であることが重要。
+        self._ep_start = pd.Timestamp(ep["start"])
+        cut = np.datetime64(self._ep_start)
         self._devs = {}
         self._total_events = 0
         for email, evs in self._base_events.items():
-            self._devs[email] = _DevState(email, list(evs))
-            self._total_events += len(evs)
+            k = int(np.searchsorted(self._base_ts[email], cut, side="left"))
+            self._devs[email] = _DevState(email, evs[:k].copy())
+            self._total_events += k
 
         # 集中度を測る母集団 = このエピソードで一度でも候補になった開発者。
         # 全開発者 (履歴に出る数百人) で測るとゼロが多すぎてジニ係数が 0.96-0.99 に
