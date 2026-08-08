@@ -1,0 +1,184 @@
+{
+  "args": {
+    "episodes": "/private/tmp/claude-502/-Users-kazuki-h-projects-after-ses/de9610b7-a146-4811-bb11-cdb7d87e18c7/scratchpad/main32_2022_h1096.pkl",
+    "acceptance_model": "outputs/rl/acceptance_model_s26_proj90/acceptance_model.joblib",
+    "output_dir": "outputs/rl/assignment/run3_fixed",
+    "state_dim": 26,
+    "n_candidates": 20,
+    "n_test_episodes": 50,
+    "total_timesteps": 60000,
+    "n_steps": 512,
+    "batch_size": 128,
+    "lr": 0.0003,
+    "hidden": 64,
+    "ent_coef": 0.01,
+    "seed": 42,
+    "service_days": 6.0,
+    "load_cap": 5,
+    "w_accept": 1.0,
+    "w_reject": 0.3,
+    "w_load": 0.5,
+    "w_gini": 2.0,
+    "load_clip": null,
+    "w_retention": 0.0,
+    "retention_parquet": null,
+    "retention_transform": "rank",
+    "retention_missing": "median",
+    "skip_ppo": false
+  },
+  "meta": {
+    "project": "all",
+    "projects": [
+      "openstack/barbican",
+      "openstack/blazar",
+      "openstack/ceilometer",
+      "openstack/cinder",
+      "openstack/cloudkitty",
+      "openstack/cyborg",
+      "openstack/designate",
+      "openstack/glance",
+      "openstack/heat",
+      "openstack/horizon",
+      "openstack/ironic",
+      "openstack/keystone",
+      "openstack/magnum",
+      "openstack/manila",
+      "openstack/mistral",
+      "openstack/neutron",
+      "openstack/nova",
+      "openstack/octavia",
+      "openstack/skyline-apiserver",
+      "openstack/swift",
+      "openstack/tacker",
+      "openstack/trove",
+      "openstack/venus"
+    ],
+    "per_project": [
+      {
+        "project": "openstack/barbican",
+        "n_episodes": 7,
+        "n_requests": 178
+      },
+      {
+        "project": "openstack/blazar",
+        "n_episodes": 3,
+        "n_requests": 30
+      },
+      {
+        "project": "openstack/ceilometer",
+        "n_episodes": 5,
+        "n_requests": 120
+      },
+      {
+        "project": "openstack/cinder",
+        "n_episodes": 12,
+        "n_requests": 7147
+      },
+      {
+        "project": "openstack/cloudkitty",
+        "n_episodes": 5,
+        "n_requests": 76
+      },
+      {
+        "project": "openstack/cyborg",
+        "n_episodes": 3,
+        "n_requests": 37
+      },
+      {
+        "project": "openstack/designate",
+        "n_episodes": 12,
+        "n_requests": 511
+      },
+      {
+        "project": "openstack/glance",
+        "n_episodes": 11,
+        "n_requests": 406
+      },
+      {
+        "project": "openstack/heat",
+        "n_episodes": 10,
+        "n_requests": 262
+      },
+      {
+        "project": "openstack/horizon",
+        "n_episodes": 12,
+        "n_requests": 603
+      },
+      {
+        "project": "openstack/ironic",
+        "n_episodes": 12,
+        "n_requests": 1497
+      },
+      {
+        "project": "openstack/keystone",
+        "n_episodes": 12,
+        "n_requests": 483
+      },
+      {
+        "project": "openstack/magnum",
+        "n_episodes": 8,
+        "n_requests": 163
+      },
+      {
+        "project": "openstack/manila",
+        "n_episodes": 12,
+        "n_requests": 971
+      },
+      {
+        "project": "openstack/mistral",
+        "n_episodes": 6,
+        "n_requests": 93
+      },
+      {
+        "project": "openstack/neutron",
+        "n_episodes": 13,
+        "n_requests": 5183
+      },
+      {
+        "project": "openstack/nova",
+        "n_episodes": 12,
+        "n_requests": 3875
+      },
+      {
+        "project": "openstack/octavia",
+        "n_episodes": 12,
+        "n_requests": 1132
+      },
+      {
+        "project": "openstack/skyline-apiserver",
+        "n_episodes": 7,
+        "n_requests": 344
+      },
+      {
+        "project": "openstack/swift",
+        "n_episodes": 12,
+        "n_requests": 521
+      },
+      {
+        "project": "openstack/tacker",
+        "n_episodes": 13,
+        "n_requests": 847
+      },
+      {
+        "project": "openstack/trove",
+        "n_episodes": 4,
+        "n_requests": 53
+      },
+      {
+        "project": "openstack/venus",
+        "n_episodes": 5,
+        "n_requests": 290
+      }
+    ],
+    "history_scope": "all",
+    "start": "2022-01-01 00:00:00",
+    "end": "2023-01-01 00:00:00",
+    "episode_days": 30,
+    "n_candidates": 20,
+    "active_window_days": 90,
+    "min_episodes": 2,
+    "n_episodes": 208,
+    "n_requests": 24822,
+    "logged_accept_rate": 0.6368544033518653
+  }
+}
