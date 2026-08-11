@@ -88,6 +88,25 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     p.add_argument(
+        "--train-until", default=None,
+        help=(
+            "この日付より前の行だけで学習する (feature_end 基準)。評価エピソードの"
+            "開始直前に置けばリークせずに学習期間を延ばせる。テスト評価も"
+            "この日付以降に絞られる"
+        ),
+    )
+    p.add_argument(
+        "--extra-train", nargs="*", default=None,
+        help="学習に追加で使う parquet (--train-until と併用して期間を切る)",
+    )
+    p.add_argument(
+        "--project-focus", action="store_true",
+        help=(
+            "「その開発者の直近活動のうち当該プロジェクトが占める割合」(専従度) を"
+            "特徴量に足す。横断的な開発者ほど承諾率が過大予測される傾向への対処"
+        ),
+    )
+    p.add_argument(
         "--raw-csv", default=None,
         help=(
             "プロジェクト単位の事前承諾率を特徴量に足す場合に指定する生 CSV。"
@@ -124,12 +143,24 @@ def stack_states(col: pd.Series, dim: int) -> np.ndarray:
 
 
 def load_split(
-    path: str, dim: int, subsample: int = 0, seed: int = 42, use_first_dims: int = 0
+    path: str, dim: int, subsample: int = 0, seed: int = 42, use_first_dims: int = 0,
+    until: Optional[str] = None, since: Optional[str] = None,
 ) -> Tuple[np.ndarray, np.ndarray, pd.DataFrame]:
-    """parquet から (states, actions, メタ列) を読み出す。"""
+    """parquet から (states, actions, メタ列) を読み出す。
+
+    until/since を渡すと feature_end で期間を絞る。承諾モデルの学習期間を
+    評価直前まで延ばす (時間的距離による劣化を減らす) 用途。
+    """
     cols = ["state", "action", "feature_end", "email", "r_theta"]
-    df = pd.read_parquet(path, columns=cols)
+    if isinstance(path, (list, tuple)):
+        df = pd.concat([pd.read_parquet(p, columns=cols) for p in path], ignore_index=True)
+    else:
+        df = pd.read_parquet(path, columns=cols)
     df["feature_end"] = pd.to_datetime(df["feature_end"])
+    if until:
+        df = df[df["feature_end"] < pd.Timestamp(until)]
+    if since:
+        df = df[df["feature_end"] >= pd.Timestamp(since)]
     if subsample and subsample < len(df):
         df = df.sample(n=subsample, random_state=seed)
         logger.info("subsample: %d 件に絞る", len(df))
@@ -140,7 +171,9 @@ def load_split(
         X = X[:, :use_first_dims]
     y = df["action"].astype(np.int8).to_numpy()
     meta = df[["feature_end", "email", "r_theta"]].copy()
-    logger.info("%s: n=%d, dim=%d, 承諾率=%.4f", Path(path).name, len(y), X.shape[1], y.mean())
+    name = ("+".join(Path(x).name for x in path) if isinstance(path, (list, tuple))
+            else Path(path).name)
+    logger.info("%s: n=%d, dim=%d, 承諾率=%.4f", name, len(y), X.shape[1], y.mean())
     return X, y, meta
 
 
@@ -205,6 +238,49 @@ def trailing_project_rate(
     return out
 
 
+def project_focus(
+    email: np.ndarray, proj: np.ndarray, when: np.ndarray,
+    raw_csv: str, window_days: int,
+) -> np.ndarray:
+    """その開発者の直近活動のうち、当該プロジェクトが占める割合 (専従度)。
+
+    特徴量は全プロジェクト横断で計算されるため、多くのプロジェクトで活動する人は
+    「活発」に見えてモデルが高い承諾率を予測するが、**そのプロジェクトでの承諾率は
+    低い**。モデルは「活発だが、このプロジェクトでは違う」を区別できない。
+    実測でプロジェクト別の予測誤差と横断率の相関は +0.4164 (n=10、有意ではないが
+    機構の説明としては筋が通る)。
+
+    `n_projects` (活動プロジェクト数) とは別物。あちらは「何個に関わるか」、
+    こちらは「今のプロジェクトにどれだけ集中しているか」。
+    自分自身を含めないので (side="left")、リークにならない。
+    """
+    raw = pd.read_csv(raw_csv, usecols=["email", "project", "timestamp"], low_memory=False)
+    raw["timestamp"] = pd.to_datetime(raw["timestamp"], errors="coerce")
+    raw = raw.dropna(subset=["timestamp"]).sort_values("timestamp", kind="mergesort")
+
+    out = np.full(len(email), np.nan, dtype=np.float64)
+    win = np.timedelta64(window_days, "D")
+    when = pd.to_datetime(pd.Series(when)).to_numpy()
+
+    by_dev = {e: g for e, g in raw.groupby("email")}
+    for e, idx in pd.Series(range(len(email))).groupby(email).groups.items():
+        g = by_dev.get(e)
+        if g is None:
+            continue
+        idx = np.asarray(idx)
+        ts = g["timestamp"].to_numpy()
+        pj = g["project"].to_numpy()
+        q = when[idx]
+        hi = np.searchsorted(ts, q, side="left")
+        lo = np.searchsorted(ts, q - win, side="left")
+        for k, (a, b) in enumerate(zip(lo, hi)):
+            n = b - a
+            if n <= 0:
+                continue
+            out[idx[k]] = float((pj[a:b] == proj[idx[k]]).sum()) / n
+    return out
+
+
 def baseline_metrics(
     y: np.ndarray, r_theta: np.ndarray, prior: float
 ) -> dict:
@@ -236,8 +312,12 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # ── データ読み込み ────────────────────────────────────────
+    train_src = args.extra_train or args.train_dataset
+    if args.extra_train:
+        train_src = [args.train_dataset] + list(args.extra_train)
     X, y, meta = load_split(
-        args.train_dataset, args.obs_dim, args.subsample, args.seed, args.use_first_dims
+        train_src, args.obs_dim, args.subsample, args.seed, args.use_first_dims,
+        until=args.train_until,
     )
     feat_dim = X.shape[1]
 
@@ -295,9 +375,24 @@ def main() -> None:
                 float(col_all.min()), float(col_all.max()),
             )
 
-        X_fit = np.hstack([X_fit, col_all[:split].astype(np.float32).reshape(-1, 1)])
-        X_cal = np.hstack([X_cal, col_all[split:].astype(np.float32).reshape(-1, 1)])
+        cols_all = [col_all]
+        if args.project_focus:
+            f = project_focus(
+                meta["email"].astype(str).to_numpy(), proj,
+                meta["feature_end"].to_numpy(), args.raw_csv, prior_days or 90,
+            )
+            n_nan = int(np.isnan(f).sum())
+            f = np.where(np.isnan(f), 1.0, f)   # 履歴が無ければ専従とみなす
+            logger.info(
+                "専従度: 平均 %.4f / 中央値 %.4f (履歴なし %d 行 = %.2f%%)",
+                float(f.mean()), float(np.median(f)), n_nan, 100 * n_nan / len(f),
+            )
+            cols_all.append(f)
+        add = np.column_stack(cols_all).astype(np.float32)
+        X_fit = np.hstack([X_fit, add[:split]])
+        X_cal = np.hstack([X_cal, add[split:]])
         feat_dim = X_fit.shape[1]
+        n_extra = add.shape[1]
 
     # ── 学習 ─────────────────────────────────────────────────
     model = AcceptanceModel(
@@ -311,6 +406,7 @@ def main() -> None:
     model.project_prior = project_prior
     model.project_prior_default = prior_default
     model.project_prior_days = prior_days if args.raw_csv else 0
+    model.n_extra_features = n_extra if args.raw_csv else 0
     model.fit(X_fit, y_fit, X_cal, y_cal)
 
     results: dict = {
@@ -331,7 +427,8 @@ def main() -> None:
     prior = float(y_fit.mean())
     if args.test_dataset:
         Xt, yt, meta_t = load_split(
-            args.test_dataset, args.obs_dim, 0, args.seed, args.use_first_dims
+            args.test_dataset, args.obs_dim, 0, args.seed, args.use_first_dims,
+            since=args.train_until,
         )
         if args.raw_csv:
             proj_t = attach_project(meta_t, args.raw_csv).to_numpy()
@@ -345,7 +442,14 @@ def main() -> None:
                 col_t = np.where(np.isnan(col_t), fb_t, col_t)
             else:
                 col_t = fb_t
-            Xt = np.hstack([Xt, col_t.astype(np.float32).reshape(-1, 1)])
+            cols_t = [col_t]
+            if args.project_focus:
+                ft = project_focus(
+                    meta_t["email"].astype(str).to_numpy(), proj_t,
+                    meta_t["feature_end"].to_numpy(), args.raw_csv, prior_days or 90,
+                )
+                cols_t.append(np.where(np.isnan(ft), 1.0, ft))
+            Xt = np.hstack([Xt, np.column_stack(cols_t).astype(np.float32)])
         model.evaluate(Xt, yt, tag="test")
         results["baselines_test"] = baseline_metrics(
             yt, meta_t["r_theta"].to_numpy(), prior
