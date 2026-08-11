@@ -36,6 +36,8 @@ outputs/rl/sweep/*_event/*/eval/pair_predictions.csv
 
 # 柱2(レビュアー割り当て)の再生成可能なバイナリ。metrics/csvのみ追跡する
 outputs/rl/acceptance_model*/*.joblib
+outputs/rl/contrib_model*/*.joblib
 outputs/rl/assignment/*.pkl
 outputs/rl/assignment/*/*.zip
 tmp/
+work/
