@@ -97,6 +97,16 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument("--skip-ppo", action="store_true", help="ベースラインのみ評価する")
     p.add_argument(
+        "--stuck-when-no-response", action="store_true",
+        help="貢献しなかった依頼は解消されず滞留する負荷モデル "
+             "(割り当てイベント設計向け。既定は固定 service_days)",
+    )
+    p.add_argument(
+        "--background-history", action="store_true",
+        help="エピソード開始で履歴を切らず、now より前の実績をそのまま使う "
+             "(割り当てイベント設計で必要。既定は従来どおり切る)",
+    )
+    p.add_argument(
         "--dump-step-log", action="store_true",
         help="ステップ単位のログを step_log.csv に保存する (重みの感度分析用)",
     )
@@ -144,6 +154,8 @@ def make_env(
         w_load=args.w_load,
         w_gini=args.w_gini,
         w_retention=args.w_retention,
+        background_history=getattr(args, "background_history", False),
+        stuck_when_no_response=getattr(args, "stuck_when_no_response", False),
         load_clip=args.load_clip,
         retention_fn=retention_fn,
         seed=seed,
@@ -166,12 +178,17 @@ def policy_greedy_accept(env: AssignmentSimEnv, obs, rng: np.random.Generator) -
 
 
 def policy_least_load(env: AssignmentSimEnv, obs, rng: np.random.Generator) -> int:
-    load = env.candidate_loads()
+    """負荷が最も軽い人を選ぶ。**同点は乱択で割る。**
+
+    以前は同点を承諾確率で割っていたが (`load - 1e-3 * p`)、割り当てイベント設計では
+    負荷がほとんど 0 で同点だらけになるため、実質「承諾確率が最大の人」= 貪欲法の
+    変種になってしまい、負荷分散ベースラインとして機能しなかった。
+    """
+    load = env.candidate_loads().astype(np.float64)
     load = np.where(env.action_masks(), load, np.inf)
-    # 同点は承諾確率で割る (負荷が同じなら受けてくれそうな人を選ぶ)
-    p = env.candidate_p_accept()
-    key = load - 1e-3 * p
-    return int(np.argmin(key))
+    lo = load.min()
+    tied = np.flatnonzero(load <= lo + 1e-9)
+    return int(rng.choice(tied))
 
 
 def policy_logged(env: AssignmentSimEnv, obs, rng: np.random.Generator) -> int:
@@ -221,6 +238,7 @@ def evaluate_policy(
 def evaluate_ppo(
     env: AssignmentSimEnv, model, ep_indices: List[int], seed: int,
     deterministic: bool = False,
+    step_logs: Optional[List[pd.DataFrame]] = None,
 ) -> pd.DataFrame:
     """学習済み PPO をテストエピソードで評価する。
 
@@ -241,9 +259,15 @@ def evaluate_ppo(
             masks = get_action_masks(env)
             a, _ = model.predict(obs, action_masks=masks, deterministic=deterministic)
             obs, _, done, _, info = env.step(int(a))
+        name = "ppo" if not deterministic else "ppo_deterministic"
+        if step_logs is not None:
+            d = env.episode_log()
+            d["episode"] = ep
+            d["policy"] = name
+            step_logs.append(d)
         s = dict(info["episode_summary"])
         s["episode"] = ep
-        s["policy"] = "ppo" if not deterministic else "ppo_deterministic"
+        s["policy"] = name
         rows.append(s)
     logger.info("[ppo] %d エピソード評価 (%.0fs)", len(ep_indices), time.time() - t0)
     return pd.DataFrame(rows)
@@ -335,9 +359,11 @@ def main() -> None:
         logger.info("PPO 学習完了 (%.0fs)", time.time() - t0)
         ppo_model.save(str(out_dir / "ppo_assignment"))
         # 確率的・決定的の両方を出す (既定の比較対象は確率的な方)
-        results.append(evaluate_ppo(eval_env, ppo_model, test_idx, args.seed))
+        results.append(evaluate_ppo(eval_env, ppo_model, test_idx, args.seed,
+                                    step_logs=step_logs))
         results.append(
-            evaluate_ppo(eval_env, ppo_model, test_idx, args.seed, deterministic=True)
+            evaluate_ppo(eval_env, ppo_model, test_idx, args.seed, deterministic=True,
+                         step_logs=step_logs)
         )
 
     # ── 集約 ─────────────────────────────────────────────────
