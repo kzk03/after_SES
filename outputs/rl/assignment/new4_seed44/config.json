@@ -1,0 +1,171 @@
+{
+  "args": {
+    "episodes": "work/assign_ep.pkl",
+    "acceptance_model": "outputs/rl/contrib_model_v3/contrib_model.joblib",
+    "output_dir": "outputs/rl/assignment/new4_seed44",
+    "state_dim": 26,
+    "n_candidates": 20,
+    "n_test_episodes": 109,
+    "total_timesteps": 60000,
+    "n_steps": 512,
+    "batch_size": 128,
+    "lr": 0.0003,
+    "hidden": 64,
+    "ent_coef": 0.01,
+    "seed": 44,
+    "service_days": 6.0,
+    "load_cap": 5,
+    "w_accept": 1.0,
+    "w_reject": 0.0,
+    "w_load": 0.2,
+    "w_gini": 0.25,
+    "load_clip": null,
+    "w_retention": 0.0,
+    "retention_parquet": null,
+    "retention_transform": "rank",
+    "retention_missing": "median",
+    "skip_ppo": false,
+    "stuck_when_no_response": true,
+    "background_history": true,
+    "dump_step_log": false
+  },
+  "meta": {
+    "design": "assignment_events",
+    "per_project": [
+      {
+        "project": "openstack/barbican",
+        "n_episodes": 19,
+        "n_requests": 434
+      },
+      {
+        "project": "openstack/ceilometer",
+        "n_episodes": 12,
+        "n_requests": 225
+      },
+      {
+        "project": "openstack/cinder",
+        "n_episodes": 30,
+        "n_requests": 1637
+      },
+      {
+        "project": "openstack/cloudkitty",
+        "n_episodes": 11,
+        "n_requests": 254
+      },
+      {
+        "project": "openstack/cyborg",
+        "n_episodes": 13,
+        "n_requests": 342
+      },
+      {
+        "project": "openstack/designate",
+        "n_episodes": 7,
+        "n_requests": 128
+      },
+      {
+        "project": "openstack/glance",
+        "n_episodes": 27,
+        "n_requests": 661
+      },
+      {
+        "project": "openstack/heat",
+        "n_episodes": 20,
+        "n_requests": 310
+      },
+      {
+        "project": "openstack/horizon",
+        "n_episodes": 31,
+        "n_requests": 1503
+      },
+      {
+        "project": "openstack/ironic",
+        "n_episodes": 22,
+        "n_requests": 506
+      },
+      {
+        "project": "openstack/keystone",
+        "n_episodes": 27,
+        "n_requests": 564
+      },
+      {
+        "project": "openstack/magnum",
+        "n_episodes": 21,
+        "n_requests": 415
+      },
+      {
+        "project": "openstack/manila",
+        "n_episodes": 30,
+        "n_requests": 2045
+      },
+      {
+        "project": "openstack/masakari",
+        "n_episodes": 6,
+        "n_requests": 120
+      },
+      {
+        "project": "openstack/mistral",
+        "n_episodes": 9,
+        "n_requests": 180
+      },
+      {
+        "project": "openstack/neutron",
+        "n_episodes": 30,
+        "n_requests": 4352
+      },
+      {
+        "project": "openstack/nova",
+        "n_episodes": 31,
+        "n_requests": 2368
+      },
+      {
+        "project": "openstack/octavia",
+        "n_episodes": 23,
+        "n_requests": 507
+      },
+      {
+        "project": "openstack/skyline-apiserver",
+        "n_episodes": 10,
+        "n_requests": 244
+      },
+      {
+        "project": "openstack/swift",
+        "n_episodes": 12,
+        "n_requests": 179
+      },
+      {
+        "project": "openstack/tacker",
+        "n_episodes": 27,
+        "n_requests": 2328
+      },
+      {
+        "project": "openstack/trove",
+        "n_episodes": 7,
+        "n_requests": 138
+      },
+      {
+        "project": "openstack/venus",
+        "n_episodes": 10,
+        "n_requests": 286
+      },
+      {
+        "project": "openstack/watcher",
+        "n_episodes": 9,
+        "n_requests": 152
+      },
+      {
+        "project": "openstack/zaqar",
+        "n_episodes": 3,
+        "n_requests": 34
+      }
+    ],
+    "episode_days": 60,
+    "n_candidates": 20,
+    "active_window_days": 90,
+    "horizon": 14.0,
+    "cutoff": "2024-10-01 00:00:00",
+    "n_test": 109,
+    "n_episodes": 432,
+    "n_requests": 19331,
+    "logged_contrib_rate": 0.4230510578862966
+  }
+}
