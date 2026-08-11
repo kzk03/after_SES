@@ -33,6 +33,7 @@ Gerrit（コードレビューシステム）の REST API からデータを取�
 
 import argparse
 import json
+import time
 import logging
 import sys
 from datetime import datetime
@@ -80,6 +81,8 @@ class GerritDataFetcher:
         """
         self.gerrit_url = gerrit_url.rstrip('/')  # 末尾スラッシュを除去（URLの二重スラッシュ防止）
         self.timeout = timeout
+        # 429 を受けたときに待って再試行する回数
+        self.max_429_retries = 5
         # requests.Session: 同じサーバーへの接続を使い回す（毎回接続確立するよりも高速）
         self.session = requests.Session()
 
@@ -107,7 +110,19 @@ class GerritDataFetcher:
         url = f"{self.gerrit_url}/{endpoint}"
 
         try:
-            response = self.session.get(url, params=params, timeout=self.timeout)
+            # 429 (レート制限) は待てば通る。ここで待たずに例外を投げると
+            # 呼び出し側が「オフセット上限」と誤認して期間を二分割し、
+            # 待機せずに叩き続けて事態を悪化させる (AOSP で実際に起きた)。
+            for attempt in range(self.max_429_retries):
+                response = self.session.get(url, params=params, timeout=self.timeout)
+                if response.status_code != 429:
+                    break
+                wait = float(response.headers.get("Retry-After", 0) or 0)
+                if wait <= 0:
+                    wait = min(300, 30 * (2 ** attempt))
+                logger.warning("429 → %.0fs 待機 (%d/%d)",
+                               wait, attempt + 1, self.max_429_retries)
+                time.sleep(wait)
             response.raise_for_status()  # 4xx / 5xx なら例外を投げる
 
             content = response.text
