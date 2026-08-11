@@ -135,6 +135,8 @@ class AssignmentSimEnv(gym.Env):
         load_clip: Optional[float] = None,
         retention_fn: Optional[Callable[[str, pd.Timestamp], float]] = None,
         force_logged_outcome: bool = False,
+        background_history: bool = False,
+        stuck_when_no_response: bool = False,
         feature_window_days: int = 180,
         seed: Optional[int] = None,
     ) -> None:
@@ -182,6 +184,15 @@ class AssignmentSimEnv(gym.Env):
         self.load_clip = load_clip
         self.retention_fn = retention_fn
         self.force_logged_outcome = force_logged_outcome
+        # 背景活動モード: エピソード開始で履歴を切らず、now より前の実績を
+        # そのまま使う。エージェントは「誰を割り当てるか」だけを変える。
+        # 併せて当該 change の行 (これから予測する結果を含む) を履歴から除く。
+        self.background_history = background_history
+        # 貢献しなかった依頼は解消されず滞留する、というモデル。
+        # 固定 service_days の占有はイベント密度が高い設計向けで、
+        # 割り当てイベント設計 (0.6件/日) では誰も上限に達しない。
+        # 実データでは非貢献者は永久に応答しないので、その依頼は残り続ける。
+        self.stuck_when_no_response = stuck_when_no_response
         self._project_prior_days = int(
             getattr(acceptance_model, "project_prior_days", 0) or 0
         )
@@ -236,12 +247,15 @@ class AssignmentSimEnv(gym.Env):
 
         self._base_events: Dict[str, List[Dict[str, Any]]] = {}
         self._base_ts: Dict[str, np.ndarray] = {}
+        self._base_chg: Dict[str, np.ndarray] = {}
         for key, parts in per_dev.items():
             grp = parts[0] if len(parts) == 1 else pd.concat(parts, ignore_index=True)
             if len(parts) > 1:
                 grp = grp.sort_values("timestamp", kind="mergesort")
             self._base_events[key] = grp.to_dict("records")
             self._base_ts[key] = grp["timestamp"].to_numpy()
+            if "chg" in grp.columns:
+                self._base_chg[key] = pd.to_numeric(grp["chg"], errors="coerce").to_numpy()
 
         self.observation_space = gym.spaces.Dict({
             "candidates": gym.spaces.Box(
@@ -367,22 +381,46 @@ class AssignmentSimEnv(gym.Env):
         day = now.toordinal()
         untouched = st.n_assigned == 0
 
-        if untouched:
-            base_key = (email, day)
-            cached = self._base_feat_cache.get(base_key)
-            if cached is not None:
-                return cached
-            key = None
-        else:
+        if self.background_history:
+            # 背景モードでは履歴が now に依存するので、エピソード横断の
+            # 永続キャッシュは使えない (同じ (email, 日付) でもエピソードごとに
+            # 除外する change 集合が違う)。エピソード内キャッシュのみ使う。
             key = (email, len(st.events), day)
             cached = self._feat_cache.get(key)
             if cached is not None:
                 return cached
-
-        if st.events:
-            df = pd.DataFrame(st.events)
+            base = self._base_events.get(email)
+            rows = []
+            if base:
+                ts = self._base_ts[email]
+                k = int(np.searchsorted(ts, np.datetime64(now), side="left"))
+                chg = self._base_chg.get(email)
+                if chg is not None and self._ep_changes:
+                    rows = [r for i, r in enumerate(base[:k])
+                            if not (chg[i] == chg[i] and int(chg[i]) in self._ep_changes)]
+                else:
+                    rows = list(base[:k])
+            rows.extend(st.events)
+            df = pd.DataFrame(rows) if rows else pd.DataFrame(
+                columns=["email", "timestamp", "label", "owner_email"])
+            untouched = False
         else:
-            df = pd.DataFrame(columns=["email", "timestamp", "label", "owner_email"])
+            if untouched:
+                base_key = (email, day)
+                cached = self._base_feat_cache.get(base_key)
+                if cached is not None:
+                    return cached
+                key = None
+            else:
+                key = (email, len(st.events), day)
+                cached = self._feat_cache.get(key)
+                if cached is not None:
+                    return cached
+
+            if st.events:
+                df = pd.DataFrame(st.events)
+            else:
+                df = pd.DataFrame(columns=["email", "timestamp", "label", "owner_email"])
 
         vec = self.state_builder.build_obs(
             email=email,
@@ -393,7 +431,9 @@ class AssignmentSimEnv(gym.Env):
             profile_features_vec=None,
             # 全開発者のイベント総数。毎回 sum を取ると O(開発者数) が
             # 候補数ぶん重なるので、append 時に更新する running counter を使う
-            total_project_reviews=max(1, self._total_events),
+            total_project_reviews=max(1, (
+                int(np.searchsorted(self._all_ts, np.datetime64(now), side="left"))
+                if self.background_history else self._total_events)),
             feature_window_days=self.feature_window_days,
         ).astype(np.float32)
 
@@ -502,9 +542,18 @@ class AssignmentSimEnv(gym.Env):
         self._ep_n_accepted = 0
         cut = np.datetime64(self._ep_start)
         self._devs = {}
-        for email, evs in self._base_events.items():
-            k = int(np.searchsorted(self._base_ts[email], cut, side="left"))
-            self._devs[email] = _DevState(email, evs[:k].copy())
+        if self.background_history:
+            # 履歴は切らない。now 時点で base から切り出すので events は
+            # 「エージェントが生成した行」だけを持つ。
+            self._ep_changes = {int(r["change_id"]) for r in self._requests
+                                if str(r.get("change_id", "")).lstrip("-").isdigit()}
+            for email in self._base_events:
+                self._devs[email] = _DevState(email, [])
+        else:
+            self._ep_changes = set()
+            for email, evs in self._base_events.items():
+                k = int(np.searchsorted(self._base_ts[email], cut, side="left"))
+                self._devs[email] = _DevState(email, evs[:k].copy())
         # 重複なしの行数 (開発者ごとの合算ではない)
         self._total_events = int(np.searchsorted(self._all_ts, cut, side="left"))
 
@@ -608,7 +657,13 @@ class AssignmentSimEnv(gym.Env):
             # 「直近7日の未応答レビュー数」として全件を数えてしまう。
             # 定数を入れるのも実態と合わない (承諾は中央値 0.83 日でほぼ即応答、
             # 拒否は 24.7% が無応答) ので経験分布から引く。
-            "first_response_time": self._sample_response_time(now, accepted),
+            "first_response_time": (
+                (now + pd.Timedelta(days=float(req["logged_resp_days"])))
+                if (self.force_logged_outcome
+                    and chosen == str(req.get("logged_reviewer", ""))
+                    and req.get("logged_resp_days") is not None)
+                else self._sample_response_time(now, accepted)
+            ),
         })
         st.n_assigned += 1
         self._total_events += 1
@@ -619,10 +674,22 @@ class AssignmentSimEnv(gym.Env):
         load_before = st.open_load(now)
         if accepted:
             st.n_accepted += 1
-            # 承諾したレビューは service_days の間その人を占有する
-            st.open_until.append(now + pd.Timedelta(days=self.service_days))
+            if self.stuck_when_no_response:
+                # 貢献した人は実際に応答するまでの間だけ占有する
+                d = req.get("logged_resp_days")
+                delay = (float(d) if (self.force_logged_outcome
+                                      and chosen == str(req.get("logged_reviewer", ""))
+                                      and d is not None)
+                         else float(self._rng.choice(self._lat_accept)))
+                st.open_until.append(now + pd.Timedelta(days=max(0.0, delay)))
+            else:
+                # 承諾したレビューは service_days の間その人を占有する
+                st.open_until.append(now + pd.Timedelta(days=self.service_days))
         else:
             st.n_rejected += 1
+            if self.stuck_when_no_response:
+                # 応答が返らない依頼は解消されない (滞留する)
+                st.open_until.append(now + pd.Timedelta(days=100000))
 
         # ── 3. 報酬 (プロジェクト側の指標) ────────────────────
         #
