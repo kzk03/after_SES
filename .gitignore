@@ -30,7 +30,10 @@ archive/**
 
 ~$*
 
-# event版sweepの巨大出力(GitHubの100MB制限超過)
-outputs/rl/sweep/*_event/dataset/event_transitions.parquet
-outputs/rl/sweep/*_event/*/eval/pair_predictions.csv
 tmp/
+
+# ループ検証の一時実験結果(残すものだけ git add -f する運用)
+outputs/rl/
+
+# 一時作業ディレクトリ(中間データ・ログなど)
+work/
