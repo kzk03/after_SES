@@ -34,11 +34,13 @@ PAIR_NAMES = {
     "P3": "低承諾型",
     "P4": "高承諾・汎用型",
 }
+# OpenStack 側の pair archetype と cosine 類似度で対応づけた配色
+# (P1<->OS-P1 sim=0.939, P2<->OS-P2 sim=0.868, P3<->OS-P4 sim=0.867, P4<->OS-P3 sim=0.796)
 PAIR_COLORS = {
     "P1": "#E64B35",
     "P2": "#4DBBD5",
-    "P3": "#00A087",
-    "P4": "#F39B7F",
+    "P3": "#F39B7F",
+    "P4": "#00A087",
 }
 # Eugster paper 風カラーパレット (NBA position colors からインスパイア)
 ARCH_COLORS = {
