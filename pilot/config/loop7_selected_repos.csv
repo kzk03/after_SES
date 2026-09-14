@@ -1,0 +1,7 @@
+full_name,codeowners_path,A_estimate,layer,n_pr_1y_estimate
+juspay/hyperswitch,.github/CODEOWNERS,0.39,high,3333
+ray-project/ray,.github/CODEOWNERS,0.29,high,7605
+python/cpython,.github/CODEOWNERS,0.08,mid,12581
+ghostty-org/ghostty,CODEOWNERS,0.07,mid,2430
+apache/airflow,.github/CODEOWNERS,0.03,low,14488
+godotengine/godot,.github/CODEOWNERS,0.00,low,7605

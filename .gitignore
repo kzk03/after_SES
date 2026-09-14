@@ -37,3 +37,8 @@ outputs/rl/
 
 # 一時作業ディレクトリ(中間データ・ログなど)
 work/
+
+# パイロット(生成と評価の分離研究): 生データ・中間データは再取得/再生成可能なので無視。config/reportsはコミット対象
+pilot/raw/
+pilot/interim/
+pilot/processed/

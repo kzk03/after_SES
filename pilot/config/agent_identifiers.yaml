@@ -1,0 +1,69 @@
+# エージェント識別子リスト(パイロット版 v0)
+#
+# 出典:
+# - MSR 2026 Mining Challenge のデータセット "AIDev"(HuggingFace: hao-li/AIDev)が対象とする
+#   6エージェント(GitHub Copilot, Cursor, Google Jules, Devin, Claude Code, OpenAI Codex)
+# - 論文 "Fingerprinting AI Coding Agents on GitHub"(Taher Ghaleb, MSR 2026, arXiv:2601.17406)
+# - 上記に加え、home-assistant/core・grafana/grafana の実データ(GraphQL/REST)を目視確認して
+#   実際のGitHub App識別子(login)を採取
+#
+# ⚠ 注意: MSR採録論文10本の精読(パイロット手順.md Loop1の本来の指示)はまだ完了していない。
+# 本リストは "AIDev" が対象とする6エージェントの公式App識別子で暫定運用し、
+# 事前登録前に採録論文の同定方法と突き合わせて確定させること。
+#
+# login の表記ゆれに注意: REST API の user.login は "xxx[bot]" 形式、
+# GraphQL の author.login は "xxx"(サフィックスなし)で返ることがある。
+# 分類ロジック側で末尾の "[bot]" を正規化してから照合する。
+#
+# ★ Loop1/Loop5ゲート判定(2026-09-12、gates.md参照): agent関与の主指標は
+# 「PR作成者login」と「commit trailer(trailer_patterns)」のOR条件(trailer込み)に確定した。
+# login単独では実データでの検出量がtrailer込みの1/100程度しかなく、モジュール間の分散も
+# ほぼ消えてしまう(Loop5参照)。login単独版は感度分析としてのみ残す。
+
+agent:
+  accounts:
+    # --- GitHub Copilot (coding agent: 生成 / pull-request-reviewer: 評価) ---
+    - copilot-swe-agent          # Copilot coding agent。PR作成。実データでPR authorが表示名 "Copilot" になるケースを確認
+    - copilot-pull-request-reviewer  # Copilotの自動コードレビュー。home-assistant/coreのreviewサンプルで65件中37件を占めた
+    - Copilot                    # 上記のPR上の表示名(REST APIのuser.login)
+    # --- Cursor ---
+    - cursor                     # Cursor Agent(コード生成)およびBugbot(レビュー)の両方がこのアカウントに現れる。実データでgrafanaのreview 8件中3件
+    # --- Devin (Cognition AI) ---
+    - devin-ai-integration
+    # --- Claude Code (Anthropic) ---
+    - claude
+    - claude-code
+    # --- Google Jules ---
+    - google-labs-jules
+    # --- OpenAI Codex ---
+    - chatgpt-codex-connector    # 実データでは PR作成(author)としては未検出。レビューコメント(involves)で多数関与(home-assistant 186件, grafana 689件)
+    - openai-codex
+  trailer_patterns:
+    # commit / PR body の "Co-authored-by:" trailer に現れる識別子(正規表現、大文字小文字を無視)
+    - "Co-authored-by:\\s*Copilot"
+    - "Co-authored-by:.*copilot-swe-agent"
+    - "Co-authored-by:.*devin-ai-integration"
+    - "Co-authored-by:.*cursor"
+    - "Co-authored-by:.*claude"
+    - "Co-authored-by:.*google-labs-jules"
+    - "Co-authored-by:.*chatgpt-codex-connector"
+    - "Co-authored-by:.*openai-codex"
+
+legacy_bot:
+  accounts:
+    # --- 汎用CI/依存更新系(プロジェクト非依存) ---
+    - dependabot
+    - renovate
+    - github-actions
+    # --- home-assistant/core 固有 ---
+    - home-assistant              # home-assistant[bot]。自動ラベリング・自動クローズ等
+    # --- grafana/grafana 固有 ---
+    - grafana-pr-approver
+    - grafana-pr-automation
+    - renovate-sh-app
+    - next-js-bot                 # (vercel/next.js調査時に確認。grafana系には出ないが参考保持)
+    # --- elastic/kibana 固有(参考。今回の対象外だがLoop0調査で観測) ---
+    - elastic-renovate-prod
+    - kibanamachine
+  patterns:
+    - ".*\\[bot\\]$"   # 上記accountsに一致しない "xxx[bot]" 形式のアカウントは、Loop1の目視検証で個別に agent/legacy_bot を判定する
