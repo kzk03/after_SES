@@ -41,3 +41,6 @@ work/
 # SES補足資料(生成物、量が多いため無視)
 outputs/analysis/ses_supplement/
 scripts/analyze/study/supplement/
+
+# AI研究(生成と評価の分離)のパイロット作業。AIresearchブランチで管理
+pilot/
