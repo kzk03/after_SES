@@ -1,0 +1,15 @@
+{
+  "repo": "grafana/grafana",
+  "n_prs_scanned": 17496,
+  "n_unique_actors": 6321,
+  "category_counts": {
+    "human": 6300,
+    "legacy_bot": 15,
+    "agent": 6
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 3964,
+    "Co-authored-by:.*cursor": 651,
+    "Co-authored-by:\\s*Copilot": 93
+  }
+}

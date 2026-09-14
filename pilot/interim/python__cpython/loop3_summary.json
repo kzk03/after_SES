@@ -1,0 +1,18 @@
+{
+  "repo": "python/cpython",
+  "n_pr_total": 13000,
+  "n_pr_matched_to_module": 8130,
+  "pr_match_rate": 0.6253846153846154,
+  "n_pr_multi_module": 3143,
+  "pr_multi_module_rate": 0.38659286592865927,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 23181,
+  "events_by_stage": {
+    "E": 15071,
+    "G": 8110
+  }
+}

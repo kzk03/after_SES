@@ -1,0 +1,15 @@
+{
+  "repo": "cockroachdb/cockroach",
+  "n_prs_scanned": 9142,
+  "n_unique_actors": 223,
+  "category_counts": {
+    "human": 219,
+    "legacy_bot": 3,
+    "agent": 1
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 2794,
+    "Co-authored-by:.*cursor": 113,
+    "Co-authored-by:\\s*Copilot": 1
+  }
+}

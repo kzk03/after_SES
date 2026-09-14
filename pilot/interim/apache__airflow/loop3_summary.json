@@ -1,0 +1,18 @@
+{
+  "repo": "apache/airflow",
+  "n_pr_total": 14838,
+  "n_pr_matched_to_module": 11700,
+  "pr_match_rate": 0.7885159725030327,
+  "n_pr_multi_module": 3023,
+  "pr_multi_module_rate": 0.25837606837606836,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 44997,
+  "events_by_stage": {
+    "E": 33297,
+    "G": 11700
+  }
+}

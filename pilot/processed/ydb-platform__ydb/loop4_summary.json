@@ -1,0 +1,21 @@
+{
+  "repo": "ydb-platform/ydb",
+  "n_modules_with_events": 16,
+  "n_months": 13,
+  "n_panel_rows": 111,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.7927927927927928,
+    "H_E": 0.7027027027027027
+  },
+  "A_summary": {
+    "mean": 0.0036702654129595227,
+    "std": 0.014529863430355606,
+    "n_non_null": 109
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.10664906635172518,
+    "std": 0.22338371855710962,
+    "n_non_null": 109
+  }
+}

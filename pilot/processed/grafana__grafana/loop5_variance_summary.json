@@ -1,0 +1,21 @@
+{
+  "repo": "grafana/grafana",
+  "A": {
+    "n_modules": 699,
+    "std": 0.06371668986933178,
+    "q25": 0.0,
+    "q75": 0.0,
+    "iqr_diff": 0.0,
+    "pct_positive": 0.04005722460658083,
+    "monthly_std_mean": 0.03458600410857748
+  },
+  "A_prime(trailer込み感度分析)": {
+    "n_modules": 699,
+    "std": 0.19574625722793598,
+    "q25": 0.0,
+    "q75": 0.125,
+    "iqr_diff": 0.125,
+    "pct_positive": 0.39341917024320455,
+    "monthly_std_mean": 0.20095903087849795
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "repo": "dotnet/docs",
+  "S1_EG_mean": 0.0097580864819306,
+  "S1_IG_mean": NaN,
+  "S1_EG_prime_mean(trailer込み)": 0.2272728692037739,
+  "S1_IG_prime_mean(trailer込み)": NaN,
+  "S2_jaccard_mean": 0.14193390571218623,
+  "S3_n_actors_with_trend": 135,
+  "S3_reviewer_ratio_delta_mean": 0.07720372770734954,
+  "S4_n_modules_computed": 26,
+  "S4_lag_distribution": {
+    "0": 11,
+    "3": 6,
+    "1": 5,
+    "2": 4
+  },
+  "S4_prime_n_modules_computed(trailer込み)": 29,
+  "S4_prime_lag_distribution(trailer込み)": {
+    "0": 13,
+    "2": 7,
+    "3": 5,
+    "1": 4
+  },
+  "S1_S2_corr_matrix": {
+    "S1_EG": {
+      "S1_EG": 1.0,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.752381943622669,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.020277808179680976
+    },
+    "S1_IG": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S1_EG_prime": {
+      "S1_EG": 0.752381943622669,
+      "S1_IG": NaN,
+      "S1_EG_prime": 1.0,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.06586890001293584
+    },
+    "S1_IG_prime": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S2_jaccard": {
+      "S1_EG": 0.020277808179680976,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.06586890001293584,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 1.0
+    }
+  }
+}

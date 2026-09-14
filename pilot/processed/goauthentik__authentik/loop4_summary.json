@@ -1,0 +1,21 @@
+{
+  "repo": "goauthentik/authentik",
+  "n_modules_with_events": 44,
+  "n_months": 13,
+  "n_panel_rows": 316,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.5474683544303798,
+    "H_E": 0.7183544303797469
+  },
+  "A_summary": {
+    "mean": 3.832445483462984e-05,
+    "std": 0.0006285677946904024,
+    "n_non_null": 269
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.006744527918357632,
+    "std": 0.03486041499582464,
+    "n_non_null": 269
+  }
+}

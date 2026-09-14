@@ -1,0 +1,55 @@
+{
+  "repo": "godotengine/godot",
+  "S1_EG_mean": -0.005227208046386986,
+  "S1_IG_mean": NaN,
+  "S1_EG_prime_mean(trailer込み)": -0.0014055169393341806,
+  "S1_IG_prime_mean(trailer込み)": NaN,
+  "S2_jaccard_mean": 0.15034599511646296,
+  "S3_n_actors_with_trend": 498,
+  "S3_reviewer_ratio_delta_mean": 0.17393761626890034,
+  "S4_n_modules_computed": 0,
+  "S4_lag_distribution": {},
+  "S4_prime_n_modules_computed(trailer込み)": 8,
+  "S4_prime_lag_distribution(trailer込み)": {
+    "0": 5,
+    "2": 2,
+    "3": 1
+  },
+  "S1_S2_corr_matrix": {
+    "S1_EG": {
+      "S1_EG": 1.0,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.8655233133084118,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.08106893125142814
+    },
+    "S1_IG": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S1_EG_prime": {
+      "S1_EG": 0.8655233133084118,
+      "S1_IG": NaN,
+      "S1_EG_prime": 1.0,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.07041606450052458
+    },
+    "S1_IG_prime": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S2_jaccard": {
+      "S1_EG": 0.08106893125142814,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.07041606450052458,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 1.0
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "repo": "espressif/arduino-esp32",
+  "n_pr_total": 608,
+  "n_pr_matched_to_module": 600,
+  "pr_match_rate": 0.9868421052631579,
+  "n_pr_multi_module": 252,
+  "pr_multi_module_rate": 0.42,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 3076,
+  "events_by_stage": {
+    "E": 2477,
+    "G": 599
+  }
+}

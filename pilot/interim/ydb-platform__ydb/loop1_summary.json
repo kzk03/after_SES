@@ -1,0 +1,16 @@
+{
+  "repo": "ydb-platform/ydb",
+  "n_prs_scanned": 23545,
+  "n_unique_actors": 330,
+  "category_counts": {
+    "human": 325,
+    "agent": 3,
+    "legacy_bot": 2
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*cursor": 1468,
+    "Co-authored-by:.*claude": 262,
+    "Co-authored-by:\\s*Copilot": 835,
+    "Co-authored-by:.*copilot-swe-agent": 67
+  }
+}

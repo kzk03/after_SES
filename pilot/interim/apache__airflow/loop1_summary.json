@@ -1,0 +1,16 @@
+{
+  "repo": "apache/airflow",
+  "n_prs_scanned": 14838,
+  "n_unique_actors": 1633,
+  "category_counts": {
+    "human": 1625,
+    "legacy_bot": 4,
+    "agent": 4
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 419,
+    "Co-authored-by:\\s*Copilot": 126,
+    "Co-authored-by:.*cursor": 93,
+    "Co-authored-by:.*copilot-swe-agent": 7
+  }
+}

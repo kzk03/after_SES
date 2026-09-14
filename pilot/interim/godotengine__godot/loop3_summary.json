@@ -1,0 +1,18 @@
+{
+  "repo": "godotengine/godot",
+  "n_pr_total": 7782,
+  "n_pr_matched_to_module": 7539,
+  "pr_match_rate": 0.9687740940632228,
+  "n_pr_multi_module": 2673,
+  "pr_multi_module_rate": 0.35455630720254677,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 25163,
+  "events_by_stage": {
+    "E": 17657,
+    "G": 7506
+  }
+}

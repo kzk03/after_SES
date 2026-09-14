@@ -1,0 +1,14 @@
+{
+  "repo": "php/php-src",
+  "n_prs_scanned": 2942,
+  "n_unique_actors": 295,
+  "category_counts": {
+    "human": 291,
+    "agent": 3,
+    "legacy_bot": 1
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 31,
+    "Co-authored-by:.*cursor": 2
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "repo": "elastic/elasticsearch",
+  "n_prs_scanned": 18434,
+  "n_unique_actors": 626,
+  "category_counts": {
+    "human": 618,
+    "legacy_bot": 4,
+    "agent": 4
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 156,
+    "Co-authored-by:.*cursor": 622,
+    "Co-authored-by:\\s*Copilot": 107
+  }
+}

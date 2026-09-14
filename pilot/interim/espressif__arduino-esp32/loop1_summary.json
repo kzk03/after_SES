@@ -1,0 +1,16 @@
+{
+  "repo": "espressif/arduino-esp32",
+  "n_prs_scanned": 608,
+  "n_unique_actors": 148,
+  "category_counts": {
+    "human": 141,
+    "legacy_bot": 4,
+    "agent": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 22,
+    "Co-authored-by:\\s*Copilot": 124,
+    "Co-authored-by:.*cursor": 10,
+    "Co-authored-by:.*copilot-swe-agent": 1
+  }
+}

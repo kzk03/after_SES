@@ -1,0 +1,14 @@
+{
+  "repo": "reactos/reactos",
+  "n_prs_scanned": 1168,
+  "n_unique_actors": 141,
+  "category_counts": {
+    "human": 138,
+    "agent": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:\\s*Copilot": 23,
+    "Co-authored-by:.*claude": 16,
+    "Co-authored-by:.*copilot-swe-agent": 2
+  }
+}

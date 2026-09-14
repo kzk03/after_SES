@@ -1,0 +1,21 @@
+{
+  "repo": "istio/istio",
+  "n_modules_with_events": 42,
+  "n_months": 13,
+  "n_panel_rows": 378,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.5687830687830688,
+    "H_E": 0.7116402116402116
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 356
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.024420733157962712,
+    "std": 0.13057372452460486,
+    "n_non_null": 356
+  }
+}

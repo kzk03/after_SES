@@ -1,0 +1,51 @@
+{
+  "repo": "flipperdevices/flipperzero-firmware",
+  "S1_EG_mean": -0.010752688172043012,
+  "S1_IG_mean": NaN,
+  "S1_EG_prime_mean(trailer込み)": 0.03763440860215053,
+  "S1_IG_prime_mean(trailer込み)": NaN,
+  "S2_jaccard_mean": 0.013963963963963962,
+  "S3_n_actors_with_trend": 17,
+  "S3_reviewer_ratio_delta_mean": 0.041666666666666664,
+  "S4_n_modules_computed": 0,
+  "S4_lag_distribution": {},
+  "S4_prime_n_modules_computed(trailer込み)": 0,
+  "S4_prime_lag_distribution(trailer込み)": {},
+  "S1_S2_corr_matrix": {
+    "S1_EG": {
+      "S1_EG": 1.0,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.3285714285714286,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.06892719241639057
+    },
+    "S1_IG": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S1_EG_prime": {
+      "S1_EG": 0.3285714285714286,
+      "S1_IG": NaN,
+      "S1_EG_prime": 1.0,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": -0.06892719241639056
+    },
+    "S1_IG_prime": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S2_jaccard": {
+      "S1_EG": 0.06892719241639057,
+      "S1_IG": NaN,
+      "S1_EG_prime": -0.06892719241639056,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 1.0
+    }
+  }
+}

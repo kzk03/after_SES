@@ -38,10 +38,9 @@ outputs/rl/
 # 一時作業ディレクトリ(中間データ・ログなど)
 work/
 
-# パイロット(生成と評価の分離研究): 生データ・中間データは再取得/再生成可能なので無視。config/reportsはコミット対象
+# パイロット(生成と評価の分離研究): 生データ(GitHub APIから再取得可能、974MBと大きい)は無視。
+# interim/processed(分析の中間・最終成果物)はコミット対象
 pilot/raw/
-pilot/interim/
-pilot/processed/
 
 # SES補足資料(生成物、量が多いため無視)
 outputs/analysis/ses_supplement/

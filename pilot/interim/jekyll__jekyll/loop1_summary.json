@@ -1,0 +1,11 @@
+{
+  "repo": "jekyll/jekyll",
+  "n_prs_scanned": 62,
+  "n_unique_actors": 56,
+  "category_counts": {
+    "human": 56
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 1
+  }
+}

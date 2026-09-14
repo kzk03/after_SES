@@ -1,0 +1,21 @@
+{
+  "repo": "cilium/cilium",
+  "n_modules_with_events": 298,
+  "n_months": 13,
+  "n_panel_rows": 1552,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.31443298969072164,
+    "H_E": 0.6230670103092784
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 1405
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.003959180228714501,
+    "std": 0.05156956137868618,
+    "n_non_null": 1405
+  }
+}

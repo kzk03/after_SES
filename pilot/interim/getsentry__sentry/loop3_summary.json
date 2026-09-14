@@ -1,0 +1,18 @@
+{
+  "repo": "getsentry/sentry",
+  "n_pr_total": 23835,
+  "n_pr_matched_to_module": 20168,
+  "pr_match_rate": 0.8461506188378435,
+  "n_pr_multi_module": 10475,
+  "pr_multi_module_rate": 0.5193871479571599,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 85411,
+  "events_by_stage": {
+    "E": 65243,
+    "G": 20168
+  }
+}

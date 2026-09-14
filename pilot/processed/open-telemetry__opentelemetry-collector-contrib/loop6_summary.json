@@ -1,0 +1,56 @@
+{
+  "repo": "open-telemetry/opentelemetry-collector-contrib",
+  "S1_EG_mean": -0.023232662329737128,
+  "S1_IG_mean": NaN,
+  "S1_EG_prime_mean(trailer込み)": -0.0123954324114124,
+  "S1_IG_prime_mean(trailer込み)": NaN,
+  "S2_jaccard_mean": 0.10022497793288829,
+  "S3_n_actors_with_trend": 431,
+  "S3_reviewer_ratio_delta_mean": 0.2629413684961723,
+  "S4_n_modules_computed": 0,
+  "S4_lag_distribution": {},
+  "S4_prime_n_modules_computed(trailer込み)": 22,
+  "S4_prime_lag_distribution(trailer込み)": {
+    "1": 7,
+    "2": 6,
+    "0": 6,
+    "3": 3
+  },
+  "S1_S2_corr_matrix": {
+    "S1_EG": {
+      "S1_EG": 1.0,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.7340533065007234,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.0625562648307239
+    },
+    "S1_IG": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S1_EG_prime": {
+      "S1_EG": 0.7340533065007234,
+      "S1_IG": NaN,
+      "S1_EG_prime": 1.0,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.08258949466784002
+    },
+    "S1_IG_prime": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S2_jaccard": {
+      "S1_EG": 0.0625562648307239,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.08258949466784002,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 1.0
+    }
+  }
+}

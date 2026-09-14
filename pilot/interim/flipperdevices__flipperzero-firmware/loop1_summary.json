@@ -1,0 +1,13 @@
+{
+  "repo": "flipperdevices/flipperzero-firmware",
+  "n_prs_scanned": 112,
+  "n_unique_actors": 73,
+  "category_counts": {
+    "human": 70,
+    "agent": 2,
+    "legacy_bot": 1
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 18
+  }
+}

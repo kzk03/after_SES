@@ -1,0 +1,16 @@
+{
+  "repo": "DefinitelyTyped/DefinitelyTyped",
+  "n_prs_scanned": 1749,
+  "n_unique_actors": 1009,
+  "category_counts": {
+    "human": 1000,
+    "legacy_bot": 5,
+    "agent": 4
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 63,
+    "Co-authored-by:.*cursor": 5,
+    "Co-authored-by:\\s*Copilot": 2,
+    "Co-authored-by:.*copilot-swe-agent": 1
+  }
+}

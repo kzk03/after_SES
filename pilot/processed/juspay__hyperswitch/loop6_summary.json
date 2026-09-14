@@ -1,0 +1,59 @@
+{
+  "repo": "juspay/hyperswitch",
+  "S1_EG_mean": -0.007804734033849318,
+  "S1_IG_mean": NaN,
+  "S1_EG_prime_mean(trailer込み)": 0.1116619276092717,
+  "S1_IG_prime_mean(trailer込み)": NaN,
+  "S2_jaccard_mean": 0.13203260460287605,
+  "S3_n_actors_with_trend": 110,
+  "S3_reviewer_ratio_delta_mean": 0.016192720763343337,
+  "S4_n_modules_computed": 3,
+  "S4_lag_distribution": {
+    "0": 2,
+    "1": 1
+  },
+  "S4_prime_n_modules_computed(trailer込み)": 11,
+  "S4_prime_lag_distribution(trailer込み)": {
+    "0": 4,
+    "1": 3,
+    "2": 2,
+    "3": 2
+  },
+  "S1_S2_corr_matrix": {
+    "S1_EG": {
+      "S1_EG": 1.0,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.27537345799535795,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.06767223108747464
+    },
+    "S1_IG": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S1_EG_prime": {
+      "S1_EG": 0.27537345799535795,
+      "S1_IG": NaN,
+      "S1_EG_prime": 1.0,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.04431325756567835
+    },
+    "S1_IG_prime": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S2_jaccard": {
+      "S1_EG": 0.06767223108747464,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.04431325756567835,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 1.0
+    }
+  }
+}

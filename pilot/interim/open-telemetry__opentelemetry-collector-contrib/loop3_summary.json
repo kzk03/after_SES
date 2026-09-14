@@ -1,0 +1,18 @@
+{
+  "repo": "open-telemetry/opentelemetry-collector-contrib",
+  "n_pr_total": 6229,
+  "n_pr_matched_to_module": 6085,
+  "pr_match_rate": 0.9768823246106919,
+  "n_pr_multi_module": 1907,
+  "pr_multi_module_rate": 0.31339359079704193,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 24430,
+  "events_by_stage": {
+    "E": 18346,
+    "G": 6084
+  }
+}

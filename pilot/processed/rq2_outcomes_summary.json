@@ -1,0 +1,19 @@
+{
+  "k=3": {
+    "n_obs": 71025,
+    "n_obs_valid(churn_rate & S1 both非null)": 23440,
+    "churn_rate_mean": 0.5727410324676822,
+    "n_new_entrants_mean": 2.8261316437873987,
+    "corr(S1_EG_prime, churn_rate)": -0.0596373274219877
+  },
+  "k=6": {
+    "n_obs": 49587,
+    "n_obs_valid(churn_rate & S1 both非null)": 15735,
+    "churn_rate_mean": 0.469236356615667,
+    "n_new_entrants_mean": 5.671163813096174,
+    "corr(S1_EG_prime, churn_rate)": -0.0668404600472425
+  },
+  "n_repos_used": 39,
+  "n_repos_skipped": 0,
+  "repos_skipped": []
+}

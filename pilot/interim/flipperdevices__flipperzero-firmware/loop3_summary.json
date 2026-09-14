@@ -1,0 +1,18 @@
+{
+  "repo": "flipperdevices/flipperzero-firmware",
+  "n_pr_total": 112,
+  "n_pr_matched_to_module": 109,
+  "pr_match_rate": 0.9732142857142857,
+  "n_pr_multi_module": 39,
+  "pr_multi_module_rate": 0.3577981651376147,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 231,
+  "events_by_stage": {
+    "E": 122,
+    "G": 109
+  }
+}

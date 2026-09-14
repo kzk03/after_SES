@@ -1,0 +1,21 @@
+{
+  "repo": "home-assistant/core",
+  "n_modules_with_events": 1909,
+  "n_months": 42,
+  "n_panel_rows": 8708,
+  "valid_cell_ratio": {
+    "H_I": 0.015732659623334866,
+    "H_G": 0.2048690858980248,
+    "H_E": 0.6231051906293064
+  },
+  "A_summary": {
+    "mean": 0.0010170562368232502,
+    "std": 0.026983117723140822,
+    "n_non_null": 7342
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.1527527354031535,
+    "std": 0.31946995551036345,
+    "n_non_null": 7342
+  }
+}

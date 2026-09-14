@@ -1,0 +1,16 @@
+{
+  "repo": "NVIDIA/Megatron-LM",
+  "n_prs_scanned": 4809,
+  "n_unique_actors": 597,
+  "category_counts": {
+    "human": 588,
+    "agent": 6,
+    "legacy_bot": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 2115,
+    "Co-authored-by:.*cursor": 38,
+    "Co-authored-by:\\s*Copilot": 9,
+    "Co-authored-by:.*copilot-swe-agent": 3
+  }
+}

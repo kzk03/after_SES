@@ -1,0 +1,16 @@
+{
+  "repo": "goauthentik/authentik",
+  "n_prs_scanned": 7943,
+  "n_unique_actors": 343,
+  "category_counts": {
+    "human": 335,
+    "legacy_bot": 5,
+    "agent": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 65,
+    "Co-authored-by:\\s*Copilot": 23,
+    "Co-authored-by:.*cursor": 7,
+    "Co-authored-by:.*copilot-swe-agent": 1
+  }
+}

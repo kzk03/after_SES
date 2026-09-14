@@ -1,0 +1,21 @@
+{
+  "repo": "home-assistant/core",
+  "A": {
+    "n_modules": 1908,
+    "std": 0.01649873872350383,
+    "q25": 0.0,
+    "q75": 0.0,
+    "iqr_diff": 0.0,
+    "pct_positive": 0.008385744234800839,
+    "monthly_std_mean": 0.018421786442424877
+  },
+  "A_prime(trailer込み感度分析)": {
+    "n_modules": 1908,
+    "std": 0.22971142982363885,
+    "q25": 0.0,
+    "q75": 0.25,
+    "iqr_diff": 0.25,
+    "pct_positive": 0.490041928721174,
+    "monthly_std_mean": 0.297314412650627
+  }
+}

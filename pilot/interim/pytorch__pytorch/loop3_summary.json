@@ -1,0 +1,18 @@
+{
+  "repo": "pytorch/pytorch",
+  "n_pr_total": 20775,
+  "n_pr_matched_to_module": 8691,
+  "pr_match_rate": 0.41833935018050544,
+  "n_pr_multi_module": 2778,
+  "pr_multi_module_rate": 0.3196410079392475,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 29521,
+  "events_by_stage": {
+    "E": 20830,
+    "G": 8691
+  }
+}

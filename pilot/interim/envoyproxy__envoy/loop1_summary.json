@@ -1,0 +1,15 @@
+{
+  "repo": "envoyproxy/envoy",
+  "n_prs_scanned": 5191,
+  "n_unique_actors": 520,
+  "category_counts": {
+    "human": 513,
+    "legacy_bot": 4,
+    "agent": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:\\s*Copilot": 47,
+    "Co-authored-by:.*claude": 162,
+    "Co-authored-by:.*cursor": 7
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "repo": "NVIDIA/Megatron-LM",
+  "S1_EG_mean": -0.08151013756275423,
+  "S1_IG_mean": NaN,
+  "S1_EG_prime_mean(trailer込み)": 0.03393704651606352,
+  "S1_IG_prime_mean(trailer込み)": NaN,
+  "S2_jaccard_mean": 0.13488524501223714,
+  "S3_n_actors_with_trend": 260,
+  "S3_reviewer_ratio_delta_mean": 0.18884806170249707,
+  "S4_n_modules_computed": 0,
+  "S4_lag_distribution": {},
+  "S4_prime_n_modules_computed(trailer込み)": 26,
+  "S4_prime_lag_distribution(trailer込み)": {
+    "0": 14,
+    "1": 5,
+    "3": 4,
+    "2": 3
+  },
+  "S1_S2_corr_matrix": {
+    "S1_EG": {
+      "S1_EG": 1.0,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.4969526324134409,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": -0.047238763386540095
+    },
+    "S1_IG": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S1_EG_prime": {
+      "S1_EG": 0.4969526324134409,
+      "S1_IG": NaN,
+      "S1_EG_prime": 1.0,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.04955478121660258
+    },
+    "S1_IG_prime": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S2_jaccard": {
+      "S1_EG": -0.047238763386540095,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.04955478121660258,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 1.0
+    }
+  }
+}

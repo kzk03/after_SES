@@ -1,0 +1,55 @@
+{
+  "repo": "SigNoz/signoz",
+  "S1_EG_mean": -0.09102592485835387,
+  "S1_IG_mean": NaN,
+  "S1_EG_prime_mean(trailer込み)": -0.053160756745315,
+  "S1_IG_prime_mean(trailer込み)": NaN,
+  "S2_jaccard_mean": 0.18874648379481715,
+  "S3_n_actors_with_trend": 61,
+  "S3_reviewer_ratio_delta_mean": 0.092629611917314,
+  "S4_n_modules_computed": 0,
+  "S4_lag_distribution": {},
+  "S4_prime_n_modules_computed(trailer込み)": 17,
+  "S4_prime_lag_distribution(trailer込み)": {
+    "0": 13,
+    "3": 3,
+    "1": 1
+  },
+  "S1_S2_corr_matrix": {
+    "S1_EG": {
+      "S1_EG": 1.0,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.803490940367951,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.18782146668950703
+    },
+    "S1_IG": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S1_EG_prime": {
+      "S1_EG": 0.803490940367951,
+      "S1_IG": NaN,
+      "S1_EG_prime": 1.0,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.15176668641556879
+    },
+    "S1_IG_prime": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S2_jaccard": {
+      "S1_EG": 0.18782146668950703,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.15176668641556879,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 1.0
+    }
+  }
+}

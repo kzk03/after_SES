@@ -1,0 +1,60 @@
+{
+  "repo": "ceph/ceph",
+  "S1_EG_mean": -0.02183218757441051,
+  "S1_IG_mean": NaN,
+  "S1_EG_prime_mean(trailer込み)": -0.013961402101546139,
+  "S1_IG_prime_mean(trailer込み)": NaN,
+  "S2_jaccard_mean": 0.1628853621191975,
+  "S3_n_actors_with_trend": 273,
+  "S3_reviewer_ratio_delta_mean": 0.15868399731900146,
+  "S4_n_modules_computed": 6,
+  "S4_lag_distribution": {
+    "3": 2,
+    "0": 2,
+    "1": 1,
+    "2": 1
+  },
+  "S4_prime_n_modules_computed(trailer込み)": 12,
+  "S4_prime_lag_distribution(trailer込み)": {
+    "0": 5,
+    "1": 4,
+    "2": 3
+  },
+  "S1_S2_corr_matrix": {
+    "S1_EG": {
+      "S1_EG": 1.0,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.8628099671621421,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.04372185932294854
+    },
+    "S1_IG": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S1_EG_prime": {
+      "S1_EG": 0.8628099671621421,
+      "S1_IG": NaN,
+      "S1_EG_prime": 1.0,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.08890038595917592
+    },
+    "S1_IG_prime": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S2_jaccard": {
+      "S1_EG": 0.04372185932294854,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.08890038595917592,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 1.0
+    }
+  }
+}

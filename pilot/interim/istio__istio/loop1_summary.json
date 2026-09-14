@@ -1,0 +1,15 @@
+{
+  "repo": "istio/istio",
+  "n_prs_scanned": 3014,
+  "n_unique_actors": 297,
+  "category_counts": {
+    "human": 292,
+    "agent": 3,
+    "legacy_bot": 2
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 26,
+    "Co-authored-by:\\s*Copilot": 21,
+    "Co-authored-by:.*cursor": 2
+  }
+}

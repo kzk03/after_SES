@@ -1,0 +1,21 @@
+{
+  "repo": "open-telemetry/opentelemetry-collector-contrib",
+  "n_modules_with_events": 347,
+  "n_months": 13,
+  "n_panel_rows": 2270,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.21277533039647578,
+    "H_E": 0.5766519823788546
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 1795
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.010828469603668239,
+    "std": 0.08730671326996174,
+    "n_non_null": 1795
+  }
+}

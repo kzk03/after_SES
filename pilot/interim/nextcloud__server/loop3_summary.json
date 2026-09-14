@@ -1,0 +1,18 @@
+{
+  "repo": "nextcloud/server",
+  "n_pr_total": 7902,
+  "n_pr_matched_to_module": 7539,
+  "pr_match_rate": 0.9540622627182992,
+  "n_pr_multi_module": 2846,
+  "pr_multi_module_rate": 0.37750364769863376,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 24632,
+  "events_by_stage": {
+    "E": 17094,
+    "G": 7538
+  }
+}

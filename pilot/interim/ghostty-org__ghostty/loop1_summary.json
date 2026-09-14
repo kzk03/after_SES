@@ -1,0 +1,17 @@
+{
+  "repo": "ghostty-org/ghostty",
+  "n_prs_scanned": 2498,
+  "n_unique_actors": 597,
+  "category_counts": {
+    "human": 588,
+    "legacy_bot": 5,
+    "agent": 4
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 396,
+    "Co-authored-by:.*cursor": 7,
+    "Co-authored-by:\\s*Copilot": 9,
+    "Co-authored-by:.*copilot-swe-agent": 1,
+    "Co-authored-by:.*chatgpt-codex-connector": 1
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "repo": "reactos/reactos",
+  "n_pr_total": 1168,
+  "n_pr_matched_to_module": 697,
+  "pr_match_rate": 0.5967465753424658,
+  "n_pr_multi_module": 187,
+  "pr_multi_module_rate": 0.2682926829268293,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 4847,
+  "events_by_stage": {
+    "E": 4175,
+    "G": 672
+  }
+}

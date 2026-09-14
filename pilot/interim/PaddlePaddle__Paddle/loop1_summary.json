@@ -1,0 +1,15 @@
+{
+  "repo": "PaddlePaddle/Paddle",
+  "n_prs_scanned": 4307,
+  "n_unique_actors": 329,
+  "category_counts": {
+    "human": 323,
+    "agent": 3,
+    "legacy_bot": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 393,
+    "Co-authored-by:\\s*Copilot": 83,
+    "Co-authored-by:.*copilot-swe-agent": 8
+  }
+}

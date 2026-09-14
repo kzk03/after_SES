@@ -1,0 +1,15 @@
+{
+  "repo": "godotengine/godot",
+  "n_prs_scanned": 7782,
+  "n_unique_actors": 1593,
+  "category_counts": {
+    "human": 1588,
+    "agent": 3,
+    "legacy_bot": 2
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 54,
+    "Co-authored-by:.*cursor": 4,
+    "Co-authored-by:\\s*Copilot": 5
+  }
+}

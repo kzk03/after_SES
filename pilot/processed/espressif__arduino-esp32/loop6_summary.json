@@ -1,0 +1,57 @@
+{
+  "repo": "espressif/arduino-esp32",
+  "S1_EG_mean": -0.13660531863083344,
+  "S1_IG_mean": NaN,
+  "S1_EG_prime_mean(trailer込み)": -0.030429735449902646,
+  "S1_IG_prime_mean(trailer込み)": NaN,
+  "S2_jaccard_mean": 0.1442784379082456,
+  "S3_n_actors_with_trend": 41,
+  "S3_reviewer_ratio_delta_mean": 0.1785194785632172,
+  "S4_n_modules_computed": 3,
+  "S4_lag_distribution": {
+    "0": 3
+  },
+  "S4_prime_n_modules_computed(trailer込み)": 12,
+  "S4_prime_lag_distribution(trailer込み)": {
+    "0": 6,
+    "3": 5,
+    "2": 1
+  },
+  "S1_S2_corr_matrix": {
+    "S1_EG": {
+      "S1_EG": 1.0,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.6080326419073759,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": -0.01578212800458023
+    },
+    "S1_IG": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S1_EG_prime": {
+      "S1_EG": 0.6080326419073759,
+      "S1_IG": NaN,
+      "S1_EG_prime": 1.0,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.13011815623002787
+    },
+    "S1_IG_prime": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S2_jaccard": {
+      "S1_EG": -0.01578212800458023,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.13011815623002787,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 1.0
+    }
+  }
+}

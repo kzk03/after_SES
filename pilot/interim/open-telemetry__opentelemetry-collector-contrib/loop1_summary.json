@@ -1,0 +1,15 @@
+{
+  "repo": "open-telemetry/opentelemetry-collector-contrib",
+  "n_prs_scanned": 6229,
+  "n_unique_actors": 980,
+  "category_counts": {
+    "human": 971,
+    "legacy_bot": 6,
+    "agent": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*cursor": 15,
+    "Co-authored-by:\\s*Copilot": 39,
+    "Co-authored-by:.*claude": 31
+  }
+}

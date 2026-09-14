@@ -1,0 +1,16 @@
+{
+  "repo": "ray-project/ray",
+  "n_prs_scanned": 7891,
+  "n_unique_actors": 908,
+  "category_counts": {
+    "human": 900,
+    "agent": 5,
+    "legacy_bot": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 2164,
+    "Co-authored-by:.*cursor": 124,
+    "Co-authored-by:\\s*Copilot": 35,
+    "Co-authored-by:.*copilot-swe-agent": 3
+  }
+}

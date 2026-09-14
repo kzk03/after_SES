@@ -1,0 +1,21 @@
+{
+  "repo": "python/cpython",
+  "n_modules_with_events": 313,
+  "n_months": 13,
+  "n_panel_rows": 1883,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.46309081253319173,
+    "H_E": 0.5390334572490706
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 1777
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.045009024389342595,
+    "std": 0.17925970885410047,
+    "n_non_null": 1777
+  }
+}

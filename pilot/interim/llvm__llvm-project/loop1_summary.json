@@ -1,0 +1,15 @@
+{
+  "repo": "llvm/llvm-project",
+  "n_prs_scanned": 54016,
+  "n_unique_actors": 4120,
+  "category_counts": {
+    "human": 4115,
+    "agent": 3,
+    "legacy_bot": 2
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 1987,
+    "Co-authored-by:.*cursor": 243,
+    "Co-authored-by:\\s*Copilot": 104
+  }
+}

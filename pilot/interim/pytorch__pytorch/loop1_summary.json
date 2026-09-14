@@ -1,0 +1,16 @@
+{
+  "repo": "pytorch/pytorch",
+  "n_prs_scanned": 20775,
+  "n_unique_actors": 2308,
+  "category_counts": {
+    "human": 2299,
+    "agent": 5,
+    "legacy_bot": 4
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*cursor": 263,
+    "Co-authored-by:.*claude": 741,
+    "Co-authored-by:\\s*Copilot": 191,
+    "Co-authored-by:.*copilot-swe-agent": 2
+  }
+}

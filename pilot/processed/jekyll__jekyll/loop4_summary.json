@@ -1,0 +1,21 @@
+{
+  "repo": "jekyll/jekyll",
+  "n_modules_with_events": 13,
+  "n_months": 13,
+  "n_panel_rows": 43,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.06976744186046512,
+    "H_E": 0.06976744186046512
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 37
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.02702702702702703,
+    "std": 0.1643989873053573,
+    "n_non_null": 37
+  }
+}

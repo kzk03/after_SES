@@ -1,0 +1,110 @@
+{
+  "churn_rate_k3": {
+    "k": 3.0,
+    "dep_var": "churn_rate",
+    "n_obs": 23440,
+    "n_repo_clusters": 39,
+    "params": {
+      "S1_EG_prime": -0.008642138019083678,
+      "log_n_activity": 0.010006345111438678
+    },
+    "pvalues(cluster=module)": {
+      "S1_EG_prime": 0.4687918212996691,
+      "log_n_activity": 0.007609368811084316
+    },
+    "std_errors(cluster=module)": {
+      "S1_EG_prime": 0.011929038587576556,
+      "log_n_activity": 0.0037487584986939317
+    },
+    "rsquared_within": 0.0010507212565425972,
+    "pvalues(cluster=repo)": {
+      "S1_EG_prime": 0.78304741173236,
+      "log_n_activity": 0.09344475070193381
+    },
+    "std_errors(cluster=repo)": {
+      "S1_EG_prime": 0.03138553006702909,
+      "log_n_activity": 0.005964704818104252
+    }
+  },
+  "n_new_entrants_k3": {
+    "k": 3.0,
+    "dep_var": "n_new_entrants",
+    "n_obs": 23441,
+    "n_repo_clusters": 39,
+    "params": {
+      "S1_EG_prime": -0.21097892012690816,
+      "log_n_activity": -0.4711728832717844
+    },
+    "pvalues(cluster=module)": {
+      "S1_EG_prime": 0.03192833390734595,
+      "log_n_activity": 0.0
+    },
+    "std_errors(cluster=module)": {
+      "S1_EG_prime": 0.09833642943706014,
+      "log_n_activity": 0.05222431566537174
+    },
+    "rsquared_within": 0.01304852261069811,
+    "pvalues(cluster=repo)": {
+      "S1_EG_prime": 0.1592603868480753,
+      "log_n_activity": 3.149724299023049e-05
+    },
+    "std_errors(cluster=repo)": {
+      "S1_EG_prime": 0.1498829874659365,
+      "log_n_activity": 0.11316839296470953
+    }
+  },
+  "churn_rate_k6": {
+    "k": 6.0,
+    "dep_var": "churn_rate",
+    "n_obs": 15735,
+    "n_repo_clusters": 39,
+    "params": {
+      "S1_EG_prime": 0.001561794022295911,
+      "log_n_activity": 0.031432328039245935
+    },
+    "pvalues(cluster=module)": {
+      "S1_EG_prime": 0.9332263047998619,
+      "log_n_activity": 3.0404567752384537e-12
+    },
+    "std_errors(cluster=module)": {
+      "S1_EG_prime": 0.01863974449338879,
+      "log_n_activity": 0.004500483034686019
+    },
+    "rsquared_within": 0.010011075157956961,
+    "pvalues(cluster=repo)": {
+      "S1_EG_prime": 0.9452232321528875,
+      "log_n_activity": 7.736744578323851e-11
+    },
+    "std_errors(cluster=repo)": {
+      "S1_EG_prime": 0.022730830556290587,
+      "log_n_activity": 0.004826505620295672
+    }
+  },
+  "n_new_entrants_k6": {
+    "k": 6.0,
+    "dep_var": "n_new_entrants",
+    "n_obs": 15736,
+    "n_repo_clusters": 39,
+    "params": {
+      "S1_EG_prime": -0.4575227396815977,
+      "log_n_activity": -1.0743079375920388
+    },
+    "pvalues(cluster=module)": {
+      "S1_EG_prime": 0.010101930758959377,
+      "log_n_activity": 0.0
+    },
+    "std_errors(cluster=module)": {
+      "S1_EG_prime": 0.17783111993032719,
+      "log_n_activity": 0.07609169447330788
+    },
+    "rsquared_within": 0.04654843503459838,
+    "pvalues(cluster=repo)": {
+      "S1_EG_prime": 0.012069492660343961,
+      "log_n_activity": 1.1523226817189425e-11
+    },
+    "std_errors(cluster=repo)": {
+      "S1_EG_prime": 0.1822401673548485,
+      "log_n_activity": 0.15813112768679058
+    }
+  }
+}

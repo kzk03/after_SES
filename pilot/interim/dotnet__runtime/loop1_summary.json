@@ -1,0 +1,15 @@
+{
+  "repo": "dotnet/runtime",
+  "n_prs_scanned": 9282,
+  "n_unique_actors": 569,
+  "category_counts": {
+    "human": 559,
+    "legacy_bot": 6,
+    "agent": 4
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:\\s*Copilot": 9107,
+    "Co-authored-by:.*copilot-swe-agent": 88,
+    "Co-authored-by:.*claude": 22
+  }
+}

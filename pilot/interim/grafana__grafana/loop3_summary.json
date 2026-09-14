@@ -1,0 +1,19 @@
+{
+  "repo": "grafana/grafana",
+  "n_pr_total": 17496,
+  "n_pr_matched_to_module": 16638,
+  "pr_match_rate": 0.950960219478738,
+  "n_pr_multi_module": 8661,
+  "pr_multi_module_rate": 0.5205553552109629,
+  "n_issue_total": 17603,
+  "n_issue_linked_to_pr": 5233,
+  "issue_link_rate": 0.29727887291938876,
+  "n_issue_matched_to_module": 1477,
+  "issue_module_attribution_rate": 0.08390615236039312,
+  "n_events": 58245,
+  "events_by_stage": {
+    "E": 40773,
+    "G": 15995,
+    "I": 1477
+  }
+}

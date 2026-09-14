@@ -1,0 +1,18 @@
+{
+  "repo": "gradle/gradle",
+  "n_pr_total": 3155,
+  "n_pr_matched_to_module": 2712,
+  "pr_match_rate": 0.8595879556259904,
+  "n_pr_multi_module": 1204,
+  "pr_multi_module_rate": 0.443952802359882,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 8650,
+  "events_by_stage": {
+    "E": 5941,
+    "G": 2709
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "repo": "jekyll/jekyll",
+  "n_pr_total": 62,
+  "n_pr_matched_to_module": 56,
+  "pr_match_rate": 0.9032258064516129,
+  "n_pr_multi_module": 25,
+  "pr_multi_module_rate": 0.44642857142857145,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 88,
+  "events_by_stage": {
+    "G": 56,
+    "E": 32
+  }
+}

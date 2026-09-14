@@ -1,0 +1,18 @@
+{
+  "repo": "ceph/ceph",
+  "n_pr_total": 6445,
+  "n_pr_matched_to_module": 5081,
+  "pr_match_rate": 0.7883630721489526,
+  "n_pr_multi_module": 1325,
+  "pr_multi_module_rate": 0.26077543790592406,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 23438,
+  "events_by_stage": {
+    "E": 18357,
+    "G": 5081
+  }
+}

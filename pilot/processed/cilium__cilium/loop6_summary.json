@@ -1,0 +1,53 @@
+{
+  "repo": "cilium/cilium",
+  "S1_EG_mean": -0.0014087503489317735,
+  "S1_IG_mean": NaN,
+  "S1_EG_prime_mean(trailer込み)": 0.0013811073028645253,
+  "S1_IG_prime_mean(trailer込み)": NaN,
+  "S2_jaccard_mean": 0.10259791444077168,
+  "S3_n_actors_with_trend": 231,
+  "S3_reviewer_ratio_delta_mean": 0.1696664093950347,
+  "S4_n_modules_computed": 0,
+  "S4_lag_distribution": {},
+  "S4_prime_n_modules_computed(trailer込み)": 1,
+  "S4_prime_lag_distribution(trailer込み)": {
+    "3": 1
+  },
+  "S1_S2_corr_matrix": {
+    "S1_EG": {
+      "S1_EG": 1.0,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.5338742289088615,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.02959214988155701
+    },
+    "S1_IG": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S1_EG_prime": {
+      "S1_EG": 0.5338742289088615,
+      "S1_IG": NaN,
+      "S1_EG_prime": 1.0,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 0.016959729479254566
+    },
+    "S1_IG_prime": {
+      "S1_EG": NaN,
+      "S1_IG": NaN,
+      "S1_EG_prime": NaN,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": NaN
+    },
+    "S2_jaccard": {
+      "S1_EG": 0.02959214988155701,
+      "S1_IG": NaN,
+      "S1_EG_prime": 0.016959729479254566,
+      "S1_IG_prime": NaN,
+      "S2_jaccard": 1.0
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "repo": "php/php-src",
+  "n_pr_total": 2942,
+  "n_pr_matched_to_module": 2356,
+  "pr_match_rate": 0.8008157715839564,
+  "n_pr_multi_module": 539,
+  "pr_multi_module_rate": 0.22877758913412563,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 7978,
+  "events_by_stage": {
+    "E": 5622,
+    "G": 2356
+  }
+}

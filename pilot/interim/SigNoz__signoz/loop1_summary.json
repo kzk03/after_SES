@@ -1,0 +1,15 @@
+{
+  "repo": "SigNoz/signoz",
+  "n_prs_scanned": 3035,
+  "n_unique_actors": 331,
+  "category_counts": {
+    "human": 324,
+    "agent": 4,
+    "legacy_bot": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 203,
+    "Co-authored-by:.*cursor": 10,
+    "Co-authored-by:\\s*Copilot": 23
+  }
+}

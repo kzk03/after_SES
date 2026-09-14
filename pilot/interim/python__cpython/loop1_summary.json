@@ -1,0 +1,15 @@
+{
+  "repo": "python/cpython",
+  "n_prs_scanned": 13000,
+  "n_unique_actors": 1501,
+  "category_counts": {
+    "human": 1494,
+    "legacy_bot": 4,
+    "agent": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 1491,
+    "Co-authored-by:.*cursor": 9,
+    "Co-authored-by:\\s*Copilot": 17
+  }
+}
