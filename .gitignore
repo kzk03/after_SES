@@ -40,3 +40,4 @@ work/
 
 # SES補足資料(生成物、量が多いため無視)
 outputs/analysis/ses_supplement/
+scripts/analyze/study/supplement/
