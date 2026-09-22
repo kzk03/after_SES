@@ -54,3 +54,5 @@ pilot/phase2/outputs/*.parquet
 pilot/phase2/outputs_full/*.parquet
 # 収集・パイプラインの実行ログ
 pilot/phase2/logs/
+# 所見・論文骨子などのテキストはローカル管理(コミットしない)
+pilot/phase2/reports/
