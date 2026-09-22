@@ -1,0 +1,21 @@
+{
+  "repo": "hashicorp/vault",
+  "n_modules_with_events": 35,
+  "n_months": 45,
+  "n_panel_rows": 486,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.5246913580246914,
+    "H_E": 0.6522633744855967
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 451
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.0033259423503325942,
+    "std": 0.052599346985268455,
+    "n_non_null": 451
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "repo": "ydb-platform/ydb",
+  "n_pr_total": 42661,
+  "n_pr_matched_to_module": 9331,
+  "pr_match_rate": 0.21872436182930546,
+  "n_pr_multi_module": 988,
+  "pr_multi_module_rate": 0.105883613760583,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 15384,
+  "events_by_stage": {
+    "G": 9329,
+    "E": 6055
+  }
+}

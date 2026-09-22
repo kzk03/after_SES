@@ -1,0 +1,15 @@
+{
+  "repo": "cilium/cilium",
+  "n_prs_scanned": 20217,
+  "n_unique_actors": 1253,
+  "category_counts": {
+    "human": 1244,
+    "legacy_bot": 6,
+    "agent": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 12,
+    "Co-authored-by:\\s*Copilot": 6,
+    "Co-authored-by:.*cursor": 4
+  }
+}

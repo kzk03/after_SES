@@ -1,0 +1,21 @@
+{
+  "repo": "backstage/backstage",
+  "n_modules_with_events": 78,
+  "n_months": 45,
+  "n_panel_rows": 1869,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.4510433386837881,
+    "H_E": 0.7356875334403424
+  },
+  "A_summary": {
+    "mean": 0.002121235167784402,
+    "std": 0.02357608339384601,
+    "n_non_null": 1690
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.05389672054234393,
+    "std": 0.18447992969519203,
+    "n_non_null": 1690
+  }
+}

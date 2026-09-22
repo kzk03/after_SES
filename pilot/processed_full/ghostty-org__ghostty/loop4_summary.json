@@ -1,0 +1,21 @@
+{
+  "repo": "ghostty-org/ghostty",
+  "n_modules_with_events": 67,
+  "n_months": 44,
+  "n_panel_rows": 592,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.46114864864864863,
+    "H_E": 0.4797297297297297
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 567
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.031318805116409866,
+    "std": 0.1368524392584023,
+    "n_non_null": 567
+  }
+}

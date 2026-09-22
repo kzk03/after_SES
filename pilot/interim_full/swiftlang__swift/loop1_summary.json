@@ -1,0 +1,14 @@
+{
+  "repo": "swiftlang/swift",
+  "n_prs_scanned": 24295,
+  "n_unique_actors": 829,
+  "category_counts": {
+    "human": 826,
+    "agent": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 31,
+    "Co-authored-by:\\s*Copilot": 3,
+    "Co-authored-by:.*cursor": 3
+  }
+}

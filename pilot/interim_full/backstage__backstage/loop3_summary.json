@@ -1,0 +1,18 @@
+{
+  "repo": "backstage/backstage",
+  "n_pr_total": 15291,
+  "n_pr_matched_to_module": 13728,
+  "pr_match_rate": 0.8977830096134981,
+  "n_pr_multi_module": 4199,
+  "pr_multi_module_rate": 0.3058712121212121,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 52261,
+  "events_by_stage": {
+    "E": 38540,
+    "G": 13721
+  }
+}

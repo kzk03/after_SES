@@ -1,0 +1,21 @@
+{
+  "repo": "envoyproxy/envoy",
+  "n_modules_with_events": 302,
+  "n_months": 45,
+  "n_panel_rows": 3087,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.2384191771946874,
+    "H_E": 0.6261742792355037
+  },
+  "A_summary": {
+    "mean": 0.008107111574325731,
+    "std": 0.06313867206036541,
+    "n_non_null": 2600
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.020431778021989606,
+    "std": 0.11511379974755434,
+    "n_non_null": 2600
+  }
+}

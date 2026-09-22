@@ -1,0 +1,18 @@
+{
+  "repo": "PaddlePaddle/Paddle",
+  "n_pr_total": 26638,
+  "n_pr_matched_to_module": 2944,
+  "pr_match_rate": 0.11051880771829717,
+  "n_pr_multi_module": 682,
+  "pr_multi_module_rate": 0.23165760869565216,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 11248,
+  "events_by_stage": {
+    "E": 8305,
+    "G": 2943
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "repo": "prestodb/presto",
+  "n_pr_total": 7389,
+  "n_pr_matched_to_module": 6445,
+  "pr_match_rate": 0.8722425226688321,
+  "n_pr_multi_module": 2186,
+  "pr_multi_module_rate": 0.339177657098526,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 36064,
+  "events_by_stage": {
+    "E": 29621,
+    "G": 6443
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "repo": "prestodb/presto",
+  "n_prs_scanned": 7389,
+  "n_unique_actors": 552,
+  "category_counts": {
+    "human": 544,
+    "legacy_bot": 4,
+    "agent": 4
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 21,
+    "Co-authored-by:\\s*Copilot": 5,
+    "Co-authored-by:.*copilot-swe-agent": 2,
+    "Co-authored-by:.*cursor": 7
+  }
+}

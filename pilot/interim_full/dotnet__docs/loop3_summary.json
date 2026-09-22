@@ -1,0 +1,18 @@
+{
+  "repo": "dotnet/docs",
+  "n_pr_total": 17757,
+  "n_pr_matched_to_module": 16151,
+  "pr_match_rate": 0.9095567945035761,
+  "n_pr_multi_module": 2181,
+  "pr_multi_module_rate": 0.13503807813757662,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 42342,
+  "events_by_stage": {
+    "E": 26453,
+    "G": 15889
+  }
+}

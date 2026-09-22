@@ -1,0 +1,21 @@
+{
+  "repo": "nextcloud/server",
+  "n_modules_with_events": 53,
+  "n_months": 45,
+  "n_panel_rows": 768,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.6158854166666666,
+    "H_E": 0.8098958333333334
+  },
+  "A_summary": {
+    "mean": 0.0001133011164971391,
+    "std": 0.002900971823996204,
+    "n_non_null": 704
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.002248884684138235,
+    "std": 0.020408859726263086,
+    "n_non_null": 704
+  }
+}

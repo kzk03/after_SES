@@ -1,0 +1,15 @@
+{
+  "repo": "ceph/ceph",
+  "n_prs_scanned": 22336,
+  "n_unique_actors": 948,
+  "category_counts": {
+    "human": 941,
+    "agent": 4,
+    "legacy_bot": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 104,
+    "Co-authored-by:.*cursor": 22,
+    "Co-authored-by:\\s*Copilot": 9
+  }
+}

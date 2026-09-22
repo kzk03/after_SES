@@ -1,0 +1,21 @@
+{
+  "repo": "grafana/grafana",
+  "n_modules_with_events": 904,
+  "n_months": 45,
+  "n_panel_rows": 8992,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.351423487544484,
+    "H_E": 0.6003113879003559
+  },
+  "A_summary": {
+    "mean": 0.002413492539714303,
+    "std": 0.043400820452334656,
+    "n_non_null": 8272
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.04160339676831242,
+    "std": 0.17063770785423862,
+    "n_non_null": 8272
+  }
+}

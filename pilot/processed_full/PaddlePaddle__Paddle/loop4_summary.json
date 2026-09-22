@@ -1,0 +1,21 @@
+{
+  "repo": "PaddlePaddle/Paddle",
+  "n_modules_with_events": 61,
+  "n_months": 45,
+  "n_panel_rows": 835,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.36167664670658684,
+    "H_E": 0.6167664670658682
+  },
+  "A_summary": {
+    "mean": 0.000655307994757536,
+    "std": 0.01810121535639991,
+    "n_non_null": 763
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.017504884805015865,
+    "std": 0.12129971910226699,
+    "n_non_null": 763
+  }
+}

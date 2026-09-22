@@ -1,0 +1,21 @@
+{
+  "repo": "ray-project/ray",
+  "n_modules_with_events": 73,
+  "n_months": 45,
+  "n_panel_rows": 1585,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.6151419558359621,
+    "H_E": 0.8321766561514196
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 1513
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.044025568651151654,
+    "std": 0.15852125218181784,
+    "n_non_null": 1513
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "repo": "apache/airflow",
+  "n_modules_with_events": 95,
+  "n_months": 45,
+  "n_panel_rows": 1337,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.6267763649962603,
+    "H_E": 0.8362004487658938
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 1283
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.021336164326808484,
+    "std": 0.09945709601230467,
+    "n_non_null": 1283
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "n_agent_accounts": 6,
+  "agent_total_reviews": 117037,
+  "agent_judgment_share": 0.002657279321923836,
+  "top_agents": [
+    {
+      "login": "copilot-pull-request-reviewer",
+      "category": "agent",
+      "n_reviews": 78700,
+      "n_repos": 39,
+      "APPROVED": 48,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 78637,
+      "DISMISSED": 15,
+      "approved_share": 0.0006099110546378653,
+      "judgment_share": 0.0006099110546378653
+    },
+    {
+      "login": "cursor",
+      "category": "agent",
+      "n_reviews": 30453,
+      "n_repos": 5,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 30453,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    },
+    {
+      "login": "copilot-swe-agent",
+      "category": "agent",
+      "n_reviews": 3980,
+      "n_repos": 12,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 3980,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    },
+    {
+      "login": "claude",
+      "category": "agent",
+      "n_reviews": 2219,
+      "n_repos": 3,
+      "APPROVED": 257,
+      "CHANGES_REQUESTED": 6,
+      "COMMENTED": 1954,
+      "DISMISSED": 2,
+      "approved_share": 0.11581793600721045,
+      "judgment_share": 0.11852185669220369
+    },
+    {
+      "login": "chatgpt-codex-connector",
+      "category": "agent",
+      "n_reviews": 1679,
+      "n_repos": 11,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 1679,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    },
+    {
+      "login": "devin-ai-integration",
+      "category": "agent",
+      "n_reviews": 6,
+      "n_repos": 1,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 6,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    }
+  ]
+}

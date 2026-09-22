@@ -1,0 +1,21 @@
+{
+  "repo": "llvm/llvm-project",
+  "n_modules_with_events": 18,
+  "n_months": 43,
+  "n_panel_rows": 487,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.6386036960985626,
+    "H_E": 0.8275154004106776
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 466
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.008643864590850365,
+    "std": 0.05283144825084398,
+    "n_non_null": 466
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "repo": "termux/termux-packages",
+  "n_pr_total": 9668,
+  "n_pr_matched_to_module": 9045,
+  "pr_match_rate": 0.9355606123293339,
+  "n_pr_multi_module": 770,
+  "pr_multi_module_rate": 0.08512990602542841,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 16537,
+  "events_by_stage": {
+    "G": 8997,
+    "E": 7540
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "repo": "termux/termux-packages",
+  "n_modules_with_events": 124,
+  "n_months": 45,
+  "n_panel_rows": 827,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.18863361547763,
+    "H_E": 0.21765417170495768
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 798
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.00042600983695441705,
+    "std": 0.011801906588441187,
+    "n_non_null": 798
+  }
+}

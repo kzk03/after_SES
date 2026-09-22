@@ -1,0 +1,15 @@
+{
+  "repo": "juspay/hyperswitch",
+  "n_prs_scanned": 9539,
+  "n_unique_actors": 601,
+  "category_counts": {
+    "human": 592,
+    "legacy_bot": 5,
+    "agent": 4
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 1093,
+    "Co-authored-by:\\s*Copilot": 19,
+    "Co-authored-by:.*copilot-swe-agent": 2
+  }
+}

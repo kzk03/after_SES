@@ -1,0 +1,15 @@
+{
+  "repo": "dotnet/docs",
+  "n_prs_scanned": 17757,
+  "n_unique_actors": 1260,
+  "category_counts": {
+    "human": 1249,
+    "legacy_bot": 7,
+    "agent": 4
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:\\s*Copilot": 1376,
+    "Co-authored-by:.*copilot-swe-agent": 337,
+    "Co-authored-by:.*claude": 27
+  }
+}

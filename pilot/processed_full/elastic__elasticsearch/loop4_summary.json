@@ -1,0 +1,21 @@
+{
+  "repo": "elastic/elasticsearch",
+  "n_modules_with_events": 22,
+  "n_months": 1,
+  "n_panel_rows": 22,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.6363636363636364,
+    "H_E": 0.5454545454545454
+  },
+  "A_summary": {
+    "mean": 0.0017636684303350995,
+    "std": 0.008082144082814546,
+    "n_non_null": 21
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.0171957671957672,
+    "std": 0.05619124841287244,
+    "n_non_null": 21
+  }
+}

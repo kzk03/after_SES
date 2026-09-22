@@ -1,0 +1,21 @@
+{
+  "repo": "pytorch/pytorch",
+  "n_modules_with_events": 156,
+  "n_months": 45,
+  "n_panel_rows": 3996,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.5845845845845846,
+    "H_E": 0.769019019019019
+  },
+  "A_summary": {
+    "mean": 0.0005699917672173014,
+    "std": 0.011078016797917577,
+    "n_non_null": 3799
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.008559901093303816,
+    "std": 0.06206437243291846,
+    "n_non_null": 3799
+  }
+}

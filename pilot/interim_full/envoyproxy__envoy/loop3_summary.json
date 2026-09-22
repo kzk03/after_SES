@@ -1,0 +1,18 @@
+{
+  "repo": "envoyproxy/envoy",
+  "n_pr_total": 16989,
+  "n_pr_matched_to_module": 9403,
+  "pr_match_rate": 0.553475778444876,
+  "n_pr_multi_module": 3396,
+  "pr_multi_module_rate": 0.36116133148995,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 42718,
+  "events_by_stage": {
+    "E": 33321,
+    "G": 9397
+  }
+}

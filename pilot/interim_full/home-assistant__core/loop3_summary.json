@@ -1,0 +1,18 @@
+{
+  "repo": "home-assistant/core",
+  "n_pr_total": 58001,
+  "n_pr_matched_to_module": 53429,
+  "pr_match_rate": 0.9211737728659851,
+  "n_pr_multi_module": 23853,
+  "pr_multi_module_rate": 0.4464429429710457,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 249998,
+  "events_by_stage": {
+    "E": 196579,
+    "G": 53419
+  }
+}

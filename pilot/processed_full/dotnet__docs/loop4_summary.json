@@ -1,0 +1,21 @@
+{
+  "repo": "dotnet/docs",
+  "n_modules_with_events": 80,
+  "n_months": 45,
+  "n_panel_rows": 1589,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.47388294524858404,
+    "H_E": 0.6620516047828823
+  },
+  "A_summary": {
+    "mean": 0.08725258571358067,
+    "std": 0.2404993261192673,
+    "n_non_null": 1477
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.15083586591278192,
+    "std": 0.3106555373649886,
+    "n_non_null": 1477
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "repo": "juspay/hyperswitch",
+  "n_modules_with_events": 131,
+  "n_months": 45,
+  "n_panel_rows": 1521,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.410913872452334,
+    "H_E": 0.8126232741617357
+  },
+  "A_summary": {
+    "mean": 5.819239861793056e-05,
+    "std": 0.0014615219537004547,
+    "n_non_null": 1410
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.04173787575013788,
+    "std": 0.17095161819725402,
+    "n_non_null": 1410
+  }
+}

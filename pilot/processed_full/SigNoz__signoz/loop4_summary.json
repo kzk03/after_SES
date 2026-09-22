@@ -1,0 +1,21 @@
+{
+  "repo": "SigNoz/signoz",
+  "n_modules_with_events": 132,
+  "n_months": 45,
+  "n_panel_rows": 1063,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.31702728127939794,
+    "H_E": 0.6782690498588899
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 981
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.019061784068263688,
+    "std": 0.10831731069051447,
+    "n_non_null": 981
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "repo": "ghostty-org/ghostty",
+  "n_pr_total": 5502,
+  "n_pr_matched_to_module": 3295,
+  "pr_match_rate": 0.5988731370410759,
+  "n_pr_multi_module": 958,
+  "pr_multi_module_rate": 0.29074355083459785,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 7732,
+  "events_by_stage": {
+    "E": 4438,
+    "G": 3294
+  }
+}

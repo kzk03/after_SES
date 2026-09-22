@@ -1,0 +1,21 @@
+{
+  "repo": "NVIDIA/Megatron-LM",
+  "n_modules_with_events": 51,
+  "n_months": 44,
+  "n_panel_rows": 600,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.48,
+    "H_E": 0.5083333333333333
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 571
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.07670693725635552,
+    "std": 0.1916440356671212,
+    "n_non_null": 571
+  }
+}

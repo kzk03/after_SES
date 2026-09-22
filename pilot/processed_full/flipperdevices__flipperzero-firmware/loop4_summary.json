@@ -1,0 +1,21 @@
+{
+  "repo": "flipperdevices/flipperzero-firmware",
+  "n_modules_with_events": 36,
+  "n_months": 45,
+  "n_panel_rows": 477,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.22641509433962265,
+    "H_E": 0.3522012578616352
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 405
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.006790123456790123,
+    "std": 0.07535111147967458,
+    "n_non_null": 405
+  }
+}

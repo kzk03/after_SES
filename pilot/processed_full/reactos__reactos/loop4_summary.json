@@ -1,0 +1,21 @@
+{
+  "repo": "reactos/reactos",
+  "n_modules_with_events": 97,
+  "n_months": 45,
+  "n_panel_rows": 1000,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.282,
+    "H_E": 0.765
+  },
+  "A_summary": {
+    "mean": 0.001424746605469497,
+    "std": 0.03500409937099649,
+    "n_non_null": 830
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.00667005232738755,
+    "std": 0.06616810658884549,
+    "n_non_null": 830
+  }
+}

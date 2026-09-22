@@ -1,0 +1,15 @@
+{
+  "repo": "backstage/backstage",
+  "n_prs_scanned": 15291,
+  "n_unique_actors": 1906,
+  "category_counts": {
+    "human": 1896,
+    "legacy_bot": 6,
+    "agent": 4
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 824,
+    "Co-authored-by:\\s*Copilot": 262,
+    "Co-authored-by:.*cursor": 186
+  }
+}

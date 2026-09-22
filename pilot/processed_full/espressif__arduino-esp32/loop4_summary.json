@@ -1,0 +1,21 @@
+{
+  "repo": "espressif/arduino-esp32",
+  "n_modules_with_events": 46,
+  "n_months": 45,
+  "n_panel_rows": 677,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.38847858197932056,
+    "H_E": 0.5583456425406204
+  },
+  "A_summary": {
+    "mean": 0.004049111807732497,
+    "std": 0.052776326942929545,
+    "n_non_null": 638
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.045213950974139064,
+    "std": 0.16589769581842992,
+    "n_non_null": 638
+  }
+}

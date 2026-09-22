@@ -1,0 +1,21 @@
+{
+  "repo": "php/php-src",
+  "n_modules_with_events": 68,
+  "n_months": 45,
+  "n_panel_rows": 1943,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.4184251158003088,
+    "H_E": 0.6489963973237262
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 1820
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.0011060962846677134,
+    "std": 0.018848724010533075,
+    "n_non_null": 1820
+  }
+}

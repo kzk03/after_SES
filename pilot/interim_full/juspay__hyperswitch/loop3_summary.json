@@ -1,0 +1,18 @@
+{
+  "repo": "juspay/hyperswitch",
+  "n_pr_total": 9539,
+  "n_pr_matched_to_module": 8644,
+  "pr_match_rate": 0.9061746514309676,
+  "n_pr_multi_module": 5340,
+  "pr_multi_module_rate": 0.6177695511337343,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 51855,
+  "events_by_stage": {
+    "E": 43227,
+    "G": 8628
+  }
+}

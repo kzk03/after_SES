@@ -1,0 +1,21 @@
+{
+  "repo": "ceph/ceph",
+  "n_modules_with_events": 142,
+  "n_months": 45,
+  "n_panel_rows": 2397,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.49144764288694204,
+    "H_E": 0.7008760951188986
+  },
+  "A_summary": {
+    "mean": 0.0010595741033359776,
+    "std": 0.02590921347936952,
+    "n_non_null": 2103
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.0034471895603185748,
+    "std": 0.04290110937618726,
+    "n_non_null": 2103
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "repo": "godotengine/godot",
+  "n_modules_with_events": 206,
+  "n_months": 45,
+  "n_panel_rows": 3602,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.4647418101054969,
+    "H_E": 0.6549139367018323
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 3255
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.0014794222896404564,
+    "std": 0.02174274894084897,
+    "n_non_null": 3255
+  }
+}

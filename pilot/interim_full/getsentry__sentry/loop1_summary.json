@@ -1,0 +1,15 @@
+{
+  "repo": "getsentry/sentry",
+  "n_prs_scanned": 69654,
+  "n_unique_actors": 711,
+  "category_counts": {
+    "human": 693,
+    "legacy_bot": 11,
+    "agent": 7
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 8587,
+    "Co-authored-by:.*cursor": 500,
+    "Co-authored-by:\\s*Copilot": 22
+  }
+}

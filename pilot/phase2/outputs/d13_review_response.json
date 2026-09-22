@@ -1,0 +1,96 @@
+{
+  "n_reviews": 592950,
+  "n_repos": 39,
+  "descriptive": [
+    {
+      "category": "human",
+      "state": "COMMENTED",
+      "n": 291839,
+      "commit_1d": 0.4489290327886266,
+      "commit_7d": 0.6063171817337641,
+      "any_after": 0.7588087952604005,
+      "mean_commits_after": 3.814551859072982
+    },
+    {
+      "category": "human",
+      "state": "APPROVED",
+      "n": 198208,
+      "commit_1d": 0.19801420729738456,
+      "commit_7d": 0.26146270584436554,
+      "any_after": 0.2990696641911527,
+      "mean_commits_after": 0.7797061672586374
+    },
+    {
+      "category": "agent",
+      "state": "COMMENTED",
+      "n": 78231,
+      "commit_1d": 0.49426697856348506,
+      "commit_7d": 0.6074701844537331,
+      "any_after": 0.6951336426736204,
+      "mean_commits_after": 3.6166225665017704
+    },
+    {
+      "category": "human",
+      "state": "CHANGES_REQUESTED",
+      "n": 16511,
+      "commit_1d": 0.4360729210829144,
+      "commit_7d": 0.611713403185755,
+      "any_after": 0.7809339228393193,
+      "mean_commits_after": 3.4804070013930106
+    },
+    {
+      "category": "human",
+      "state": "DISMISSED",
+      "n": 7849,
+      "commit_1d": 0.5645305134412028,
+      "commit_7d": 0.7607338514460441,
+      "any_after": 0.876672187539814,
+      "mean_commits_after": 3.2201554338132246
+    },
+    {
+      "category": "agent",
+      "state": "APPROVED",
+      "n": 292,
+      "commit_1d": 0.2636986301369863,
+      "commit_7d": 0.4486301369863014,
+      "any_after": 0.702054794520548,
+      "mean_commits_after": 4.113013698630137
+    }
+  ],
+  "lpm_controls": {
+    "params": {
+      "const": 0.5622611076058854,
+      "is_agent": -0.02731258144993158,
+      "log_days_since": -0.07230859835000997,
+      "log_review_idx": 0.01414531624989465,
+      "log_pr_lines": 0.022494241580809766
+    },
+    "pvalues": {
+      "const": 3.695170909655176e-27,
+      "is_agent": 0.3952813450503545,
+      "log_days_since": 5.967213111432254e-41,
+      "log_review_idx": 0.01666431252541779,
+      "log_pr_lines": 0.008866830052897335
+    },
+    "n": 370070
+  },
+  "pr_fixed_effects": {
+    "params": {
+      "is_agent": -0.00452665070571577,
+      "log_days_since": 0.06971820213433756,
+      "log_review_idx": -0.1680003762919129
+    },
+    "pvalues": {
+      "is_agent": 0.6859889045804657,
+      "log_days_since": 0.0,
+      "log_review_idx": 0.0
+    },
+    "n": 155178,
+    "n_prs": 19790
+  },
+  "ai_only_prs": {
+    "n": 2623,
+    "share_of_reviewed_prs": 0.016492602536452863,
+    "merged_rate": 0.03240564239420511
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "repo": "home-assistant/core",
+  "n_prs_scanned": 58001,
+  "n_unique_actors": 5284,
+  "category_counts": {
+    "human": 5267,
+    "legacy_bot": 10,
+    "agent": 7
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 4527,
+    "Co-authored-by:\\s*Copilot": 2307,
+    "Co-authored-by:.*cursor": 185,
+    "Co-authored-by:.*copilot-swe-agent": 8
+  }
+}

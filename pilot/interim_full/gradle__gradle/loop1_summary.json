@@ -1,0 +1,14 @@
+{
+  "repo": "gradle/gradle",
+  "n_prs_scanned": 10260,
+  "n_unique_actors": 577,
+  "category_counts": {
+    "human": 567,
+    "legacy_bot": 7,
+    "agent": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 208,
+    "Co-authored-by:\\s*Copilot": 15
+  }
+}

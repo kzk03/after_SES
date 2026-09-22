@@ -1,0 +1,21 @@
+{
+  "repo": "prestodb/presto",
+  "n_modules_with_events": 99,
+  "n_months": 45,
+  "n_panel_rows": 1484,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.3362533692722372,
+    "H_E": 0.7075471698113207
+  },
+  "A_summary": {
+    "mean": 0.00014612363228280184,
+    "std": 0.0038938119369928874,
+    "n_non_null": 1258
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.00623883892011062,
+    "std": 0.07048090608010894,
+    "n_non_null": 1258
+  }
+}

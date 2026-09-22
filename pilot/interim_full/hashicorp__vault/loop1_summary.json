@@ -1,0 +1,14 @@
+{
+  "repo": "hashicorp/vault",
+  "n_prs_scanned": 12054,
+  "n_unique_actors": 708,
+  "category_counts": {
+    "human": 702,
+    "legacy_bot": 5,
+    "agent": 1
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 4,
+    "Co-authored-by:\\s*Copilot": 3
+  }
+}

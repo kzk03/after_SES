@@ -1,0 +1,18 @@
+{
+  "repo": "llvm/llvm-project",
+  "n_pr_total": 123846,
+  "n_pr_matched_to_module": 9532,
+  "pr_match_rate": 0.07696655523795681,
+  "n_pr_multi_module": 1974,
+  "pr_multi_module_rate": 0.20709190096516997,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 49300,
+  "events_by_stage": {
+    "E": 39804,
+    "G": 9496
+  }
+}

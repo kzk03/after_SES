@@ -1,0 +1,16 @@
+{
+  "repo": "nextcloud/server",
+  "n_prs_scanned": 21239,
+  "n_unique_actors": 736,
+  "category_counts": {
+    "human": 727,
+    "legacy_bot": 5,
+    "agent": 4
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 81,
+    "Co-authored-by:.*cursor": 4,
+    "Co-authored-by:\\s*Copilot": 3,
+    "Co-authored-by:.*google-labs-jules": 1
+  }
+}

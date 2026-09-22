@@ -1,0 +1,21 @@
+{
+  "repo": "swiftlang/swift",
+  "n_modules_with_events": 214,
+  "n_months": 45,
+  "n_panel_rows": 3865,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.496248382923674,
+    "H_E": 0.5979301423027167
+  },
+  "A_summary": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n_non_null": 3706
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.0015874202197810497,
+    "std": 0.0332695341626877,
+    "n_non_null": 3706
+  }
+}

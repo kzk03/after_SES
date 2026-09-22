@@ -1,0 +1,18 @@
+{
+  "repo": "istio/istio",
+  "n_pr_total": 12734,
+  "n_pr_matched_to_module": 12276,
+  "pr_match_rate": 0.9640332966860374,
+  "n_pr_multi_module": 4452,
+  "pr_multi_module_rate": 0.3626588465298143,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 36189,
+  "events_by_stage": {
+    "E": 23915,
+    "G": 12274
+  }
+}

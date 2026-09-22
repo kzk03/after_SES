@@ -1,0 +1,14 @@
+{
+  "repo": "termux/termux-packages",
+  "n_prs_scanned": 9668,
+  "n_unique_actors": 504,
+  "category_counts": {
+    "human": 501,
+    "legacy_bot": 2,
+    "agent": 1
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 2,
+    "Co-authored-by:\\s*Copilot": 1
+  }
+}

@@ -1,0 +1,10 @@
+login,category,n_reviews,n_repos,APPROVED,CHANGES_REQUESTED,COMMENTED,DISMISSED,approved_share,judgment_share
+copilot-pull-request-reviewer,agent,78700,39,48,0,78637,15,0.0006099110546378653,0.0006099110546378653
+cursor,agent,30453,5,0,0,30453,0,0.0,0.0
+github-actions,legacy_bot,11160,9,8153,60,2897,50,0.7305555555555555,0.735931899641577
+home-assistant,legacy_bot,5599,1,0,1845,0,3754,0.0,0.3295231291302018
+copilot-swe-agent,agent,3980,12,0,0,3980,0,0.0,0.0
+claude,agent,2219,3,257,6,1954,2,0.11581793600721045,0.11852185669220369
+chatgpt-codex-connector,agent,1679,11,0,0,1679,0,0.0,0.0
+grafana-pr-approver,legacy_bot,315,1,314,0,0,1,0.9968253968253968,0.9968253968253968
+devin-ai-integration,agent,6,1,0,0,6,0,0.0,0.0

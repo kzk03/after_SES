@@ -1,0 +1,18 @@
+{
+  "repo": "tgstation/tgstation",
+  "n_pr_total": 29008,
+  "n_pr_matched_to_module": 14527,
+  "pr_match_rate": 0.5007928847214561,
+  "n_pr_multi_module": 4638,
+  "pr_multi_module_rate": 0.31926757073036416,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 47300,
+  "events_by_stage": {
+    "E": 32927,
+    "G": 14373
+  }
+}

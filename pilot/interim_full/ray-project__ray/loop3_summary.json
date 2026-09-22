@@ -1,0 +1,18 @@
+{
+  "repo": "ray-project/ray",
+  "n_pr_total": 24103,
+  "n_pr_matched_to_module": 20322,
+  "pr_match_rate": 0.8431315603866738,
+  "n_pr_multi_module": 5656,
+  "pr_multi_module_rate": 0.27831906308434207,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 113886,
+  "events_by_stage": {
+    "E": 93565,
+    "G": 20321
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "repo": "tgstation/tgstation",
+  "n_prs_scanned": 29008,
+  "n_unique_actors": 935,
+  "category_counts": {
+    "human": 926,
+    "legacy_bot": 6,
+    "agent": 3
+  },
+  "trailer_pattern_hits": {
+    "Co-authored-by:.*claude": 3,
+    "Co-authored-by:\\s*Copilot": 6
+  }
+}

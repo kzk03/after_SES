@@ -1,0 +1,18 @@
+{
+  "repo": "swiftlang/swift",
+  "n_pr_total": 24295,
+  "n_pr_matched_to_module": 21778,
+  "pr_match_rate": 0.8963984358921588,
+  "n_pr_multi_module": 13464,
+  "pr_multi_module_rate": 0.6182385894021489,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 62472,
+  "events_by_stage": {
+    "E": 40707,
+    "G": 21765
+  }
+}

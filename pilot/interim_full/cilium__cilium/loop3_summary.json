@@ -1,0 +1,18 @@
+{
+  "repo": "cilium/cilium",
+  "n_pr_total": 20217,
+  "n_pr_matched_to_module": 18771,
+  "pr_match_rate": 0.9284760350200326,
+  "n_pr_multi_module": 10936,
+  "pr_multi_module_rate": 0.5826008204144691,
+  "n_issue_total": 0,
+  "n_issue_linked_to_pr": 0,
+  "issue_link_rate": null,
+  "n_issue_matched_to_module": 0,
+  "issue_module_attribution_rate": null,
+  "n_events": 81754,
+  "events_by_stage": {
+    "E": 62992,
+    "G": 18762
+  }
+}

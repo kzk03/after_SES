@@ -1,0 +1,21 @@
+{
+  "repo": "DefinitelyTyped/DefinitelyTyped",
+  "n_modules_with_events": 2349,
+  "n_months": 45,
+  "n_panel_rows": 6435,
+  "valid_cell_ratio": {
+    "H_I": 0.0,
+    "H_G": 0.0675990675990676,
+    "H_E": 0.2414918414918415
+  },
+  "A_summary": {
+    "mean": 0.00018670649738610905,
+    "std": 0.013664058598604922,
+    "n_non_null": 5356
+  },
+  "A_prime_summary(trailer込み感度分析)": {
+    "mean": 0.005754389996361618,
+    "std": 0.07166043639933949,
+    "n_non_null": 5356
+  }
+}
