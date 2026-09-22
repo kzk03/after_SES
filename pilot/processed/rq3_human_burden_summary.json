@@ -1,0 +1,84 @@
+{
+  "n_repos_used": 39,
+  "n_prs_with_human_approval": 140250,
+  "n_ai_reviews_before_approval_mean": 0.3356363636363636,
+  "pct_prs_with_any_ai_review_before_approval": 0.1886559714795009,
+  "human_approval_lag_days_mean": 4.528990331996435,
+  "human_approval_lag_days_median": 0.2945775462962963,
+  "model(log(1+AIレビュー数_承認前) ~ A_prime + log_n_prs + FE)": {
+    "n_obs": 28550,
+    "n_repo_clusters": 39,
+    "params": {
+      "A_prime": 0.1789580246523773,
+      "log_n_prs": 0.017082944426831292
+    },
+    "pvalues(cluster=module)": {
+      "A_prime": 0.0,
+      "log_n_prs": 0.0005682543808198659
+    },
+    "pvalues(cluster=repo)": {
+      "A_prime": 0.007113982625476689,
+      "log_n_prs": 0.020734315213717158
+    }
+  },
+  "model(承認までの日数 ~ A_prime + log_n_prs + FE)": {
+    "n_obs": 28550,
+    "n_repo_clusters": 39,
+    "params": {
+      "A_prime": 3.517021508640802,
+      "log_n_prs": -1.941621555997191
+    },
+    "pvalues(cluster=module)": {
+      "A_prime": 1.028010121473244e-08,
+      "log_n_prs": 0.0
+    },
+    "pvalues(cluster=repo)": {
+      "A_prime": 0.00030702507752211616,
+      "log_n_prs": 2.8816754538141254e-08
+    }
+  },
+  "model_PR規模統制済み(log(1+AIレビュー数_承認前) ~ A_prime + log_n_prs + log_pr_lines + log_pr_files + FE)": {
+    "n_obs": 28550,
+    "n_repo_clusters": 39,
+    "params": {
+      "A_prime": 0.16563050041369637,
+      "log_n_prs": 0.0011354079462711159,
+      "log_pr_lines": 0.03181631400293755,
+      "log_pr_files": 0.0050968000590435065
+    },
+    "pvalues(cluster=module)": {
+      "A_prime": 0.0,
+      "log_n_prs": 0.8208827661298685,
+      "log_pr_lines": 0.0,
+      "log_pr_files": 0.2878987444994916
+    },
+    "pvalues(cluster=repo)": {
+      "A_prime": 0.008999057770087138,
+      "log_n_prs": 0.8384906857326104,
+      "log_pr_lines": 0.0007374133604041155,
+      "log_pr_files": 0.2616261500495731
+    }
+  },
+  "model_PR規模統制済み(承認までの日数 ~ A_prime + log_n_prs + log_pr_lines + log_pr_files + FE)": {
+    "n_obs": 28550,
+    "n_repo_clusters": 39,
+    "params": {
+      "A_prime": 2.8395063268902083,
+      "log_n_prs": -2.7554890709966444,
+      "log_pr_lines": 1.654514458544594,
+      "log_pr_files": 0.07829868501724971
+    },
+    "pvalues(cluster=module)": {
+      "A_prime": 2.2465945228589135e-06,
+      "log_n_prs": 0.0,
+      "log_pr_lines": 0.0,
+      "log_pr_files": 0.7636094878736932
+    },
+    "pvalues(cluster=repo)": {
+      "A_prime": 9.12377186816915e-05,
+      "log_n_prs": 2.4724666758402236e-12,
+      "log_pr_lines": 6.964968601863575e-10,
+      "log_pr_files": 0.8064910095923268
+    }
+  }
+}

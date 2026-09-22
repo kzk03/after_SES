@@ -1,0 +1,62 @@
+{
+  "n_repos_used": 39,
+  "n_obs_raw": 26833,
+  "avg_entry_lines_overall_mean": 517.0972935130144,
+  "avg_entry_files_overall_mean": 7.937897900572653,
+  "within(log_entry_lines ~ S1_EG_prime + log_activity + module_FE + time_FE)": {
+    "n_obs": 24247,
+    "n_repo_clusters": 39,
+    "params": {
+      "S1_EG_prime": 0.16776142604725908,
+      "log_activity": 0.4524090397040024
+    },
+    "pvalues(cluster=module)": {
+      "S1_EG_prime": 0.006970594121411322,
+      "log_activity": 0.0
+    },
+    "rsquared_within": 0.03920800436385663,
+    "pvalues(cluster=repo)": {
+      "S1_EG_prime": 0.14106099118632653,
+      "log_activity": 0.0
+    },
+    "std_errors(cluster=repo)": {
+      "S1_EG_prime": 0.11397473000348993,
+      "log_activity": 0.034910137234653846
+    }
+  },
+  "within(log_entry_files ~ S1_EG_prime + log_activity + module_FE + time_FE)": {
+    "n_obs": 24247,
+    "n_repo_clusters": 39,
+    "params": {
+      "S1_EG_prime": 0.08182063272851148,
+      "log_activity": 0.15801298403954292
+    },
+    "pvalues(cluster=module)": {
+      "S1_EG_prime": 0.0038160648787783913,
+      "log_activity": 0.0
+    },
+    "rsquared_within": 0.020700989634333422,
+    "pvalues(cluster=repo)": {
+      "S1_EG_prime": 0.02188866658479771,
+      "log_activity": 0.0
+    },
+    "std_errors(cluster=repo)": {
+      "S1_EG_prime": 0.03569059911300333,
+      "log_activity": 0.012777671389036157
+    }
+  },
+  "between(log_entry_lines ~ S1_EG_prime + log_activity + repo_FE, module平均)": {
+    "n_obs": 6649,
+    "S1_EG_prime_coef": 0.33394401510552985,
+    "S1_EG_prime_pvalue": 0.001860125783990145,
+    "log_activity_coef": 0.66841861517034,
+    "log_activity_pvalue": 1.7041899391286346e-184
+  },
+  "between(log_entry_files ~ S1_EG_prime + log_activity + repo_FE, module平均)": {
+    "n_obs": 6649,
+    "S1_EG_prime_coef": 0.15877492866238968,
+    "S1_EG_prime_pvalue": 0.0005955302829124744,
+    "log_activity_coef": 0.2336867960558605,
+    "log_activity_pvalue": 5.25934537792615e-103
+  }
+}

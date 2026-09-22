@@ -1,0 +1,28 @@
+{
+  "n_repos_used": 39,
+  "n_obs": 35779,
+  "revert_rate_mean": 0.007280013848133276,
+  "n_commits_total": 659530,
+  "n_revert_total": 6053,
+  "model": {
+    "n_obs": 21016,
+    "n_repo_clusters": 39,
+    "params": {
+      "S1_EG_prime": -0.000850933381373085,
+      "log_n_commits": 0.0013937495103108339
+    },
+    "pvalues(cluster=module)": {
+      "S1_EG_prime": 0.5829627981623942,
+      "log_n_commits": 0.002779717787066982
+    },
+    "rsquared_within": 0.0006543621836546665,
+    "pvalues(cluster=repo)": {
+      "S1_EG_prime": 0.7189977190941423,
+      "log_n_commits": 0.0016231399962967075
+    },
+    "std_errors(cluster=repo)": {
+      "S1_EG_prime": 0.002364984815209185,
+      "log_n_commits": 0.0004421434942594003
+    }
+  }
+}

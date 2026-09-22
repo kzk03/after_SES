@@ -1,0 +1,40 @@
+{
+  "n_repos_used": 39,
+  "n_obs_total": 176780,
+  "n_train": 111797,
+  "n_test": 64983,
+  "continues_rate_train": 0.3728454251903003,
+  "continues_rate_test": 0.33053260083406427,
+  "modelA(経験+直近活動量のみ、AI関与度を知らない)": {
+    "features": [
+      "n_months_active_so_far",
+      "log_recent"
+    ],
+    "n_train": 111797,
+    "n_test": 64983,
+    "auc_train(前半, in-sample)": 0.7591257267628028,
+    "auc_test(後半, out-of-sample)": 0.7843169812184815,
+    "auc_decay": -0.025191254455678713,
+    "coef": {
+      "n_months_active_so_far": 0.43613191913126476,
+      "log_recent": 1.0927669464351342
+    }
+  },
+  "modelB(モデルA + A_prime)": {
+    "features": [
+      "n_months_active_so_far",
+      "log_recent",
+      "A_prime"
+    ],
+    "n_train": 111797,
+    "n_test": 64983,
+    "auc_train(前半, in-sample)": 0.7599327117339902,
+    "auc_test(後半, out-of-sample)": 0.7833722628717417,
+    "auc_decay": -0.023439551137751424,
+    "coef": {
+      "n_months_active_so_far": 0.4391400300030888,
+      "log_recent": 1.0931965238085535,
+      "A_prime": -0.3451523396503007
+    }
+  }
+}

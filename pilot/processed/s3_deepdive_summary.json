@@ -1,0 +1,27 @@
+{
+  "n_repos_used": 39,
+  "n_obs_raw": 51913,
+  "reviewer_ratio_mean": 0.5224546860449456,
+  "model(reviewer_ratio ~ A_prime_weighted + log_n_total + actor_FE + time_FE)": {
+    "n_obs": 40057,
+    "n_actors(entity)": 7904,
+    "n_repo_clusters": 39,
+    "params": {
+      "A_prime_weighted": 0.008734769637250936,
+      "log_n_total": 0.09711681203817511
+    },
+    "pvalues(cluster=actor)": {
+      "A_prime_weighted": 0.6101964006555214,
+      "log_n_total": 0.0
+    },
+    "rsquared_within": 0.05254537132442094,
+    "pvalues(cluster=repo)": {
+      "A_prime_weighted": 0.7833434490479823,
+      "log_n_total": 0.0
+    },
+    "std_errors(cluster=repo)": {
+      "A_prime_weighted": 0.031766624199693234,
+      "log_n_total": 0.009962351973548162
+    }
+  }
+}
