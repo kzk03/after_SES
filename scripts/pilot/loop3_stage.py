@@ -15,14 +15,15 @@ from __future__ import annotations
 import json
 import re
 import sys
+import os
 from pathlib import Path
 
 import pandas as pd
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RAW_DIR = REPO_ROOT / "pilot" / "raw"
-INTERIM_DIR = REPO_ROOT / "pilot" / "interim"
+RAW_DIR = REPO_ROOT / "pilot" / os.environ.get("PILOT_RAW", "raw")
+INTERIM_DIR = REPO_ROOT / "pilot" / os.environ.get("PILOT_INTERIM", "interim")
 CONFIG_PATH = REPO_ROOT / "pilot" / "config" / "agent_identifiers.yaml"
 
 

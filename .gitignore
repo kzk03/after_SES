@@ -45,3 +45,12 @@ pilot/raw/
 # SES補足資料(生成物、量が多いため無視)
 outputs/analysis/ses_supplement/
 scripts/analyze/study/supplement/
+
+# phase2(全期間 2023-01〜 の再収集)の生データ。2.6GB、GitHub API から再取得可能
+pilot/raw_full/
+# 分析の中間 parquet(合計60MB超)。スクリプトから再生成できるので追跡しない。
+# json / csv / 図はコミット対象
+pilot/phase2/outputs/*.parquet
+pilot/phase2/outputs_full/*.parquet
+# 収集・パイプラインの実行ログ
+pilot/phase2/logs/

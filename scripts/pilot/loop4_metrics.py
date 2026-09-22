@@ -12,13 +12,14 @@ from __future__ import annotations
 
 import json
 import sys
+import os
 from pathlib import Path
 
 import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-INTERIM_DIR = REPO_ROOT / "pilot" / "interim"
-PROCESSED_DIR = REPO_ROOT / "pilot" / "processed"
+INTERIM_DIR = REPO_ROOT / "pilot" / os.environ.get("PILOT_INTERIM", "interim")
+PROCESSED_DIR = REPO_ROOT / "pilot" / os.environ.get("PILOT_PROCESSED", "processed")
 
 STAGE_TO_METRIC = {"I": "H_I", "G": "H_G", "E": "H_E"}
 

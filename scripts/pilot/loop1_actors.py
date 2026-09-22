@@ -12,6 +12,7 @@ import random
 import re
 import sys
 from collections import defaultdict
+import os
 from pathlib import Path
 from typing import Any
 
@@ -19,8 +20,8 @@ import pandas as pd
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RAW_DIR = REPO_ROOT / "pilot" / "raw"
-INTERIM_DIR = REPO_ROOT / "pilot" / "interim"
+RAW_DIR = REPO_ROOT / "pilot" / os.environ.get("PILOT_RAW", "raw")
+INTERIM_DIR = REPO_ROOT / "pilot" / os.environ.get("PILOT_INTERIM", "interim")
 REPORTS_DIR = REPO_ROOT / "pilot" / "reports"
 CONFIG_PATH = REPO_ROOT / "pilot" / "config" / "agent_identifiers.yaml"
 

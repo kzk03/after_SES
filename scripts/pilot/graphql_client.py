@@ -53,9 +53,22 @@ class GraphQLClient:
                     # 該当フィールドがnullになるだけで致命的ではないので、dataがあれば続行する
                     non_fatal_types = {"NOT_FOUND"}
                     retryable_types = {"INTERNAL"}  # GitHub側の一時的な内部エラー(特定ノードでクエリが重すぎる場合など)
-                    fatal = [e for e in errors if e.get("type") not in non_fatal_types | retryable_types]
+                    # レート制限はエラーとして返ってくるが、時間を置けば必ず回復するのでリトライする。
+                    # (これを fatal 扱いにしていたため、長時間収集の途中で数リポジトリが落ちていた)
+                    # GitHub は文脈によって RATE_LIMIT と RATE_LIMITED の両方を返すので両方拾う
+                    rate_limit_types = {"RATE_LIMIT", "RATE_LIMITED"}
+                    fatal = [
+                        e for e in errors
+                        if e.get("type") not in non_fatal_types | retryable_types | rate_limit_types
+                    ]
                     if fatal:
                         raise RuntimeError(f"GraphQL errors: {errors}")
+                    if any(e.get("type") in rate_limit_types for e in errors):
+                        # GitHub の GraphQL クォータは1時間単位で回復する。細かく刻まず長めに待つ
+                        wait_s = 300
+                        print(f"  [retry] API rate limit exceeded, {wait_s}s待機 (attempt {attempt + 1})")
+                        time.sleep(wait_s)
+                        continue
                     if any(e.get("type") in retryable_types for e in errors) or not data.get("data"):
                         wait_s = 5 * (attempt + 1)
                         print(f"  [retry] INTERNAL error ({errors}), {wait_s}s待機")
@@ -63,8 +76,9 @@ class GraphQLClient:
                         continue
                     print(f"  [warn] 部分的なNOT_FOUNDエラー({len(errors)}件, 該当フィールドはnull扱いで続行)")
                 rl = data.get("data", {}).get("rateLimit")
-                if rl and rl["remaining"] < 50:
-                    wait_s = 60
+                if rl and rl["remaining"] < 150:
+                    # 枯渇してから待つのではなく、手前で止まって回復を待つ(並列実行時は消費が速い)
+                    wait_s = 300
                     print(f"  [rate-limit] remaining={rl['remaining']}, {wait_s}s待機")
                     time.sleep(wait_s)
                 return data["data"]
