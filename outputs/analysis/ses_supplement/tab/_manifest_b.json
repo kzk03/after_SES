@@ -1,0 +1,220 @@
+[
+  {
+    "id": "S-B0",
+    "kind": "section",
+    "title": "B. 原型分析の深掘り",
+    "message": "原型の定義・K の決め方・全特徴量プロファイル・2プロジェクトの対応",
+    "source": ""
+  },
+  {
+    "id": "S-B1",
+    "kind": "figure",
+    "title": "原型分析の定式化と k-means との違い",
+    "message": "原型はデータの凸包上に立つため、平均に埋もれない極端な型を取り出せる。",
+    "source": "scripts/analyze/study/archetype_irl_rf.py:75（左は概念図・実データではない）",
+    "path": "outputs/analysis/ses_supplement/fig/S-B1.png"
+  },
+  {
+    "id": "S-B2",
+    "kind": "figure",
+    "title": "エルボー法による原型数 K の決定（4系統）",
+    "message": "K=4 以降は RSS/N の改善幅が小さくなる。dev/pair・両プロジェクトで同じ傾向。",
+    "source": "outputs/**/archetype/**/rss_elbow.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B2.png"
+  },
+  {
+    "id": "S-B2t",
+    "kind": "table",
+    "title": "エルボーの実数値（RSS/N）",
+    "message": "図 S-B2 の元数値。",
+    "source": "outputs/**/archetype/**/rss_elbow.csv",
+    "path": "outputs/analysis/ses_supplement/tab/S-B2t.csv",
+    "col_widths": [
+      3.6,
+      1.4,
+      2.2
+    ],
+    "font_size": 11
+  },
+  {
+    "id": "S-B2n",
+    "kind": "table",
+    "title": "原型ごとのユニット数（K=4）",
+    "message": "ハード割当て（α が最大の原型）での件数。合計は OpenStack 289人/3,677ペア、AOSP 1,248人/21,291ペア。",
+    "source": "outputs/**/k4_hard*metrics.csv（alpha CSV の dominant 件数と一致を確認）",
+    "path": "outputs/analysis/ses_supplement/tab/S-B2n.csv",
+    "col_widths": [
+      3.4,
+      5.0,
+      1.6
+    ],
+    "font_size": 11
+  },
+  {
+    "id": "S-B3",
+    "kind": "figure",
+    "title": "全特徴量シグネチャ（OpenStack・ペア単位）",
+    "message": "発表スライドは差の大きい上位5特徴量のみ。ここでは全特徴量を載せている。",
+    "source": "outputs/analysis/archetype_pair_level_volat_ep150_coldonly/k4_archetype_profile.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B3.png"
+  },
+  {
+    "id": "S-B4",
+    "kind": "figure",
+    "title": "全特徴量シグネチャ（AOSP・ペア単位）",
+    "message": "発表スライドは差の大きい上位5特徴量のみ。ここでは全特徴量を載せている。",
+    "source": "outputs/aosp32/archetype/pair/k4_archetype_profile.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B4.png"
+  },
+  {
+    "id": "S-B5",
+    "kind": "figure",
+    "title": "全特徴量シグネチャ（OpenStack・開発者単位）",
+    "message": "発表スライドは差の大きい上位5特徴量のみ。ここでは全特徴量を載せている。",
+    "source": "outputs/analysis/archetype_irl_rf_volat_ep150_coldonly/k4_archetype_profile.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B5.png"
+  },
+  {
+    "id": "S-B6",
+    "kind": "figure",
+    "title": "全特徴量シグネチャ（AOSP・開発者単位）",
+    "message": "発表スライドは差の大きい上位5特徴量のみ。ここでは全特徴量を載せている。",
+    "source": "outputs/aosp32/archetype/dev/k4_archetype_profile.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B6.png"
+  },
+  {
+    "id": "S-B7",
+    "kind": "figure",
+    "title": "原型別の全特徴量プロファイル（OpenStack・ペア単位）",
+    "message": "横軸は他原型平均との差。棒の長い特徴量がその原型を特徴づける。",
+    "source": "outputs/analysis/archetype_pair_level_volat_ep150_coldonly/k4_archetype_profile.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B7.png"
+  },
+  {
+    "id": "S-B8",
+    "kind": "figure",
+    "title": "原型別の全特徴量プロファイル（AOSP・ペア単位）",
+    "message": "横軸は他原型平均との差。棒の長い特徴量がその原型を特徴づける。",
+    "source": "outputs/aosp32/archetype/pair/k4_archetype_profile.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B8.png"
+  },
+  {
+    "id": "S-B9",
+    "kind": "figure",
+    "title": "原型別の全特徴量プロファイル（OpenStack・開発者単位）",
+    "message": "横軸は他原型平均との差。棒の長い特徴量がその原型を特徴づける。",
+    "source": "outputs/analysis/archetype_irl_rf_volat_ep150_coldonly/k4_archetype_profile.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B9.png"
+  },
+  {
+    "id": "S-B10",
+    "kind": "figure",
+    "title": "原型別の全特徴量プロファイル（AOSP・開発者単位）",
+    "message": "横軸は他原型平均との差。棒の長い特徴量がその原型を特徴づける。",
+    "source": "outputs/aosp32/archetype/dev/k4_archetype_profile.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B10.png"
+  },
+  {
+    "id": "S-B11",
+    "kind": "figure",
+    "title": "所属度 α の分布",
+    "message": "ハード割当て（dominant）は α 最大の原型。α_max が低いユニットは複数原型の混合。",
+    "source": "outputs/**/k4_*_alpha_with_metrics.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B11.png"
+  },
+  {
+    "id": "S-B11t",
+    "kind": "table",
+    "title": "所属度 α の要約",
+    "message": "図 S-B11 の元数値。",
+    "source": "outputs/**/k4_*_alpha_with_metrics.csv",
+    "path": "outputs/analysis/ses_supplement/tab/S-B11t.csv",
+    "col_widths": [
+      3.2,
+      1.4,
+      2.2,
+      2.6,
+      2.6
+    ],
+    "font_size": 11
+  },
+  {
+    "id": "S-B12",
+    "kind": "figure",
+    "title": "K を変えたときの原型サイズ構成比",
+    "message": "K=4 でも構成比が偏りすぎず、K を増やしても細かく割れていくだけ。",
+    "source": "outputs/**/k{2..6}_hard*metrics.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B12.png"
+  },
+  {
+    "id": "S-B13",
+    "kind": "figure",
+    "title": "K を変えても原型間の得意不得意は消えない",
+    "message": "どの K でも IRL 優位な原型と RF 優位な原型に分かれる。K=4 は恣意的な選択ではない。",
+    "source": "outputs/**/k{2..6}_pooled_auc*.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B13.png"
+  },
+  {
+    "id": "S-B13t",
+    "kind": "table",
+    "title": "K別・原型別の Δ(IRL−RF)",
+    "message": "図 S-B13 の元数値（pooled AUC の差）。",
+    "source": "outputs/**/k{2..6}_pooled_auc*.csv",
+    "path": "outputs/analysis/ses_supplement/tab/S-B13t.csv",
+    "col_widths": [
+      3.2,
+      1.0,
+      1.4,
+      2.6
+    ],
+    "font_size": 10
+  },
+  {
+    "id": "S-B14",
+    "kind": "figure",
+    "title": "2プロジェクトの原型はどこまで同じか",
+    "message": "ペア単位は P1↔P1 / P2↔P2 が対応し、P3・P4は番号がねじれて対応する（配色を入れ替えた根拠）。開発者単位は1対1に揃わない。",
+    "source": "outputs/**/k4_archetype_profile.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B14.png"
+  },
+  {
+    "id": "S-B14t",
+    "kind": "table",
+    "title": "原型対応の cosine 類似度",
+    "message": "図 S-B14 の元数値。",
+    "source": "outputs/**/k4_archetype_profile.csv",
+    "path": "outputs/analysis/ses_supplement/tab/S-B14t.csv",
+    "col_widths": [
+      1.2,
+      3.6,
+      3.8,
+      1.6,
+      1.2
+    ],
+    "font_size": 9
+  },
+  {
+    "id": "S-B15",
+    "kind": "figure",
+    "title": "開発者単位とペア単位の原型の関係",
+    "message": "同じ開発者でもディレクトリごとに違う原型に分かれる＝ペア単位で見る意味がある。",
+    "source": "outputs/**/k4_dev_alpha_with_metrics.csv × k4_pair_alpha_with_metrics.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-B15.png"
+  },
+  {
+    "id": "S-B15t",
+    "kind": "table",
+    "title": "開発者単位×ペア単位のクロス集計",
+    "message": "図 S-B15 の元数値。",
+    "source": "outputs/**/k4_*_alpha_with_metrics.csv",
+    "path": "outputs/analysis/ses_supplement/tab/S-B15t.csv",
+    "col_widths": [
+      1.8,
+      3.4,
+      3.4,
+      1.4,
+      1.4
+    ],
+    "font_size": 9
+  }
+]

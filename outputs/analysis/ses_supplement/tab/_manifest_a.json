@@ -1,0 +1,77 @@
+[
+  {
+    "id": "S-A0",
+    "kind": "section",
+    "title": "A. 特徴量カタログ",
+    "message": "開発者の状態 $s_t$ を表す37次元の内訳・定義・正規化",
+    "source": ""
+  },
+  {
+    "id": "S-A1",
+    "kind": "figure",
+    "title": "特徴量の全体像（37次元の内訳）",
+    "message": "RFは37次元すべて、IRLの状態は32次元、原型分析は活動特徴を除いた26/32次元。",
+    "source": "src/review_predictor/IRL/features/common_features.py:113-143 ほか（次元数は実装から自動集計）",
+    "path": "outputs/analysis/ses_supplement/fig/S-A1.png"
+  },
+  {
+    "id": "S-A2",
+    "kind": "table",
+    "title": "開発者状態 26次元 ①（在籍・量／直近活動）",
+    "message": "レビュー履歴の長さ・量と、直近の活動リズムを表す12次元。",
+    "source": "src/review_predictor/IRL/features/common_features.py:113-143",
+    "path": "outputs/analysis/ses_supplement/tab/S-A2.csv",
+    "col_widths": [
+      1.5,
+      3.0,
+      5.6,
+      2.7
+    ],
+    "font_size": 10
+  },
+  {
+    "id": "S-A3",
+    "kind": "table",
+    "title": "開発者状態 26次元 ②（承諾傾向／役割・ネットワーク）",
+    "message": "承諾するかどうかの傾向と、プロジェクト内での役割・つながりを表す14次元。",
+    "source": "src/review_predictor/IRL/features/common_features.py:113-143",
+    "path": "outputs/analysis/ses_supplement/tab/S-A3.csv",
+    "col_widths": [
+      1.8,
+      3.0,
+      5.3,
+      2.7
+    ],
+    "font_size": 10
+  },
+  {
+    "id": "S-A4",
+    "kind": "table",
+    "title": "ディレクトリ親和度 6次元 ＋ 活動特徴 5次元",
+    "message": "ディレクトリ親和度がモジュール単位予測の中核。活動特徴5次元はRFのみが使う。",
+    "source": "src/review_predictor/IRL/features/path_features.py:81-88 / src/review_predictor/IRL/features/common_features.py:145-151",
+    "path": "outputs/analysis/ses_supplement/tab/S-A4.csv",
+    "col_widths": [
+      2.0,
+      3.0,
+      5.3,
+      2.5
+    ],
+    "font_size": 10
+  },
+  {
+    "id": "S-A5",
+    "kind": "table",
+    "title": "特徴量の正規化（すべて 0–1 に揃える）",
+    "message": "右裾が重いカウント系は log1p、比率系はキャップ除算。トレンド系3つだけ [-1,+1] のまま扱う。",
+    "source": "src/review_predictor/IRL/features/common_features.py:176-207, 748-781",
+    "path": "outputs/analysis/ses_supplement/tab/S-A5.csv",
+    "col_widths": [
+      2.4,
+      2.6,
+      6.6,
+      1.0
+    ],
+    "font_size": 10
+  }
+]

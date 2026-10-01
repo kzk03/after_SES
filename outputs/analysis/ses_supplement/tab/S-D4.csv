@@ -1,0 +1,6 @@
+モデル,設定,出所
+IRL（提案）,MCE IRL / epochs=150 / 学習率 3e-4 / 乱数シード 777 / 状態32次元（開発者状態26＋ディレクトリ親和度6）,"scripts/variant/run_mce_irl_variant_single.sh:77, scripts/train/train_mce_irl.py:1544, :1495"
+RF（比較）,決定木100本 / 深さ無制限 / 葉あたり最小サンプル1 / class_weight=balanced / seed 777 / 探索なし / 入力37次元,"scripts/analyze/eval/eval_mce_irl_path_prediction.py:1157, SES/ses_main.tex:318"
+LSTM（アブレーション）,FINAL_STEP_ONLY=1 の退化版（最終有効ステップのみ教師）/ epochs=150 / IRL と同条件,"scripts/variant/run_ses_b3_ablation_queue.sh:5-8, :36"
+アンサンブル,IRL と RF の出力確率の単純平均 (p_IRL + p_RF)/2,scripts/analyze/study/verify_blabel_headline.py:87
+（未確認）,IRL の隠れ層次元・バッチサイズはスクリプトから特定できず未確認,—

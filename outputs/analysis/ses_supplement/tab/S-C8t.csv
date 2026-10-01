@@ -1,0 +1,7 @@
+データセット,モデル,AUC（4期間統合）,出所
+OpenStack,RF（時系列なし）,0.8006,headline_blabel_*.csv から算出
+OpenStack,LSTM（時系列のみ）,0.7507,headline_blabel_*.csv から算出
+OpenStack,IRL（時系列＋報酬関数）,0.7888,headline_blabel_*.csv から算出
+AOSP,RF（時系列なし）,0.776,発表用 xlsx / 論文表から転記（対応CSVなし）
+AOSP,LSTM（時系列のみ）,0.764,発表用 xlsx / 論文表から転記（対応CSVなし）
+AOSP,IRL（時系列＋報酬関数）,0.727,発表用 xlsx / 論文表から転記（対応CSVなし）

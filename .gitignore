@@ -10,7 +10,7 @@ writing/*.fls
 writing/*.fdb_latexmk
 
 writing/*
-
+pilot/
 .env
 
 *.log
@@ -39,3 +39,7 @@ outputs/rl/acceptance_model*/*.joblib
 outputs/rl/assignment/*.pkl
 outputs/rl/assignment/*/*.zip
 tmp/
+
+# 作業用の生データ(大容量)。スクリプトのみ追跡する
+work/*
+!work/scripts/

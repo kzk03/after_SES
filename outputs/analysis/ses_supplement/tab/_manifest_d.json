@@ -1,0 +1,82 @@
+[
+  {
+    "id": "S-D0",
+    "kind": "section",
+    "title": "D. 実験設定・データセット",
+    "message": "データ規模・ラベル定義・評価設計・モデル設定・原型分析の対象",
+    "source": ""
+  },
+  {
+    "id": "S-D1",
+    "kind": "table",
+    "title": "データセットの規模",
+    "message": "AOSP のデータセット全体の統計は、生データ(combined_raw_aosp32.csv)が手元に無いため論文の表から転記している。",
+    "source": "data/combined_raw_main32.csv ／ SES/ses_main.tex 表1 ／ outputs/**/train_0-3m/eval_0-3m/pair_predictions.csv",
+    "path": "outputs/analysis/ses_supplement/tab/S-D1.csv",
+    "col_widths": [
+      3.0,
+      2.0,
+      2.0,
+      6.0
+    ],
+    "font_size": 11
+  },
+  {
+    "id": "S-D2",
+    "kind": "table",
+    "title": "ラベル定義（依頼の有無で負例を2種類に分ける）",
+    "message": "「依頼が来ていないだけ」と「依頼を断った」を同じ負例にしないための重み付け。",
+    "source": "SES/ses_main.tex:318（弱負例重みの適用範囲）／ 発表スライド10枚目",
+    "path": "outputs/analysis/ses_supplement/tab/S-D2.csv",
+    "col_widths": [
+      2.4,
+      5.6,
+      1.2,
+      4.4
+    ],
+    "font_size": 12
+  },
+  {
+    "id": "S-D3",
+    "kind": "table",
+    "title": "評価設計",
+    "message": "「訓練期間3年」は本文の記述。実装では 3–6m 以降の horizon で train_start を前倒しし、学習ステップ数を 33 に揃えている（scripts/variant/run_ses_b3_ablation_queue.sh:17-23 に明記）。",
+    "source": "scripts/variant/run_ses_b3_ablation_queue.sh:15-37 ／ SES/ses_main.tex",
+    "path": "outputs/analysis/ses_supplement/tab/S-D3.csv",
+    "col_widths": [
+      3.0,
+      9.0
+    ],
+    "font_size": 12
+  },
+  {
+    "id": "S-D4",
+    "kind": "table",
+    "title": "モデルの学習設定",
+    "message": "確認できなかった項目は「未確認」と明記している（推測で埋めていない）。",
+    "source": "各スクリプトの該当行（右列）",
+    "path": "outputs/analysis/ses_supplement/tab/S-D4.csv",
+    "col_widths": [
+      2.6,
+      6.4,
+      4.2
+    ],
+    "font_size": 10
+  },
+  {
+    "id": "S-D5",
+    "kind": "table",
+    "title": "原型分析の対象（t0直前6か月に履歴があるユニット）",
+    "message": "⚠ 発表スライド18枚目は OpenStack のペアを 3,747 としているが、実際に原型を当てているペアは 3,677（dev 側の 3,747 と取り違えている可能性）。AOSP は 21,291 で一致。",
+    "source": "outputs/**/k4_{dev,pair}_alpha_with_metrics.csv の行数",
+    "path": "outputs/analysis/ses_supplement/tab/S-D5.csv",
+    "col_widths": [
+      2.4,
+      2.2,
+      2.6,
+      2.0,
+      6.0
+    ],
+    "font_size": 11
+  }
+]

@@ -1,0 +1,13 @@
+グループ,特徴量,定義,正規化
+在籍・量,window_tenure_days,特徴量窓の中での初回活動日から窓終端までの日数,180 で除算しクリップ
+在籍・量,total_changes,窓内に自分が投稿した変更 (owner) の件数,log1p / log1p(500)
+在籍・量,total_reviews,窓内に自分が受けたレビュー依頼 (reviewer) の件数,log1p / log1p(500)
+在籍・量,active_months_ratio,活動があった月数 ÷ 窓の月数,0–1（計算時点で 0–1）
+在籍・量,n_projects,窓内に活動したユニークな project 数,5 で除算しクリップ
+直近活動,recent_activity_frequency,直近30日の活動件数 ÷ 30（1日あたり件数）,0–1（計算時点で 0–1）
+直近活動,avg_activity_gap,活動と活動の間隔の中央値（日）,log1p / log1p(120)
+直近活動,days_since_last_activity,最終活動からの経過日数,log1p / log1p(730)
+直近活動,recent_load_ratio_30d_all,直近30日の件数 ÷ 窓全体の30日あたり平均件数,3 で除算しクリップ
+直近活動,recent_load_ratio_7d_30d,直近7日の1日あたり件数 ÷ 直近30日の1日あたり件数,3 で除算しクリップ
+直近活動,concurrent_open_reviews_7d,直近7日に受けた依頼のうち未応答の件数（瞬間負荷）,20 で除算しクリップ
+直近活動,activity_trend,窓を時間で前半／後半に二分したときの活動量の増減,"[-1, +1]（正規化の対象外）"

@@ -1,0 +1,6 @@
+方式,式,対象,件数
+log1p + キャップ,log1p(x) / log1p(cap),"total_changes(500), total_reviews(500), avg_activity_gap(120), days_since_last_activity(730), time_since_last_accept(730), time_since_last_reject(730), avg_change_lines(2000)",7
+キャップ除算,"min(x / cap, 1)","window_tenure_days(180), recent_load_ratio_30d_all(3), recent_load_ratio_7d_30d(3), core_reviewer_ratio(0.2), n_projects(5), concurrent_open_reviews_7d(20)",6
+"正規化なし（[-1,+1]）",そのまま,"accept_rate_drift_30d, activity_trend, response_time_trend",3
+計算時点で 0–1,—,"recent_activity_frequency, unique_collaborator_count, overall_acceptance_rate, recent_acceptance_rate, reciprocity_score, acceptance_rate_last10, active_months_ratio, reviewer_owner_ratio, cross_project_review_share, same_domain_share, recent_switch_rate, avg_action_intensity, avg_response_time, avg_review_size, repeat_collaboration_rate",15
+path 側で正規化,log1p(100) / 64 除算 / 定義上0–1,"path_review_count, path_recency, path_acceptance_rate, path_owner_overlap, path_hub_score, path_neighbor_coverage",6

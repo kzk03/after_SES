@@ -1,0 +1,15 @@
+グループ,特徴量,定義,正規化
+承諾傾向,overall_acceptance_rate,窓内の全依頼に対する承諾（label=1）の割合,0–1（計算時点で 0–1）
+承諾傾向,recent_acceptance_rate,直近30日の依頼に対する承諾の割合,0–1（計算時点で 0–1）
+承諾傾向,acceptance_rate_last10,直近10件の依頼における承諾の割合,0–1（計算時点で 0–1）
+承諾傾向,accept_rate_drift_30d,直近30日の承諾率 − 窓全体の承諾率,"[-1, +1]（正規化の対象外）"
+承諾傾向,time_since_last_accept,最後に承諾（label=1）してからの経過日数,log1p / log1p(730)
+承諾傾向,time_since_last_reject,最後に拒否（label=0）してからの経過日数,log1p / log1p(730)
+承諾傾向,recent_switch_rate,直近10件での承諾⇄拒否の切り替わり率（変動の大きさ）,0–1（計算時点で 0–1）
+役割・ネットワーク,reviewer_owner_ratio,レビュー件数 ÷（レビュー件数＋投稿件数）＝役割バランス,0–1（計算時点で 0–1）
+役割・ネットワーク,core_reviewer_ratio,自分のレビュー件数 ÷ プロジェクト全体の依頼件数,0.2 で除算しクリップ
+役割・ネットワーク,unique_collaborator_count,窓内に関わったユニークな owner 数のスコア,0–1（計算時点で 0–1）
+役割・ネットワーク,reciprocity_score,自分がレビューした owner のうち、自分の変更もレビューした人の割合,0–1（計算時点で 0–1）
+役割・ネットワーク,cross_project_review_share,ホームプロジェクト以外でのレビュー比率,0–1（計算時点で 0–1）
+役割・ネットワーク,same_domain_share,owner と email ドメインが一致する依頼の比率,0–1（計算時点で 0–1）
+役割・ネットワーク,response_time_trend,直近30日の応答速度 − 窓全体の応答速度（速度=1/(1+日数/3)）,"[-1, +1]（正規化の対象外）"

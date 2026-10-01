@@ -1,0 +1,213 @@
+[
+  {
+    "id": "S-C0",
+    "kind": "section",
+    "title": "C. 予測性能の深掘り",
+    "message": "原型別・期間別の優劣、信頼区間、検定、アブレーション、アンサンブル",
+    "source": ""
+  },
+  {
+    "id": "S-C10",
+    "kind": "figure",
+    "title": "IRL（MCE-IRL）の定式化",
+    "message": "報酬は特徴量の線形和ではなく系列を通した非線形関数。学習は行動履歴（expert 軌跡）の重み付き対数尤度最大化。",
+    "source": "src/review_predictor/IRL/model/mce_irl_predictor.py:10-26,:83-87,:1039-1068 / scripts/train/train_mce_irl.py:630-637",
+    "path": "outputs/analysis/ses_supplement/fig/S-C10.png"
+  },
+  {
+    "id": "S-C1",
+    "kind": "figure",
+    "title": "原型×期間の Δ(IRL−RF)（ペア単位）",
+    "message": "発表スライドでは P1 と P3/P4 の2行だけを見せている。ここでは全原型×全期間。",
+    "source": "outputs/analysis/ses_supplement/tab/period_auc_openstack_pair.csv（pooled_pairs_blabel_t0_20230101.csv から今回算出） ／ outputs/aosp32/archetype/pair/k4_period_auc.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-C1.png"
+  },
+  {
+    "id": "S-C1t",
+    "kind": "table",
+    "title": "原型×期間の AUC 実数値（ペア単位）",
+    "message": "図の元数値。IRL・RF は pooled AUC（B定義ラベル）。",
+    "source": "outputs/analysis/ses_supplement/tab/period_auc_openstack_pair.csv（pooled_pairs_blabel_t0_20230101.csv から今回算出） ／ outputs/aosp32/archetype/pair/k4_period_auc.csv",
+    "path": "outputs/analysis/ses_supplement/tab/S-C1t.csv",
+    "col_widths": [
+      2.6,
+      3.4,
+      1.2,
+      1.2,
+      1.2,
+      1.2,
+      1.4
+    ],
+    "font_size": 9
+  },
+  {
+    "id": "S-C2",
+    "kind": "figure",
+    "title": "原型×期間の Δ(IRL−RF)（開発者単位）",
+    "message": "発表スライドでは P1 と P3/P4 の2行だけを見せている。ここでは全原型×全期間。",
+    "source": "outputs/analysis/ses_supplement/tab/period_auc_openstack_dev.csv（pooled_pairs_blabel_t0_20230101.csv から今回算出） ／ outputs/aosp32/archetype/dev/k4_period_auc.csv",
+    "path": "outputs/analysis/ses_supplement/fig/S-C2.png"
+  },
+  {
+    "id": "S-C2t",
+    "kind": "table",
+    "title": "原型×期間の AUC 実数値（開発者単位）",
+    "message": "図の元数値。IRL・RF は pooled AUC（B定義ラベル）。",
+    "source": "outputs/analysis/ses_supplement/tab/period_auc_openstack_dev.csv（pooled_pairs_blabel_t0_20230101.csv から今回算出） ／ outputs/aosp32/archetype/dev/k4_period_auc.csv",
+    "path": "outputs/analysis/ses_supplement/tab/S-C2t.csv",
+    "col_widths": [
+      2.6,
+      3.4,
+      1.2,
+      1.2,
+      1.2,
+      1.2,
+      1.4
+    ],
+    "font_size": 9
+  },
+  {
+    "id": "S-C3",
+    "kind": "figure",
+    "title": "アンサンブルはどこで効いたか（OpenStack）",
+    "message": "IRLとRFの優劣が入れ替わる原型ほど平均の効果が大きい。負の原型では単体の方が良い。",
+    "source": "outputs/analysis/ses_supplement/tab/period_auc_openstack_{pair,dev}.csv（AOSP はラベル定義が既存CSVと異なるため未算出）",
+    "path": "outputs/analysis/ses_supplement/fig/S-C3.png"
+  },
+  {
+    "id": "S-C4",
+    "kind": "figure",
+    "title": "原型別 pooled AUC と 95%CI（ペア単位）",
+    "message": "信頼区間が重なる原型では IRL と RF の差は言い切れない。",
+    "source": "outputs/analysis/archetype_pair_level_volat_ep150_coldonly/k4_pooled_auc.csv ／ outputs/aosp32/archetype/pair/k4_pooled_auc.csv（OpenStack 側の warm_irl は除外）",
+    "path": "outputs/analysis/ses_supplement/fig/S-C4.png"
+  },
+  {
+    "id": "S-C4t",
+    "kind": "table",
+    "title": "原型別 pooled AUC の実数値（ペア単位）",
+    "message": "図の元数値（bootstrap 95%信頼区間）。",
+    "source": "outputs/**/k4_pooled_auc*.csv",
+    "path": "outputs/analysis/ses_supplement/tab/S-C4t.csv",
+    "col_widths": [
+      2.6,
+      3.4,
+      2.0,
+      1.4,
+      1.2,
+      2.4
+    ],
+    "font_size": 10
+  },
+  {
+    "id": "S-C5",
+    "kind": "figure",
+    "title": "原型別 pooled AUC と 95%CI（開発者単位）",
+    "message": "信頼区間が重なる原型では IRL と RF の差は言い切れない。",
+    "source": "outputs/analysis/archetype_irl_rf_volat_ep150_coldonly/k4_pooled_auc_bootstrap.csv ／ outputs/aosp32/archetype/dev/k4_pooled_auc_bootstrap.csv（OpenStack 側の warm_irl は除外）",
+    "path": "outputs/analysis/ses_supplement/fig/S-C5.png"
+  },
+  {
+    "id": "S-C5t",
+    "kind": "table",
+    "title": "原型別 pooled AUC の実数値（開発者単位）",
+    "message": "図の元数値（bootstrap 95%信頼区間）。",
+    "source": "outputs/**/k4_pooled_auc*.csv",
+    "path": "outputs/analysis/ses_supplement/tab/S-C5t.csv",
+    "col_widths": [
+      2.6,
+      3.4,
+      2.0,
+      1.4,
+      1.2,
+      2.4
+    ],
+    "font_size": 10
+  },
+  {
+    "id": "S-C6",
+    "kind": "table",
+    "title": "原型別 Wilcoxon 符号順位検定（IRL vs RF・ペア単位）",
+    "message": "ユニットごとの AUC の対応比較。AUC が計算できる（正例と負例が両方ある）ユニットのみが対象なので n は原型サイズより小さい。",
+    "source": "outputs/analysis/archetype_pair_level_volat_ep150_coldonly/k4_wilcoxon.csv ／ outputs/aosp32/archetype/pair/k4_wilcoxon.csv（OpenStack の warm_irl 比較・acc 比較の行は除外）",
+    "path": "outputs/analysis/ses_supplement/tab/S-C6.csv",
+    "col_widths": [
+      2.6,
+      3.4,
+      1.8,
+      2.0,
+      1.6,
+      1.6,
+      1.0
+    ],
+    "font_size": 10
+  },
+  {
+    "id": "S-C7",
+    "kind": "table",
+    "title": "原型別 Wilcoxon 符号順位検定（IRL vs RF・開発者単位）",
+    "message": "ユニットごとの AUC の対応比較。AUC が計算できる（正例と負例が両方ある）ユニットのみが対象なので n は原型サイズより小さい。",
+    "source": "outputs/analysis/archetype_irl_rf_volat_ep150_coldonly/k4_wilcoxon.csv ／ outputs/aosp32/archetype/dev/k4_wilcoxon.csv（OpenStack の warm_irl 比較・acc 比較の行は除外）",
+    "path": "outputs/analysis/ses_supplement/tab/S-C7.csv",
+    "col_widths": [
+      2.6,
+      3.4,
+      1.8,
+      2.0,
+      1.6,
+      1.6,
+      1.0
+    ],
+    "font_size": 10
+  },
+  {
+    "id": "S-C8",
+    "kind": "figure",
+    "title": "アブレーション：LSTM と IRL の比較",
+    "message": "OpenStack は報酬関数化で +3.8pp。AOSP は逆に LSTM 単体が最も高く、補完効果はエコシステム依存。",
+    "source": "outputs/ses_review/b3_ablation/headline_blabel_*.csv ／ docs/SES発表用_アブレーション.xlsx（AOSP）",
+    "path": "outputs/analysis/ses_supplement/fig/S-C8.png"
+  },
+  {
+    "id": "S-C8t",
+    "kind": "table",
+    "title": "アブレーションの実数値",
+    "message": "図 S-C8 の元数値。AOSP は対応する出力CSVがローカルに存在しないため転記。",
+    "source": "outputs/ses_review/b3_ablation/headline_blabel_*.csv ／ docs/SES発表用_アブレーション.xlsx",
+    "path": "outputs/analysis/ses_supplement/tab/S-C8t.csv",
+    "col_widths": [
+      2.4,
+      3.6,
+      2.4,
+      4.6
+    ],
+    "font_size": 11
+  },
+  {
+    "id": "S-C9",
+    "kind": "figure",
+    "title": "アンサンブルの期間別内訳",
+    "message": "短期ではIRLの上積みが大きく、長期では単体ベストとほぼ同じか下回る期間もある。",
+    "source": "outputs/analysis/ses_supplement/tab/overall_auc_{openstack,aosp}.csv（OpenStack は headline CSV と一致を確認済み）",
+    "path": "outputs/analysis/ses_supplement/fig/S-C9.png"
+  },
+  {
+    "id": "S-C9t",
+    "kind": "table",
+    "title": "アンサンブルの実数値",
+    "message": "図 S-C9 の元数値。AOSP は pair_predictions の焼き込みラベルから再計算（論文の表と一致）。",
+    "source": "outputs/analysis/ses_supplement/tab/overall_auc_*.csv",
+    "path": "outputs/analysis/ses_supplement/tab/S-C9t.csv",
+    "col_widths": [
+      2.2,
+      1.4,
+      1.6,
+      1.4,
+      1.4,
+      1.4,
+      1.8,
+      2.2
+    ],
+    "font_size": 10
+  }
+]
