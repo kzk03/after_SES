@@ -1,0 +1,129 @@
+{
+  "n_threads_live_line": 58321,
+  "n_threads_all": 117896,
+  "who_resolves": {
+    "agent": {
+      "agent": 0.19258254183627319,
+      "human": 0.7777476255088195,
+      "legacy_bot": 0.000542740841248304,
+      "unknown": 0.029127091813658978
+    },
+    "human": {
+      "agent": 0.0,
+      "human": 0.9959954233409611,
+      "legacy_bot": 0.00025028604118993136,
+      "unknown": 0.0037542906178489703
+    }
+  },
+  "who_resolves_n": {
+    "agent": {
+      "agent": 10645,
+      "human": 42990,
+      "legacy_bot": 30,
+      "unknown": 1610
+    },
+    "human": {
+      "agent": 0,
+      "human": 27856,
+      "legacy_bot": 7,
+      "unknown": 105
+    }
+  },
+  "self_resolved_share": 0.2177295341474446,
+  "by_agent": {
+    "copilot-pull-request-reviewer": {
+      "n": 30391,
+      "human_resolved": 0.9930571550788062
+    },
+    "cursor": {
+      "n": 16117,
+      "human_resolved": 0.4747781845256561
+    },
+    "sentry": {
+      "n": 5274,
+      "human_resolved": 0.4550625711035267
+    },
+    "sentry-warden": {
+      "n": 969,
+      "human_resolved": 0.3302373581011352
+    },
+    "claude": {
+      "n": 861,
+      "human_resolved": 1.0
+    },
+    "gemini-code-assist": {
+      "n": 848,
+      "human_resolved": 1.0
+    },
+    "chatgpt-codex-connector": {
+      "n": 380,
+      "human_resolved": 1.0
+    },
+    "seer-by-sentry": {
+      "n": 297,
+      "human_resolved": 0.9393939393939394
+    },
+    "sourcery-ai": {
+      "n": 100,
+      "human_resolved": 0.33
+    },
+    "ellipsis-dev": {
+      "n": 25,
+      "human_resolved": 1.0
+    },
+    "greptile-apps": {
+      "n": 9,
+      "human_resolved": 1.0
+    },
+    "coderabbitai": {
+      "n": 3,
+      "human_resolved": 1.0
+    },
+    "devin-ai-integration": {
+      "n": 1,
+      "human_resolved": 0.0
+    }
+  },
+  "pairs": {
+    "解決された(誰でも)": {
+      "coef": 0.26721703346532666,
+      "se": 0.05525649787852894,
+      "p": 1.3251879588029004e-06,
+      "n": 3274
+    },
+    "★人間が解決した": {
+      "coef": 0.12971022008106306,
+      "se": 0.029470513706275195,
+      "p": 1.0757649023078942e-05,
+      "n": 3274
+    }
+  },
+  "full_sample": {
+    "解決された(誰でも)": {
+      "coef": 0.28253180245801784,
+      "se": 0.06116379576104635,
+      "p": 3.851011123036771e-06,
+      "n": 30993
+    },
+    "★人間が解決した": {
+      "coef": 0.11371095351788728,
+      "se": 0.036148255275094986,
+      "p": 0.0016569947375338746,
+      "n": 30993
+    }
+  },
+  "equivalence": {
+    "5%": {
+      "p_upper": 0.9946160620706312,
+      "p_lower": 9.156342161136517e-05
+    },
+    "10%": {
+      "p_upper": 0.9746850178596251,
+      "p_lower": 7.229812001871099e-06
+    },
+    "20%": {
+      "p_upper": 0.7774241254095768,
+      "p_lower": 1.620956040821282e-08
+    }
+  }
+}

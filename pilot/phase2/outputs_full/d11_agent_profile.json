@@ -1,7 +1,7 @@
 {
-  "n_agent_accounts": 6,
-  "agent_total_reviews": 117037,
-  "agent_judgment_share": 0.002657279321923836,
+  "n_agent_accounts": 18,
+  "agent_total_reviews": 143974,
+  "agent_judgment_share": 0.0022087321321905343,
   "top_agents": [
     {
       "login": "copilot-pull-request-reviewer",
@@ -23,6 +23,42 @@
       "APPROVED": 0,
       "CHANGES_REQUESTED": 0,
       "COMMENTED": 30453,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    },
+    {
+      "login": "gemini-code-assist",
+      "category": "agent",
+      "n_reviews": 9150,
+      "n_repos": 2,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 9150,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    },
+    {
+      "login": "sentry",
+      "category": "agent",
+      "n_reviews": 8239,
+      "n_repos": 1,
+      "APPROVED": 4,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 8235,
+      "DISMISSED": 0,
+      "approved_share": 0.00048549581259861634,
+      "judgment_share": 0.00048549581259861634
+    },
+    {
+      "login": "ellipsis-dev",
+      "category": "agent",
+      "n_reviews": 4741,
+      "n_repos": 1,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 4741,
       "DISMISSED": 0,
       "approved_share": 0.0,
       "judgment_share": 0.0
@@ -52,6 +88,18 @@
       "judgment_share": 0.11852185669220369
     },
     {
+      "login": "sourcery-ai",
+      "category": "agent",
+      "n_reviews": 2079,
+      "n_repos": 1,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 3,
+      "COMMENTED": 2060,
+      "DISMISSED": 16,
+      "approved_share": 0.0,
+      "judgment_share": 0.001443001443001443
+    },
+    {
       "login": "chatgpt-codex-connector",
       "category": "agent",
       "n_reviews": 1679,
@@ -64,6 +112,78 @@
       "judgment_share": 0.0
     },
     {
+      "login": "sentry-warden",
+      "category": "agent",
+      "n_reviews": 1475,
+      "n_repos": 1,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 1475,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    },
+    {
+      "login": "seer-by-sentry",
+      "category": "agent",
+      "n_reviews": 754,
+      "n_repos": 1,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 754,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    },
+    {
+      "login": "coderabbitai",
+      "category": "agent",
+      "n_reviews": 413,
+      "n_repos": 5,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 413,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    },
+    {
+      "login": "graphite-app",
+      "category": "agent",
+      "n_reviews": 28,
+      "n_repos": 1,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 28,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    },
+    {
+      "login": "greptile-apps",
+      "category": "agent",
+      "n_reviews": 28,
+      "n_repos": 1,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 28,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    },
+    {
+      "login": "anthropic-code-agent",
+      "category": "agent",
+      "n_reviews": 25,
+      "n_repos": 1,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 25,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    },
+    {
       "login": "devin-ai-integration",
       "category": "agent",
       "n_reviews": 6,
@@ -71,6 +191,30 @@
       "APPROVED": 0,
       "CHANGES_REQUESTED": 0,
       "COMMENTED": 6,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    },
+    {
+      "login": "SourceryAI",
+      "category": "agent",
+      "n_reviews": 4,
+      "n_repos": 1,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 4,
+      "DISMISSED": 0,
+      "approved_share": 0.0,
+      "judgment_share": 0.0
+    },
+    {
+      "login": "QodoAI-Agent",
+      "category": "agent",
+      "n_reviews": 1,
+      "n_repos": 1,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 1,
       "DISMISSED": 0,
       "approved_share": 0.0,
       "judgment_share": 0.0

@@ -2,20 +2,20 @@
   "repo": "NVIDIA/Megatron-LM",
   "n_modules_with_events": 51,
   "n_months": 44,
-  "n_panel_rows": 600,
+  "n_panel_rows": 599,
   "valid_cell_ratio": {
     "H_I": 0.0,
-    "H_G": 0.48,
-    "H_E": 0.5083333333333333
+    "H_G": 0.4774624373956594,
+    "H_E": 0.5091819699499165
   },
   "A_summary": {
     "mean": 0.0,
     "std": 0.0,
-    "n_non_null": 571
+    "n_non_null": 568
   },
   "A_prime_summary(trailer込み感度分析)": {
-    "mean": 0.07670693725635552,
-    "std": 0.1916440356671212,
-    "n_non_null": 571
+    "mean": 0.07793807314059392,
+    "std": 0.19324277060097672,
+    "n_non_null": 568
   }
 }

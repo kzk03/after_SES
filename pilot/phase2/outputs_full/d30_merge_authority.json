@@ -1,0 +1,55 @@
+{
+  "n": 443892,
+  "n_repos": 39,
+  "merger_overall": {
+    "human": 391670,
+    "legacy_bot": 51470,
+    "none": 632,
+    "unknown": 120
+  },
+  "merger_by_author": {
+    "human": {
+      "agent": 1.0,
+      "human": 0.9281754639672211,
+      "legacy_bot": 0.5413295947558873
+    },
+    "legacy_bot": {
+      "agent": 0.0,
+      "human": 0.07154505315302842,
+      "legacy_bot": 0.4464884527215202
+    },
+    "none": {
+      "agent": 0.0,
+      "human": 0.00017692035507146044,
+      "legacy_bot": 0.0106663130174488
+    },
+    "unknown": {
+      "agent": 0.0,
+      "human": 0.0001025625246791075,
+      "legacy_bot": 0.0015156395051437017
+    }
+  },
+  "merger_human_authored": {
+    "human": 361994,
+    "legacy_bot": 27903,
+    "none": 69,
+    "unknown": 40
+  },
+  "first_approver_machine_share_d24": 0.0008436099168703644,
+  "approval_x_merge": {
+    "human": {
+      "false": 41976,
+      "true": 320018
+    },
+    "legacy_bot": {
+      "false": 414,
+      "true": 27489
+    }
+  },
+  "fully_machine_closed": 414,
+  "merge_concentration": {
+    "median_n_mergers": 50.0,
+    "median_top1_share": 0.23701923076923076,
+    "median_top10pct_share": 0.5982142857142857
+  }
+}

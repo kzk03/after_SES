@@ -3,6 +3,7 @@
 Fig 1: 月次推移 — 人間のレビュー件数は減っていないのに人間比率だけが下がる(dilution)
 Fig 2: イベントスタディ — AI 導入後、AI 側は増えるが人間側は動かない
 Fig 3: レビュー種別 — AI は COMMENTED しか出さない(判断していない)
+Fig 7: 委譲の乖離 — AI の検出は伸びるが、手渡せる形で出す割合は落ちている
 
 図中のラベルは論文投稿を想定して英語にする。
 
@@ -20,7 +21,13 @@ import pandas as pd
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from common import OUT_DIR, PHASE2_DIR
+# outputs_full の図を作るときは、生データ側も全期間版を読む(fig1 が build_count_panel を呼ぶため)
+if os.environ.get("PHASE2_OUT") == "outputs_full":
+    os.environ.setdefault("PILOT_RAW", "raw_full")
+    os.environ.setdefault("PILOT_INTERIM", "interim_full")
+    os.environ.setdefault("PILOT_PROCESSED", "processed_full")
+
+from common import OUT_DIR, PHASE2_DIR, build_count_panel
 
 # 全期間データで回すときは PHASE2_FIG=figures_full として既存の図を上書きしないようにする
 FIG_DIR = PHASE2_DIR / os.environ.get("PHASE2_FIG", "figures")
@@ -31,53 +38,77 @@ plt.rcParams.update({
     "figure.dpi": 150,
 })
 
-HUMAN_C = "#1f77b4"
-AI_C = "#d62728"
-GREY = "#888888"
+# Okabe-Ito の青と朱(色覚多様性に安全な組)。CI/legacy bot は中立のグレー
+HUMAN_C = "#0072B2"
+AI_C = "#D55E00"
+GREY = "#7F7F7F"
+INK2 = "#444444"
+
+
+def _human_verdict_rate() -> float:
+    """D10 の state 分布から人間の判断率(APPROVED + CHANGES_REQUESTED の割合)を計算する。"""
+    sd = json.loads((OUT_DIR / "d10_review_kind.json").read_text())["state_distribution"]["human"]
+    return (sd.get("APPROVED", 0) + sd.get("CHANGES_REQUESTED", 0)) / sum(sd.values())
 
 
 def fig1_trend() -> None:
+    """列幅(\\columnwidth)の図。人間系列は論文の主指標である「PR 作成者を除いた人間レビュー」。
+
+    (b) の H_E は論文本文と同じ定義(作成者を含む全人間 / 全レビュー)のまま。
+    """
     m = pd.read_csv(OUT_DIR / "d1_monthly_trend.csv")
+    panel = build_count_panel()
+    na = panel.groupby("month")["n_E_human_nonauthor"].sum()
+    m["n_E_human_nonauthor"] = m["month"].map(na)
     # 最終月は収集時点で途中までしか埋まっていないので図からは落とす
     m = m.iloc[:-1].reset_index(drop=True)
-    fig, axes = plt.subplots(1, 2, figsize=(7.2, 2.7))
+    x = np.arange(len(m))
+    tick_idx = [i for i, mo in enumerate(m["month"]) if mo.endswith("-01")]
 
+    fig, axes = plt.subplots(2, 1, figsize=(3.4, 4.3), sharex=True)
     ax = axes[0]
-    x = range(len(m))
-    ax.plot(x, m["n_E_human"] / 1000, "o-", color=HUMAN_C, label="Human reviews", ms=3.5, lw=1.6)
-    ax.plot(x, m["n_E_agent"] / 1000, "s-", color=AI_C, label="AI reviews", ms=3.5, lw=1.6)
-    ax.set_ylabel("Review events (thousands)")
-    ax.set_xticks(list(x)[::3])
-    ax.set_xticklabels(m["month"][::3], rotation=45, ha="right")
-    ax.legend(frameon=False, loc="center left")
-    ax.set_title("(a) Absolute volume", fontsize=9, loc="left")
-    ax.set_ylim(bottom=0)
+    h = m["n_E_human_nonauthor"] / 1000
+    a = m["n_E_agent"] / 1000
+    ax.plot(x, h, "-", color=HUMAN_C, lw=1.8, label="Non-author human reviews")
+    ax.plot(x, a, "-", color=AI_C, lw=1.8, label="AI reviews")
+    ax.set_ylabel("Review events per month\n(thousands)")
+    ax.set_ylim(0, 44)
+    ax.grid(axis="y", color="#e3e3e3", lw=0.6)
+    ax.set_axisbelow(True)
+    # 左下(AI がほぼ 0、人間系列より下)が空いているのでそこに置く
+    ax.legend(frameon=False, loc="lower left", bbox_to_anchor=(0.0, 0.06), fontsize=8, handlelength=1.6)
+    ax.set_title("(a) Volume", fontsize=9, loc="left")
     # 注釈はデータから計算する(期間を変えても正しい値が出るように)
-    h0, h1 = m["n_E_human"].iloc[0], m["n_E_human"].iloc[-1]
-    a1 = m["n_E_agent"].iloc[-1]
-    top = max(m["n_E_human"].max(), m["n_E_agent"].max()) / 1000
-    ax.annotate(f"{(h1 / h0 - 1) * 100:+.0f}%", xy=(len(m) - 1, h1 / 1000),
-                xytext=(len(m) - 3.4, top * 1.02), fontsize=8, color=HUMAN_C)
-    ax.annotate(f"{a1 / 1000:.0f}k", xy=(len(m) - 1, a1 / 1000),
-                xytext=(len(m) - 2.6, a1 / 1000 + top * 0.06), fontsize=8, color=AI_C)
+    h0, h1 = h.iloc[0], h.iloc[-1]
+    a1 = a.iloc[-1]
+    ax.annotate(f"{(h1 / h0 - 1) * 100:+.1f}% since {m['month'].iloc[0]}", xy=(x[-1], h1),
+                xytext=(x[-1], 37.5), fontsize=8, color=INK2, ha="right")
+    ax.annotate(f"{a1:.1f}k", xy=(x[-1], a1), xytext=(x[-1], a1 + 2.2),
+                fontsize=8, color=INK2, ha="right")
 
     ax = axes[1]
-    ax.plot(x, m["H_E_aggregate"], "o-", color="black", ms=3.5, lw=1.6)
-    ax.set_ylabel("Human share of review events ($H_E$)")
-    ax.set_xticks(list(x)[::3])
-    ax.set_xticklabels(m["month"][::3], rotation=45, ha="right")
-    ax.set_ylim(0.75, 1.0)
-    ax.set_title("(b) Human share", fontsize=9, loc="left")
-    ax.annotate(f"{m['H_E_aggregate'].iloc[0]:.2f}", xy=(0, m["H_E_aggregate"].iloc[0]),
-                xytext=(0.5, 0.955), fontsize=8)
-    ax.annotate(f"{m['H_E_aggregate'].iloc[-1]:.2f}", xy=(len(m) - 1, m["H_E_aggregate"].iloc[-1]),
-                xytext=(len(m) - 2.6, 0.774), fontsize=8)
+    he = m["H_E_aggregate"]
+    ax.plot(x, he, "-", color="black", lw=1.8)
+    ax.set_ylabel("$H_E$ = human / all\nreview events")
+    ax.set_ylim(0.70, 1.02)
+    ax.grid(axis="y", color="#e3e3e3", lw=0.6)
+    ax.set_axisbelow(True)
+    ax.set_title("(b) Human share $H_E$ (PR authors included)", fontsize=9, loc="left")
+    ax.annotate(f"{he.iloc[0]:.2f}", xy=(0, he.iloc[0]), xytext=(0.3, he.iloc[0] - 0.035),
+                fontsize=8, color=INK2)
+    ax.annotate(f"{he.iloc[-1]:.3f}", xy=(x[-1], he.iloc[-1]), xytext=(x[-1], he.iloc[-1] - 0.04),
+                fontsize=8, color=INK2, ha="right")
+    ax.set_xticks(tick_idx)
+    ax.set_xticklabels(m["month"].iloc[tick_idx], rotation=45, ha="right")
+    ax.set_xlim(-0.8, len(m) - 0.2)
 
-    fig.suptitle("Human review volume grows while the human share falls", fontsize=9.5, y=1.02)
-    fig.tight_layout()
+    fig.tight_layout(h_pad=0.8)
     fig.savefig(FIG_DIR / "fig1_dilution_trend.pdf", bbox_inches="tight")
     fig.savefig(FIG_DIR / "fig1_dilution_trend.png", bbox_inches="tight")
     plt.close(fig)
+    print(f"  fig1: non-author {m['n_E_human_nonauthor'].iloc[0]:.0f} -> {m['n_E_human_nonauthor'].iloc[-1]:.0f}"
+          f" ({(h1 / h0 - 1) * 100:+.1f}%), AI last {m['n_E_agent'].iloc[-1]:.0f},"
+          f" H_E {he.iloc[0]:.3f} -> {he.iloc[-1]:.5f}")
 
 
 def _event_series(models: dict, y: str) -> tuple[list[int], list[float], list[float]]:
@@ -95,16 +126,20 @@ def _event_series(models: dict, y: str) -> tuple[list[int], list[float], list[fl
 
 
 def fig2_event_study() -> None:
+    """\\textwidth の図。(b) は論文の主指標 log(1 + 作成者以外の人間レビュー件数)。"""
     d4 = json.loads((OUT_DIR / "d4_repo_event_study.json").read_text())["models"]
     d7 = json.loads((OUT_DIR / "d7_burden_event_study.json").read_text())["models"]
 
+    # 結果変数はタイトルに書き、縦軸は係数の単位だけにする(ラベルの詰まりを避ける)
     panels = [
-        (d4, "log_n_E_agent", "(a) AI review volume", AI_C, "log(1+n)"),
-        (d4, "log_n_E_human", "(b) Human review volume", HUMAN_C, "log(1+n)"),
-        (d4, "H_E", "(c) Human share $H_E$", "black", "share"),
-        (d7, "log_ai_before_approval", "(d) AI comments read\nbefore human approval", AI_C, "log(1+n)"),
+        (d4, "log_n_E_agent", "(a) log(1 + AI reviews)", AI_C, "Estimate (log points)"),
+        (d4, "log_n_E_human_nonauthor", "(b) log(1 + non-author\n     human reviews)", HUMAN_C,
+         "Estimate (log points)"),
+        (d4, "H_E", "(c) Human share $H_E$", "black", "Estimate (share)"),
+        (d7, "log_ai_before_approval", "(d) AI reviews before\n     first human approval", AI_C,
+         "Estimate (log points)"),
     ]
-    fig, axes = plt.subplots(1, 4, figsize=(10.4, 2.6))
+    fig, axes = plt.subplots(1, 4, figsize=(7.1, 2.35))
     for ax, (models, y, title, color, ylab) in zip(axes, panels):
         ks, betas, ses = _event_series(models, y)
         lo = [b - 1.96 * s for b, s in zip(betas, ses)]
@@ -112,62 +147,62 @@ def fig2_event_study() -> None:
         ax.axhline(0, color=GREY, lw=0.8, ls="-")
         ax.axvline(-0.5, color=GREY, lw=0.8, ls="--")
         ax.errorbar(ks, betas, yerr=[np.array(betas) - np.array(lo), np.array(hi) - np.array(betas)],
-                    fmt="o", color=color, ms=4, capsize=2.5, lw=1.3)
-        ax.set_title(title, fontsize=8.5, loc="left")
-        ax.set_xlabel("Months since AI review adoption")
-        ax.set_ylabel(ylab)
+                    fmt="o", color=color, ms=3.5, capsize=2, lw=1.2)
+        ax.set_title(title, fontsize=8, loc="left")
+        ax.set_xlabel("Months since adoption", fontsize=8)
+        ax.set_ylabel(ylab, fontsize=8)
         ax.set_xticks([-3, -2, -1, 0, 1, 2, 3])
-    fig.suptitle("AI review volume rises and the human share falls, but human review volume does not decline",
-                 fontsize=9.5, y=1.04)
-    fig.tight_layout()
+        ax.set_xticklabels(["−3", "−2", "−1", "0", "1", "2", "3"])
+        ax.tick_params(labelsize=7)
+        ax.grid(axis="y", color="#e3e3e3", lw=0.6)
+        ax.set_axisbelow(True)
+        print(f"  fig2 {y}: k+3 = {betas[-1]:+.4f} (se {ses[-1]:.4f})")
+    fig.tight_layout(w_pad=0.6)
     fig.savefig(FIG_DIR / "fig2_event_study.pdf", bbox_inches="tight")
     fig.savefig(FIG_DIR / "fig2_event_study.png", bbox_inches="tight")
     plt.close(fig)
 
 
 def fig3_review_kind() -> None:
-    d = json.loads((OUT_DIR / "d10_review_kind.json").read_text())["state_distribution"]
-    prof = pd.read_csv(OUT_DIR / "d11_agent_profile.csv")
+    """列幅(\\columnwidth)の単一パネル: AI エージェント各アカウントの判断率。
 
-    fig, axes = plt.subplots(1, 2, figsize=(7.4, 2.6))
+    旧版の (a)(人間 vs AI の state 構成)は d10(モジュール対応パネル)由来で、本文の
+    全件値(d45: 309 + 9 / 143,971 = 0.22%)と食い違ううえ、本文 1 文で言えるので落とした。
+    アカウント別の値も本文と同じ d45(全 human/bot-authored PR、重複除去後)から取る。
+    これで本文の 18 アカウント・Copilot 78,697 件と図が一致する(旧版は d11 の 78,700)。
+    """
+    d45 = json.loads((OUT_DIR / "d45_verdict_boundary.json").read_text())
+    ag = pd.DataFrame([{"login": k, "n": v["reviews"], "verdict": v["APPROVED"] + v["CHANGES_REQUESTED"]}
+                       for k, v in d45["agents"].items()])
+    ag["rate"] = ag["verdict"] / ag["n"] * 100
+    ag = ag.sort_values("n", ascending=True).reset_index(drop=True)
+    ci = d45["ci_bots_total"]
+    lr = (ci["APPROVED"] + ci["CHANGES_REQUESTED"]) / ci["reviews"] * 100
 
-    ax = axes[0]
-    cats = ["Human", "AI agent"]
-    states = ["APPROVED", "CHANGES_REQUESTED", "COMMENTED"]
-    colors = ["#2ca02c", "#ff7f0e", "#c7c7c7"]
-    bottoms = np.zeros(2)
-    totals = [sum(d["human"].values()), sum(d["agent"].values())]
-    for st, c in zip(states, colors):
-        vals = np.array([d["human"][st] / totals[0], d["agent"][st] / totals[1]])
-        ax.bar(cats, vals, bottom=bottoms, color=c, label=st.replace("_", " ").title(), width=0.55)
-        for i, v in enumerate(vals):
-            if v > 0.03:
-                ax.text(i, bottoms[i] + v / 2, f"{v:.1%}", ha="center", va="center", fontsize=8)
-        bottoms += vals
-    ax.set_ylabel("Share of review events")
-    ax.set_ylim(0, 1)
-    ax.legend(frameon=False, fontsize=7.5, loc="upper center", bbox_to_anchor=(0.5, -0.16), ncol=3)
-    ax.set_title("(a) AI almost never issues a verdict", fontsize=8.5, loc="left")
-
-    ax = axes[1]
-    agents = prof[(prof["category"] == "agent") & (prof["n_reviews"] >= 5)]
-    agents = agents.sort_values("n_reviews", ascending=True)
-    labels = [f"{r.login}\n(n={r.n_reviews:,})" for r in agents.itertuples()]
-    legacy_rate = prof[prof["category"] == "legacy_bot"]
-    lr = (legacy_rate["APPROVED"].sum() + legacy_rate["CHANGES_REQUESTED"].sum()) / legacy_rate["n_reviews"].sum()
-    ax.barh(labels, agents["judgment_share"] * 100, color=AI_C, height=0.6)
-    ax.axvline(lr * 100, color=GREY, ls="--", lw=1.2)
-    ax.text(lr * 100 - 1.2, -0.4, f"legacy bots (CI etc.): {lr:.0%}",
-            fontsize=7.5, color="#555555", rotation=90, va="bottom", ha="right")
+    fig, ax = plt.subplots(figsize=(3.4, 3.05))
+    y = np.arange(len(ag))
+    ax.barh(y, ag["rate"], color=AI_C, height=0.62)
+    ax.set_yticks(y)
+    ax.set_yticklabels(ag["login"], fontsize=7)
+    ax.tick_params(axis="y", length=0)
+    # 値ラベルで棒の右側の空白を埋める(0 の棒も「0」と明示する)
+    for yi, r in zip(y, ag.itertuples()):
+        val = "0" if r.verdict == 0 else (f"{r.rate:.1f}%" if r.rate >= 1 else f"{r.rate:.2f}%")
+        ax.text(r.rate + 1.2, yi, f"{val}  (n={r.n:,})", va="center", ha="left", fontsize=7, color=INK2)
+    ax.axvline(lr, color=GREY, ls="--", lw=1.1)
+    ax.text(lr - 1.2, 1.5, f"CI/legacy bots\n(pooled): {lr:.1f}%", fontsize=7,
+            color=INK2, ha="right", va="center")
     ax.set_xlim(0, 70)
-    ax.set_xlabel("Verdict rate: % of reviews that are\nAPPROVED or CHANGES_REQUESTED")
-    ax.set_title("(b) Deterministic bots judge; LLM agents do not", fontsize=8.5, loc="left")
-    ax.tick_params(axis="y", labelsize=7)
-
+    ax.set_ylim(-0.6, len(ag) - 0.4)
+    ax.set_xlabel("Verdict rate (%)", fontsize=7.5)
+    ax.tick_params(axis="x", labelsize=7)
     fig.tight_layout()
     fig.savefig(FIG_DIR / "fig3_review_kind.pdf", bbox_inches="tight")
     fig.savefig(FIG_DIR / "fig3_review_kind.png", bbox_inches="tight")
     plt.close(fig)
+    print(f"  fig3: {len(ag)} accounts, total {ag['n'].sum():,} reviews, {ag['verdict'].sum()} verdicts;"
+          f" CI/legacy pooled {lr:.2f}%;"
+          f" {dict(zip(ag['login'], ag['rate'].round(3)))}")
 
 
 def fig4_overlap() -> None:
@@ -215,57 +250,51 @@ def fig4_overlap() -> None:
 
 
 def fig5_verdict_circuit() -> None:
-    """★核の図: 判断の回路は機械全体に対して閉じている(D24, D11)。"""
-    p24 = OUT_DIR / "d24_approval_substitution.json"
-    prof_path = OUT_DIR / "d11_agent_profile.csv"
-    if not (p24.exists() and prof_path.exists()):
-        print("   (d24/d11 の出力がないので fig5 はスキップ)")
+    """人間が作成した PR の最初の承認者(D45、全 human-authored PR、重複除去・分類修正後)。
+
+    本文(06_rq3)と同じ母集団にするため d45 の exceptions_all_corrected を使う。
+    3 値の比が 3000 倍あり線形軸では機械側の棒が見えないので、対数軸のドットプロットにする
+    (対数軸で棒の長さは意味を持たないので棒にはしない)。本文 1 文で足りるので、論文では
+    図を落として文だけにする選択肢もある。
+    """
+    p45 = OUT_DIR / "d45_verdict_boundary.json"
+    if not p45.exists():
+        print("   (d45 の出力がないので fig5 はスキップ)")
         return
-    d24 = json.loads(p24.read_text())
-    prof = pd.read_csv(prof_path)
+    ex = json.loads(p45.read_text())["exceptions_all_corrected"]
+    fa = ex["first_approver_cat"]
+    total = sum(fa.values())
+    assert total == ex["n_with_any_approval"], (total, ex["n_with_any_approval"])
 
-    fig, axes = plt.subplots(1, 2, figsize=(7.6, 2.8))
-
-    # (a) 人間が作成した PR の「最初の承認者」は誰か
-    ax = axes[0]
-    fa = d24.get("first_approver_human_authored", {})
-    total = sum(fa.values()) or 1
-    order = [("human", "Human"), ("agent", "AI agent"), ("legacy_bot", "CI bot")]
-    vals = [fa.get(k, 0) / total for k, _ in order]
-    labels = [f"{lab}\n({fa.get(k, 0):,})" for k, lab in order]
+    order = [("human", "Human"), ("agent", "AI agent"), ("legacy_bot", "CI/legacy bot")]
     colors = [HUMAN_C, AI_C, GREY]
-    bars = ax.barh(labels[::-1], [v * 100 for v in vals][::-1], color=colors[::-1], height=0.6)
-    for b, v in zip(bars, vals[::-1]):
-        ax.text(b.get_width() + 1.5, b.get_y() + b.get_height() / 2,
-                f"{v:.1%}" if v >= 0.001 else f"{v:.2%}", va="center", fontsize=8)
-    ax.set_xlim(0, 118)
-    ax.set_xlabel("Share of first approvals (%)")
-    ax.set_title("(a) Who approves human-authored PRs first?", fontsize=8.5, loc="left")
-    ax.tick_params(axis="y", labelsize=8)
-
-    # (b) 判断率: 人間 / 決定論的ボット / LLM エージェント
-    ax = axes[1]
-    ag = prof[prof["category"] == "agent"]
-    lg = prof[prof["category"] == "legacy_bot"]
-    ag_rate = (ag["APPROVED"].sum() + ag["CHANGES_REQUESTED"].sum()) / ag["n_reviews"].sum()
-    lg_rate = (lg["APPROVED"].sum() + lg["CHANGES_REQUESTED"].sum()) / lg["n_reviews"].sum()
-    hu_rate = 0.421  # D10: (601,476 + 50,612) / 1,548,762
-    names = ["Human", "Deterministic\nbots (CI)", "LLM agents"]
-    vals = [hu_rate, lg_rate, ag_rate]
-    bars = ax.bar(names, [v * 100 for v in vals], color=[HUMAN_C, GREY, AI_C], width=0.55)
-    for b, v in zip(bars, vals):
-        ax.text(b.get_x() + b.get_width() / 2, v * 100 + 1.2,
-                f"{v:.1%}" if v >= 0.01 else f"{v:.2%}", ha="center", fontsize=8)
-    ax.set_ylabel("Verdict rate (%)\nAPPROVED or CHANGES_REQUESTED")
-    ax.set_ylim(0, 72)
-    ax.set_title("(b) LLM agents almost never issue a verdict", fontsize=8.5, loc="left")
-
-    fig.suptitle("The verdict circuit is closed to machines in general, not just to AI",
-                 fontsize=9.5, y=1.03)
+    fig, ax = plt.subplots(figsize=(3.4, 1.35))
+    ys = np.arange(len(order))[::-1]
+    for y, (k, _), c in zip(ys, order, colors):
+        n = fa.get(k, 0)
+        v = n / total * 100
+        ax.hlines(y, 10, n, color=c, lw=1.0, alpha=0.5)
+        ax.plot(n, y, "o", color=c, ms=5.5)
+        pct = f"{v:.2f}%" if v >= 1 else f"{v:.3f}%"
+        if n > 1e5:  # 人間は右端なので左側に置く
+            ax.text(n / 1.5, y + 0.33, f"{n:,} ({pct})", va="center", ha="right", fontsize=7.5, color=INK2)
+        else:
+            ax.text(n * 1.5, y, f"{n:,} ({pct})", va="center", ha="left", fontsize=7.5, color=INK2)
+    ax.set_xscale("log")
+    ax.set_xlim(10, 2e6)
+    ax.set_ylim(-0.6, len(order) - 0.3)
+    ax.set_yticks(ys)
+    ax.set_yticklabels([lab for _, lab in order], fontsize=7.5)
+    ax.tick_params(axis="y", length=0)
+    ax.tick_params(axis="x", labelsize=7)
+    ax.grid(axis="x", color="#e3e3e3", lw=0.6)
+    ax.set_axisbelow(True)
+    ax.set_xlabel(f"First approvals (log scale; n = {total:,} PRs)", fontsize=7.5)
     fig.tight_layout()
     fig.savefig(FIG_DIR / "fig5_verdict_circuit.pdf", bbox_inches="tight")
     fig.savefig(FIG_DIR / "fig5_verdict_circuit.png", bbox_inches="tight")
     plt.close(fig)
+    print(f"  fig5: first approver {fa} of {total}")
 
 
 def fig6_role_shift() -> None:
@@ -302,10 +331,13 @@ def fig6_role_shift() -> None:
     ax.set_ylabel("Verdict rate of LLM agents (%)")
     ax.set_xticks(list(x)[::4])
     ax.set_xticklabels(m["month"][::4], rotation=45, ha="right")
-    ax.set_title("(a) Rising, but still ~60x below humans", fontsize=8.5, loc="left")
-    ax.text(0.03, 0.92, "Human level: 42.1%  (off scale)",
+    hu = _human_verdict_rate()
+    tr = json.loads((OUT_DIR / "d28_ai_role_shift.json").read_text())["verdict_rate_trend"]
+    ratio = hu / max(float(m["verdict_rate"].tail(6).mean()), 1e-9)
+    ax.set_title(f"(a) Rising, but still ~{ratio:.0f}x below humans", fontsize=8.5, loc="left")
+    ax.text(0.03, 0.92, f"Human level: {hu:.1%}  (off scale)",
             transform=ax.transAxes, fontsize=7.5, color=HUMAN_C)
-    ax.text(0.03, 0.82, f"trend +0.038 pt/yr (p=0.012)",
+    ax.text(0.03, 0.82, f"trend {tr['slope'] * 1200:+.3f} pt/yr (p={tr['p']:.3f})",
             transform=ax.transAxes, fontsize=7.5, color="#555555")
 
     # (b) エージェントのシェア推移(claude = 判断を出す唯一のエージェント)
@@ -334,6 +366,67 @@ def fig6_role_shift() -> None:
     plt.close(fig)
 
 
+def fig7_delegation_gap() -> None:
+    """検出と委譲可能量の乖離。論文の処方の根拠になる図(列幅 \\columnwidth、3.4in)。
+
+    2系列とも『人間コメントに占める割合』で単位が同じなので単一軸にする
+    (二軸は読み手を誤らせるので使わない)。差そのものが主張なので、間を塗る。
+    最終月(2026-09)は収集途中なので、白抜きマーカーと点線でつなぎ、凡例で断る。
+    """
+    # 作成者本人の返信を除いた人間コメントを分母にする(D44)。
+    # 旧版は d41_monthly_ceiling.csv を読んでいたが、どのスクリプトも書いておらず古い値のままだった。
+    path = OUT_DIR / "d44_author_excluded.json"
+    if not path.exists():
+        print("  [skip] fig7: d44_author_excluded.json がない")
+        return
+    ser = json.loads(path.read_text())["monthly"]["nonauthor"]["series"]
+    m = pd.DataFrame([{"month": k, "detected": v["det"], "delegable": v["dl"]}
+                      for k, v in sorted(ser.items())])
+    x = np.arange(len(m))
+    det = m["detected"].to_numpy() * 100
+    del_ = m["delegable"].to_numpy() * 100
+    PARTIAL = "2026-09"
+    has_partial = m["month"].iloc[-1] == PARTIAL
+    nf = len(m) - 1 if has_partial else len(m)  # 完全な月の数
+
+    fig, ax = plt.subplots(figsize=(3.4, 2.25))
+    ax.fill_between(x, del_, det, color=GREY, alpha=0.14, linewidth=0)
+    for s, c, lab in [(det, HUMAN_C, "AI flagged the same location (detected)"),
+                      (del_, AI_C, "…with an applicable patch (delegable)")]:
+        ax.plot(x[:nf], s[:nf], color=c, lw=1.6, label=lab)
+        if has_partial:
+            ax.plot(x[nf - 1:], s[nf - 1:], color=c, lw=1.2, ls=":")
+            ax.plot(x[-1], s[-1], "o", ms=4, mfc="white", mec=c, mew=1.2)
+    if has_partial:
+        ax.plot([], [], "o", ms=4, mfc="white", mec=INK2, mew=1.2, label=f"{PARTIAL}: partial month")
+
+    # 崩壊した月(Copilot が suggestion 形式をほぼやめた月)。文字は線に重ならないよう 2 系列の間の帯に置く
+    if "2026-05" in set(m["month"]):
+        i = int(m.index[m["month"] == "2026-05"][0])
+        ax.annotate("Copilot stops\nsuggestion blocks", xy=(i, del_[i]), xytext=(i + 2.6, 13.6),
+                    fontsize=7, color=INK2, ha="right", va="center",
+                    arrowprops=dict(arrowstyle="->", color="#888888", lw=0.8,
+                                    shrinkA=1, shrinkB=2.5, relpos=(0.72, 0.0), connectionstyle="arc3,rad=0"))
+
+    tick_idx = [j for j, mo in enumerate(m["month"]) if mo[5:] in ("02", "05", "08", "11")]
+    ax.set_xticks(tick_idx)
+    ax.set_xticklabels(m["month"].iloc[tick_idx], rotation=45, ha="right", fontsize=7)
+    ax.tick_params(axis="y", labelsize=7)
+    ax.set_ylabel("% of non-author reviewer\ninline comments", fontsize=7.5)
+    ax.set_ylim(0, 40)
+    ax.set_xlim(-0.5, len(m) - 0.5)
+    ax.grid(axis="y", color="#e3e3e3", lw=0.6)
+    ax.set_axisbelow(True)
+    ax.legend(loc="upper left", frameon=False, fontsize=7, handlelength=1.6, borderaxespad=0.2)
+    fig.tight_layout()
+    for ext in ("pdf", "png"):
+        fig.savefig(FIG_DIR / f"fig7_delegation_gap.{ext}", bbox_inches="tight")
+    plt.close(fig)
+    print(f"  fig7_delegation_gap.pdf  (2026-04 det {det[m['month'] == '2026-04'][0]:.2f}% /"
+          f" dl {del_[m['month'] == '2026-04'][0]:.2f}%; 2026-05 dl {del_[m['month'] == '2026-05'][0]:.2f}%;"
+          f" last {m['month'].iloc[-1]} det {det[-1]:.2f}% / dl {del_[-1]:.2f}%)")
+
+
 def main() -> None:
     FIG_DIR.mkdir(parents=True, exist_ok=True)
     fig1_trend()
@@ -342,6 +435,7 @@ def main() -> None:
     fig4_overlap()
     fig5_verdict_circuit()
     fig6_role_shift()
+    fig7_delegation_gap()
     print(f"-> {FIG_DIR}")
     for p in sorted(FIG_DIR.glob("*.png")):
         print(f"   {p.name}")

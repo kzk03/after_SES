@@ -79,8 +79,17 @@ def build_count_panel() -> pd.DataFrame:
         ev["is_human_strict"] = ev["is_human"] & ~trailer
 
         g = ev[ev["stage"] == "G"]
-        e = ev[ev["stage"] == "E"]
+        e = ev[ev["stage"] == "E"].copy()
         key = ["module_id", "month"]
+
+        # ★PR 作成者本人による評価イベント(bot への返信を含む)を区別する。
+        #   作成者が自分の PR にレビューを出すのは独立な審査ではない。導入後に AI への返信で
+        #   この割合が上がるため、人間のレビュー量の主指標は作成者を除いた件数にする
+        #   (2026-09-27 査読 R2・B2 の指摘)。作成者は生成工程(G)のイベントから取る。
+        author_of = (g.sort_values("month").drop_duplicates("pr_number")
+                      .set_index("pr_number")["actor_login"].to_dict())
+        e["is_self"] = e["actor_login"] == e["pr_number"].map(author_of)
+        e["is_human_nonauthor"] = e["is_human"] & ~e["is_self"]
 
         gg = g.groupby(key).agg(
             n_G=("is_human", "size"),
@@ -91,7 +100,12 @@ def build_count_panel() -> pd.DataFrame:
         ee = e.groupby(key).agg(
             n_E=("is_human", "size"),
             n_E_human=("is_human", "sum"),
+            n_E_human_nonauthor=("is_human_nonauthor", "sum"),
             n_E_actors=("actor_login", "nunique"),
+        )
+        e_hn_actors = (
+            e[e["is_human_nonauthor"]].groupby(key)["actor_login"].nunique()
+            .rename("n_E_human_nonauthor_actors")
         )
         e_h_actors = (
             e[e["is_human"]].groupby(key)["actor_login"].nunique().rename("n_E_human_actors")
@@ -103,7 +117,8 @@ def build_count_panel() -> pd.DataFrame:
         e_prs = e.groupby(key)["pr_number"].nunique().rename("n_E_prs")
         g_prs = g.groupby(key)["pr_number"].nunique().rename("n_G_prs")
 
-        panel = gg.join(ee, how="outer").join(e_h_actors).join(g_h_actors).join(e_prs).join(g_prs)
+        panel = (gg.join(ee, how="outer").join(e_h_actors).join(e_hn_actors)
+                 .join(g_h_actors).join(e_prs).join(g_prs))
         panel = panel.reset_index()
         panel["repo"] = repo
         frames.append(panel)

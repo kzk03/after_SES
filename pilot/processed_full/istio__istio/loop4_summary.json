@@ -2,20 +2,20 @@
   "repo": "istio/istio",
   "n_modules_with_events": 55,
   "n_months": 45,
-  "n_panel_rows": 1408,
+  "n_panel_rows": 1376,
   "valid_cell_ratio": {
     "H_I": 0.0,
-    "H_G": 0.6200284090909091,
-    "H_E": 0.7741477272727273
+    "H_G": 0.5276162790697675,
+    "H_E": 0.7921511627906976
   },
   "A_summary": {
     "mean": 0.0,
     "std": 0.0,
-    "n_non_null": 1353
+    "n_non_null": 1299
   },
   "A_prime_summary(trailer込み感度分析)": {
-    "mean": 0.006581590624793671,
-    "std": 0.0678746312986493,
-    "n_non_null": 1353
+    "mean": 0.006922215896879665,
+    "std": 0.0691591590644007,
+    "n_non_null": 1299
   }
 }

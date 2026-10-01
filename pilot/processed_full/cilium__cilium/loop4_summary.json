@@ -1,21 +1,21 @@
 {
   "repo": "cilium/cilium",
-  "n_modules_with_events": 393,
+  "n_modules_with_events": 392,
   "n_months": 45,
-  "n_panel_rows": 5096,
+  "n_panel_rows": 5023,
   "valid_cell_ratio": {
     "H_I": 0.0,
-    "H_G": 0.32319466248037676,
-    "H_E": 0.6585557299843015
+    "H_G": 0.30997411905235916,
+    "H_E": 0.6527971331873382
   },
   "A_summary": {
     "mean": 0.0,
     "std": 0.0,
-    "n_non_null": 4560
+    "n_non_null": 4436
   },
   "A_prime_summary(trailer込み感度分析)": {
-    "mean": 0.0014392831827042354,
-    "std": 0.032266247349503153,
-    "n_non_null": 4560
+    "mean": 0.0016867844358827227,
+    "std": 0.03590220367045381,
+    "n_non_null": 4436
   }
 }

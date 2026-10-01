@@ -79,7 +79,8 @@ def main() -> None:
             import d4_repo_event_study as d4
 
             d4.JUMP, d4.LEVEL = jump, level
-            adoption, never, always = detect_adoption(df)
+            # 閾値感度は旧定義(比率の段差)についての分析なので旧定義を使う
+            adoption, never, always = d4.detect_adoption_share(df)
             if len(adoption) < 3:
                 continue
             bal = build_balanced(df)

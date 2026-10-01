@@ -1,0 +1,222 @@
+{
+  "link_stats": {
+    "n_prs": 960119,
+    "n_commits_indexed": 2708792,
+    "n_revert_prs": 8179,
+    "n_revert_targets": 21269,
+    "n_linked": 3177,
+    "link_rate": 0.14937232592035357,
+    "n_reverted_prs": 1671,
+    "n_self_links_excluded": 5681
+  },
+  "n_prs": 440949,
+  "revert_rate_overall": 0.0022678359628891323,
+  "models": {
+    "revert_pr_rate": {
+      "y": "revert_pr_rate",
+      "x": [
+        "post"
+      ],
+      "n_obs": 83804,
+      "n_modules": 8947,
+      "n_repos": 31,
+      "params": {
+        "post": -0.0007547233915013425
+      },
+      "se_module": {
+        "post": 0.0007347494177798067
+      },
+      "p_module": {
+        "post": 0.30433680205060076
+      },
+      "se_repo": {
+        "post": 0.0008768104726322386
+      },
+      "p_repo": {
+        "post": 0.3893729924135476
+      },
+      "rsquared_within": 0.00011861551798197922
+    },
+    "log_revert_prs": {
+      "y": "log_revert_prs",
+      "x": [
+        "post"
+      ],
+      "n_obs": 83804,
+      "n_modules": 8947,
+      "n_repos": 31,
+      "params": {
+        "post": -0.0004711627158350899
+      },
+      "se_module": {
+        "post": 0.002662720481960876
+      },
+      "p_module": {
+        "post": 0.8595498165576019
+      },
+      "se_repo": {
+        "post": 0.0033693694604008807
+      },
+      "p_repo": {
+        "post": 0.8887891085762742
+      },
+      "rsquared_within": 2.6605882654240354e-05
+    },
+    "revert_rate": {
+      "y": "revert_rate",
+      "x": [
+        "post"
+      ],
+      "n_obs": 83804,
+      "n_modules": 8947,
+      "n_repos": 31,
+      "params": {
+        "post": -0.00047317815563120686
+      },
+      "se_module": {
+        "post": 0.0005218744324166218
+      },
+      "p_module": {
+        "post": 0.3645738490474091
+      },
+      "se_repo": {
+        "post": 0.0005008379540893867
+      },
+      "p_repo": {
+        "post": 0.34477785123357174
+      },
+      "rsquared_within": -1.8269549222349468e-05
+    },
+    "log_reverted": {
+      "y": "log_reverted",
+      "x": [
+        "post"
+      ],
+      "n_obs": 83804,
+      "n_modules": 8947,
+      "n_repos": 31,
+      "params": {
+        "post": -0.0021620708892932015
+      },
+      "se_module": {
+        "post": 0.0016105864356489425
+      },
+      "p_module": {
+        "post": 0.1794664526143417
+      },
+      "se_repo": {
+        "post": 0.001764418992802832
+      },
+      "p_repo": {
+        "post": 0.2204386804471763
+      },
+      "rsquared_within": -7.0865567571853916e-06
+    }
+  },
+  "base_rates": {
+    "revert_pr_rate": 0.0050476589694624045,
+    "revert_rate": 0.0017526589900994762
+  },
+  "by_density": {
+    "Q1(疎)": {
+      "y": "revert_pr_rate",
+      "x": [
+        "post"
+      ],
+      "n_obs": 19355,
+      "n_modules": 2777,
+      "n_repos": 31,
+      "params": {
+        "post": 0.0021276147222357576
+      },
+      "se_module": {
+        "post": 0.0017116934908726427
+      },
+      "p_module": {
+        "post": 0.21388982491753872
+      },
+      "se_repo": {
+        "post": 0.0018600343891329693
+      },
+      "p_repo": {
+        "post": 0.2526991998206587
+      },
+      "rsquared_within": 1.4707759349641414e-05
+    },
+    "Q2": {
+      "y": "revert_pr_rate",
+      "x": [
+        "post"
+      ],
+      "n_obs": 19364,
+      "n_modules": 1364,
+      "n_repos": 30,
+      "params": {
+        "post": -0.0019757439870047473
+      },
+      "se_module": {
+        "post": 0.0016069515501699197
+      },
+      "p_module": {
+        "post": 0.21890119265895058
+      },
+      "se_repo": {
+        "post": 0.0013746947159661562
+      },
+      "p_repo": {
+        "post": 0.1506718303322221
+      },
+      "rsquared_within": 0.000403783739511665
+    },
+    "Q3": {
+      "y": "revert_pr_rate",
+      "x": [
+        "post"
+      ],
+      "n_obs": 19321,
+      "n_modules": 1135,
+      "n_repos": 27,
+      "params": {
+        "post": 0.0008777738033355484
+      },
+      "se_module": {
+        "post": 0.0014789118130935587
+      },
+      "p_module": {
+        "post": 0.5528360481631651
+      },
+      "se_repo": {
+        "post": 0.0015793981791651572
+      },
+      "p_repo": {
+        "post": 0.5783785519287061
+      },
+      "rsquared_within": -0.00016007074110047093
+    },
+    "Q4(密)": {
+      "y": "revert_pr_rate",
+      "x": [
+        "post"
+      ],
+      "n_obs": 19338,
+      "n_modules": 1682,
+      "n_repos": 29,
+      "params": {
+        "post": -0.0025059460729153216
+      },
+      "se_module": {
+        "post": 0.0013677601350515066
+      },
+      "p_module": {
+        "post": 0.06694547774775628
+      },
+      "se_repo": {
+        "post": 0.0015245829742464986
+      },
+      "p_repo": {
+        "post": 0.10025751918925385
+      },
+      "rsquared_within": 0.0007317192556963725
+    }
+  }
+}

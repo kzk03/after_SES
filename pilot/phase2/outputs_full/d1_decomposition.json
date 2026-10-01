@@ -1,502 +1,502 @@
 {
   "n_repos": 38,
-  "n_modules": 10219,
-  "main_sample_n": 93885,
+  "n_modules": 10217,
+  "main_sample_n": 93546,
   "monthly_trend": [
     {
       "month": "2023-01",
-      "n_G_human_strict": 9587.0,
+      "n_G_human_strict": 9189.0,
       "n_G_agent": 0.0,
-      "n_E_human": 23603.0,
+      "n_E_human": 23593.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 7329.0,
+      "n_E_prs": 7320.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.2204939282303178,
+      "e_human_per_pr": 3.223087431693989,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2023-02",
-      "n_G_human_strict": 9296.0,
+      "n_G_human_strict": 8900.0,
       "n_G_agent": 0.0,
-      "n_E_human": 24747.0,
+      "n_E_human": 24732.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 7916.0,
+      "n_E_prs": 7902.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.126200101061142,
+      "e_human_per_pr": 3.129840546697039,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2023-03",
-      "n_G_human_strict": 10731.0,
+      "n_G_human_strict": 10322.0,
       "n_G_agent": 0.0,
-      "n_E_human": 32799.0,
+      "n_E_human": 32787.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 9351.0,
+      "n_E_prs": 9339.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.5075393006095603,
+      "e_human_per_pr": 3.5107613234821717,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2023-04",
-      "n_G_human_strict": 10053.0,
+      "n_G_human_strict": 9681.0,
       "n_G_agent": 0.0,
-      "n_E_human": 28117.0,
+      "n_E_human": 28107.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 8746.0,
+      "n_E_prs": 8736.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.2148410702035215,
+      "e_human_per_pr": 3.2173763736263736,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2023-05",
-      "n_G_human_strict": 10381.0,
+      "n_G_human_strict": 9801.0,
       "n_G_agent": 0.0,
-      "n_E_human": 31717.0,
+      "n_E_human": 31691.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 9577.0,
+      "n_E_prs": 9552.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.3117886603320454,
+      "e_human_per_pr": 3.3177345058626466,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2023-06",
-      "n_G_human_strict": 10399.0,
+      "n_G_human_strict": 10005.0,
       "n_G_agent": 0.0,
-      "n_E_human": 29758.0,
+      "n_E_human": 29735.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 9363.0,
+      "n_E_prs": 9341.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.1782548328527183,
+      "e_human_per_pr": 3.1832780216250938,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2023-07",
-      "n_G_human_strict": 10469.0,
+      "n_G_human_strict": 10192.0,
       "n_G_agent": 0.0,
-      "n_E_human": 30800.0,
-      "n_E_agent": 0.0,
-      "n_E_prs": 9419.0,
-      "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.2699861981102027,
-      "e_agent_per_pr": 0.0
+      "n_E_human": 30780.0,
+      "n_E_agent": 1.0,
+      "n_E_prs": 9400.0,
+      "H_E_aggregate": 0.9999675124264968,
+      "e_human_per_pr": 3.274468085106383,
+      "e_agent_per_pr": 0.00010638297872340425
     },
     {
       "month": "2023-08",
-      "n_G_human_strict": 10970.0,
+      "n_G_human_strict": 10645.0,
       "n_G_agent": 0.0,
-      "n_E_human": 34434.0,
+      "n_E_human": 34400.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 10181.0,
+      "n_E_prs": 10149.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.382182496807779,
+      "e_human_per_pr": 3.389496502118435,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2023-09",
-      "n_G_human_strict": 10022.0,
+      "n_G_human_strict": 9757.0,
       "n_G_agent": 2.0,
-      "n_E_human": 30418.0,
+      "n_E_human": 30386.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 9416.0,
+      "n_E_prs": 9385.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.2304587935429057,
+      "e_human_per_pr": 3.237719765583378,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2023-10",
-      "n_G_human_strict": 11157.0,
+      "n_G_human_strict": 10784.0,
       "n_G_agent": 0.0,
-      "n_E_human": 32172.0,
+      "n_E_human": 32144.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 10254.0,
+      "n_E_prs": 10227.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.1375073142188414,
+      "e_human_per_pr": 3.143052703627652,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2023-11",
-      "n_G_human_strict": 9749.0,
+      "n_G_human_strict": 9422.0,
       "n_G_agent": 0.0,
-      "n_E_human": 30431.0,
+      "n_E_human": 30413.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 9315.0,
+      "n_E_prs": 9301.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.266881374127751,
+      "e_human_per_pr": 3.269863455542415,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2023-12",
-      "n_G_human_strict": 9128.0,
+      "n_G_human_strict": 8834.0,
       "n_G_agent": 0.0,
-      "n_E_human": 25284.0,
+      "n_E_human": 25271.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 8211.0,
+      "n_E_prs": 8198.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.079283887468031,
+      "e_human_per_pr": 3.0825811173456943,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2024-01",
-      "n_G_human_strict": 10618.0,
-      "n_G_agent": 0.0,
-      "n_E_human": 33745.0,
-      "n_E_agent": 0.0,
-      "n_E_prs": 10375.0,
-      "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.2525301204819277,
-      "e_agent_per_pr": 0.0
+      "n_G_human_strict": 10217.0,
+      "n_G_agent": 15.0,
+      "n_E_human": 33680.0,
+      "n_E_agent": 9.0,
+      "n_E_prs": 10329.0,
+      "H_E_aggregate": 0.9997328504853216,
+      "e_human_per_pr": 3.260722238358021,
+      "e_agent_per_pr": 0.0008713331397037467
     },
     {
       "month": "2024-02",
-      "n_G_human_strict": 11143.0,
-      "n_G_agent": 0.0,
-      "n_E_human": 34135.0,
-      "n_E_agent": 0.0,
-      "n_E_prs": 10740.0,
-      "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.1783054003724396,
-      "e_agent_per_pr": 0.0
+      "n_G_human_strict": 10688.0,
+      "n_G_agent": 15.0,
+      "n_E_human": 33918.0,
+      "n_E_agent": 154.0,
+      "n_E_prs": 10688.0,
+      "H_E_aggregate": 0.9954801596618925,
+      "e_human_per_pr": 3.1734655688622753,
+      "e_agent_per_pr": 0.01440868263473054
     },
     {
       "month": "2024-03",
-      "n_G_human_strict": 11531.0,
-      "n_G_agent": 0.0,
-      "n_E_human": 34173.0,
+      "n_G_human_strict": 11125.0,
+      "n_G_agent": 27.0,
+      "n_E_human": 34068.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 11024.0,
+      "n_E_prs": 10991.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.0998730043541363,
+      "e_human_per_pr": 3.099626967518879,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2024-04",
-      "n_G_human_strict": 11077.0,
-      "n_G_agent": 0.0,
-      "n_E_human": 32901.0,
+      "n_G_human_strict": 10591.0,
+      "n_G_agent": 24.0,
+      "n_E_human": 32830.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 10747.0,
+      "n_E_prs": 10683.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.061412487205732,
+      "e_human_per_pr": 3.0731068052045307,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2024-05",
-      "n_G_human_strict": 11430.0,
-      "n_G_agent": 0.0,
-      "n_E_human": 32593.0,
-      "n_E_agent": 0.0,
-      "n_E_prs": 10663.0,
-      "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.056644471537091,
-      "e_agent_per_pr": 0.0
+      "n_G_human_strict": 10981.0,
+      "n_G_agent": 5.0,
+      "n_E_human": 32494.0,
+      "n_E_agent": 42.0,
+      "n_E_prs": 10614.0,
+      "H_E_aggregate": 0.9987091222030982,
+      "e_human_per_pr": 3.0614283022423217,
+      "e_agent_per_pr": 0.00395703787450537
     },
     {
       "month": "2024-06",
-      "n_G_human_strict": 11199.0,
-      "n_G_agent": 0.0,
-      "n_E_human": 32277.0,
-      "n_E_agent": 0.0,
-      "n_E_prs": 10408.0,
-      "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.101172175249808,
-      "e_agent_per_pr": 0.0
+      "n_G_human_strict": 10711.0,
+      "n_G_agent": 1.0,
+      "n_E_human": 32203.0,
+      "n_E_agent": 18.0,
+      "n_E_prs": 10368.0,
+      "H_E_aggregate": 0.9994413581204804,
+      "e_human_per_pr": 3.1059992283950617,
+      "e_agent_per_pr": 0.001736111111111111
     },
     {
       "month": "2024-07",
-      "n_G_human_strict": 11656.0,
+      "n_G_human_strict": 11155.0,
       "n_G_agent": 0.0,
-      "n_E_human": 34196.0,
-      "n_E_agent": 0.0,
-      "n_E_prs": 10900.0,
-      "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.1372477064220186,
-      "e_agent_per_pr": 0.0
+      "n_E_human": 34085.0,
+      "n_E_agent": 2.0,
+      "n_E_prs": 10853.0,
+      "H_E_aggregate": 0.9999413266054508,
+      "e_human_per_pr": 3.1406062839767808,
+      "e_agent_per_pr": 0.00018428084400626556
     },
     {
       "month": "2024-08",
-      "n_G_human_strict": 10696.0,
+      "n_G_human_strict": 10090.0,
       "n_G_agent": 0.0,
-      "n_E_human": 30513.0,
+      "n_E_human": 30384.0,
       "n_E_agent": 0.0,
-      "n_E_prs": 10140.0,
+      "n_E_prs": 10046.0,
       "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.009171597633136,
+      "e_human_per_pr": 3.0244873581524985,
       "e_agent_per_pr": 0.0
     },
     {
       "month": "2024-09",
-      "n_G_human_strict": 10893.0,
-      "n_G_agent": 0.0,
-      "n_E_human": 31370.0,
-      "n_E_agent": 0.0,
-      "n_E_prs": 10362.0,
-      "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.027407836325034,
-      "e_agent_per_pr": 0.0
+      "n_G_human_strict": 10189.0,
+      "n_G_agent": 1.0,
+      "n_E_human": 31226.0,
+      "n_E_agent": 1.0,
+      "n_E_prs": 10252.0,
+      "H_E_aggregate": 0.9999679764306529,
+      "e_human_per_pr": 3.0458447132266873,
+      "e_agent_per_pr": 9.754194303550527e-05
     },
     {
       "month": "2024-10",
-      "n_G_human_strict": 11496.0,
-      "n_G_agent": 2.0,
-      "n_E_human": 33190.0,
-      "n_E_agent": 0.0,
-      "n_E_prs": 11060.0,
-      "H_E_aggregate": 1.0,
-      "e_human_per_pr": 3.0009041591320074,
-      "e_agent_per_pr": 0.0
+      "n_G_human_strict": 11018.0,
+      "n_G_agent": 3.0,
+      "n_E_human": 32885.0,
+      "n_E_agent": 107.0,
+      "n_E_prs": 10883.0,
+      "H_E_aggregate": 0.9967567895247332,
+      "e_human_per_pr": 3.0216851970963887,
+      "e_agent_per_pr": 0.009831847836074612
     },
     {
       "month": "2024-11",
-      "n_G_human_strict": 10393.0,
-      "n_G_agent": 3.0,
-      "n_E_human": 30662.0,
-      "n_E_agent": 7.0,
-      "n_E_prs": 10046.0,
-      "H_E_aggregate": 0.9997717564967883,
-      "e_human_per_pr": 3.052160063706948,
-      "e_agent_per_pr": 0.0006967947441767867
+      "n_G_human_strict": 9937.0,
+      "n_G_agent": 6.0,
+      "n_E_human": 30287.0,
+      "n_E_agent": 124.0,
+      "n_E_prs": 9834.0,
+      "H_E_aggregate": 0.9959225280326198,
+      "e_human_per_pr": 3.0798250966036202,
+      "e_agent_per_pr": 0.012609314622737441
     },
     {
       "month": "2024-12",
-      "n_G_human_strict": 9058.0,
+      "n_G_human_strict": 8616.0,
       "n_G_agent": 4.0,
-      "n_E_human": 27026.0,
-      "n_E_agent": 12.0,
-      "n_E_prs": 9063.0,
-      "H_E_aggregate": 0.9995561801908425,
-      "e_human_per_pr": 2.9820147853911507,
-      "e_agent_per_pr": 0.0013240648791790798
+      "n_E_human": 26745.0,
+      "n_E_agent": 144.0,
+      "n_E_prs": 8948.0,
+      "H_E_aggregate": 0.9946446502287181,
+      "e_human_per_pr": 2.988936075100581,
+      "e_agent_per_pr": 0.016092981671881983
     },
     {
       "month": "2025-01",
-      "n_G_human_strict": 11087.0,
-      "n_G_agent": 0.0,
-      "n_E_human": 34190.0,
-      "n_E_agent": 20.0,
-      "n_E_prs": 11085.0,
-      "H_E_aggregate": 0.9994153756211634,
-      "e_human_per_pr": 3.0843482183130355,
-      "e_agent_per_pr": 0.0018042399639152007
+      "n_G_human_strict": 10598.0,
+      "n_G_agent": 2.0,
+      "n_E_human": 33663.0,
+      "n_E_agent": 268.0,
+      "n_E_prs": 10868.0,
+      "H_E_aggregate": 0.9921016179894492,
+      "e_human_per_pr": 3.097442031652558,
+      "e_agent_per_pr": 0.02465955097534045
     },
     {
       "month": "2025-02",
-      "n_G_human_strict": 10932.0,
-      "n_G_agent": 3.0,
-      "n_E_human": 32643.0,
-      "n_E_agent": 76.0,
-      "n_E_prs": 10526.0,
-      "H_E_aggregate": 0.9976771906231853,
-      "e_human_per_pr": 3.1011780353410603,
-      "e_agent_per_pr": 0.007220216606498195
+      "n_G_human_strict": 10436.0,
+      "n_G_agent": 7.0,
+      "n_E_human": 32269.0,
+      "n_E_agent": 246.0,
+      "n_E_prs": 10343.0,
+      "H_E_aggregate": 0.9924342611102568,
+      "e_human_per_pr": 3.119887846852944,
+      "e_agent_per_pr": 0.023784201875664702
     },
     {
       "month": "2025-03",
-      "n_G_human_strict": 12641.0,
-      "n_G_agent": 10.0,
-      "n_E_human": 38921.0,
-      "n_E_agent": 243.0,
-      "n_E_prs": 12220.0,
-      "H_E_aggregate": 0.9937953222347053,
-      "e_human_per_pr": 3.185024549918167,
-      "e_agent_per_pr": 0.01988543371522095
+      "n_G_human_strict": 12026.0,
+      "n_G_agent": 14.0,
+      "n_E_human": 38282.0,
+      "n_E_agent": 636.0,
+      "n_E_prs": 12007.0,
+      "H_E_aggregate": 0.9836579474793155,
+      "e_human_per_pr": 3.188306821021071,
+      "e_agent_per_pr": 0.05296910135754143
     },
     {
       "month": "2025-04",
-      "n_G_human_strict": 12803.0,
-      "n_G_agent": 17.0,
-      "n_E_human": 39036.0,
-      "n_E_agent": 289.0,
-      "n_E_prs": 12738.0,
-      "H_E_aggregate": 0.9926509853782581,
-      "e_human_per_pr": 3.0645313235986813,
-      "e_agent_per_pr": 0.022688020097346523
+      "n_G_human_strict": 12218.0,
+      "n_G_agent": 23.0,
+      "n_E_human": 38432.0,
+      "n_E_agent": 664.0,
+      "n_E_prs": 12547.0,
+      "H_E_aggregate": 0.9830161653366073,
+      "e_human_per_pr": 3.06304295847613,
+      "e_agent_per_pr": 0.052921016976169605
     },
     {
       "month": "2025-05",
-      "n_G_human_strict": 12085.0,
-      "n_G_agent": 48.0,
-      "n_E_human": 35565.0,
-      "n_E_agent": 310.0,
-      "n_E_prs": 11852.0,
-      "H_E_aggregate": 0.9913588850174216,
-      "e_human_per_pr": 3.000759365507931,
-      "e_agent_per_pr": 0.026155923050961864
+      "n_G_human_strict": 11554.0,
+      "n_G_agent": 46.0,
+      "n_E_human": 34908.0,
+      "n_E_agent": 773.0,
+      "n_E_prs": 11682.0,
+      "H_E_aggregate": 0.9783358089739638,
+      "e_human_per_pr": 2.988186954288649,
+      "e_agent_per_pr": 0.06617017633966786
     },
     {
       "month": "2025-06",
-      "n_G_human_strict": 11632.0,
-      "n_G_agent": 67.0,
-      "n_E_human": 35515.0,
-      "n_E_agent": 743.0,
-      "n_E_prs": 11723.0,
-      "H_E_aggregate": 0.979507970654752,
-      "e_human_per_pr": 3.029514629361085,
-      "e_agent_per_pr": 0.06337968096903523
+      "n_G_human_strict": 11115.0,
+      "n_G_agent": 76.0,
+      "n_E_human": 34648.0,
+      "n_E_agent": 1229.0,
+      "n_E_prs": 11387.0,
+      "H_E_aggregate": 0.9657440700170026,
+      "e_human_per_pr": 3.0427680688504437,
+      "e_agent_per_pr": 0.10793009572319312
     },
     {
       "month": "2025-07",
-      "n_G_human_strict": 12306.0,
-      "n_G_agent": 182.0,
-      "n_E_human": 38008.0,
-      "n_E_agent": 2589.0,
-      "n_E_prs": 12449.0,
-      "H_E_aggregate": 0.9362268147892702,
-      "e_human_per_pr": 3.0530966342678125,
-      "e_agent_per_pr": 0.20796851152703028
+      "n_G_human_strict": 11760.0,
+      "n_G_agent": 183.0,
+      "n_E_human": 36377.0,
+      "n_E_agent": 3826.0,
+      "n_E_prs": 12092.0,
+      "H_E_aggregate": 0.9048329726637315,
+      "e_human_per_pr": 3.0083526298379093,
+      "e_agent_per_pr": 0.31640754217664574
     },
     {
       "month": "2025-08",
-      "n_G_human_strict": 11310.0,
-      "n_G_agent": 191.0,
-      "n_E_human": 34719.0,
-      "n_E_agent": 1682.0,
-      "n_E_prs": 11257.0,
-      "H_E_aggregate": 0.9537924782286201,
-      "e_human_per_pr": 3.084214266678511,
-      "e_agent_per_pr": 0.14941813982410945
+      "n_G_human_strict": 10738.0,
+      "n_G_agent": 184.0,
+      "n_E_human": 33067.0,
+      "n_E_agent": 3025.0,
+      "n_E_prs": 10970.0,
+      "H_E_aggregate": 0.9161864125013853,
+      "e_human_per_pr": 3.0143117593436646,
+      "e_agent_per_pr": 0.2757520510483136
     },
     {
       "month": "2025-09",
-      "n_G_human_strict": 12412.0,
-      "n_G_agent": 144.0,
-      "n_E_human": 37876.0,
-      "n_E_agent": 2233.0,
-      "n_E_prs": 12471.0,
-      "H_E_aggregate": 0.9443267097160238,
-      "e_human_per_pr": 3.037126132627696,
-      "e_agent_per_pr": 0.17905540854783097
+      "n_G_human_strict": 11705.0,
+      "n_G_agent": 152.0,
+      "n_E_human": 36214.0,
+      "n_E_agent": 3488.0,
+      "n_E_prs": 12100.0,
+      "H_E_aggregate": 0.9121454838547176,
+      "e_human_per_pr": 2.992892561983471,
+      "e_agent_per_pr": 0.28826446280991735
     },
     {
       "month": "2025-10",
-      "n_G_human_strict": 13426.0,
+      "n_G_human_strict": 12777.0,
       "n_G_agent": 281.0,
-      "n_E_human": 39538.0,
-      "n_E_agent": 3117.0,
-      "n_E_prs": 13413.0,
-      "H_E_aggregate": 0.926925331145235,
-      "e_human_per_pr": 2.947737269812868,
-      "e_agent_per_pr": 0.2323864907179602
+      "n_E_human": 38065.0,
+      "n_E_agent": 4140.0,
+      "n_E_prs": 13007.0,
+      "H_E_aggregate": 0.9019073569482289,
+      "e_human_per_pr": 2.926501114784347,
+      "e_agent_per_pr": 0.3182901514569078
     },
     {
       "month": "2025-11",
-      "n_G_human_strict": 11539.0,
-      "n_G_agent": 349.0,
-      "n_E_human": 37548.0,
-      "n_E_agent": 2929.0,
-      "n_E_prs": 12104.0,
-      "H_E_aggregate": 0.9276379178298787,
-      "e_human_per_pr": 3.1021150033046925,
-      "e_agent_per_pr": 0.24198612029081296
+      "n_G_human_strict": 10948.0,
+      "n_G_agent": 337.0,
+      "n_E_human": 36225.0,
+      "n_E_agent": 3755.0,
+      "n_E_prs": 11727.0,
+      "H_E_aggregate": 0.9060780390195098,
+      "e_human_per_pr": 3.089025326170376,
+      "e_agent_per_pr": 0.3202012449901936
     },
     {
       "month": "2025-12",
-      "n_G_human_strict": 11320.0,
-      "n_G_agent": 337.0,
-      "n_E_human": 34623.0,
-      "n_E_agent": 3024.0,
-      "n_E_prs": 11870.0,
-      "H_E_aggregate": 0.9196748744919914,
-      "e_human_per_pr": 2.916849199663016,
-      "e_agent_per_pr": 0.254759898904802
+      "n_G_human_strict": 10669.0,
+      "n_G_agent": 329.0,
+      "n_E_human": 32818.0,
+      "n_E_agent": 4149.0,
+      "n_E_prs": 11488.0,
+      "H_E_aggregate": 0.887764763167149,
+      "e_human_per_pr": 2.8567200557103063,
+      "e_agent_per_pr": 0.36115947075208915
     },
     {
       "month": "2026-01",
-      "n_G_human_strict": 12455.0,
-      "n_G_agent": 515.0,
-      "n_E_human": 39607.0,
-      "n_E_agent": 3529.0,
-      "n_E_prs": 13254.0,
-      "H_E_aggregate": 0.9181889836795252,
-      "e_human_per_pr": 2.9883054172325334,
-      "e_agent_per_pr": 0.26625924249283234
+      "n_G_human_strict": 11728.0,
+      "n_G_agent": 523.0,
+      "n_E_human": 37500.0,
+      "n_E_agent": 4805.0,
+      "n_E_prs": 12889.0,
+      "H_E_aggregate": 0.8864200449119489,
+      "e_human_per_pr": 2.9094576770889904,
+      "e_agent_per_pr": 0.3727985103576693
     },
     {
       "month": "2026-02",
-      "n_G_human_strict": 12923.0,
-      "n_G_agent": 1202.0,
-      "n_E_human": 43176.0,
-      "n_E_agent": 6141.0,
-      "n_E_prs": 14236.0,
-      "H_E_aggregate": 0.8754790437374537,
-      "e_human_per_pr": 3.032874402922169,
-      "e_agent_per_pr": 0.4313711716774375
+      "n_G_human_strict": 12027.0,
+      "n_G_agent": 1193.0,
+      "n_E_human": 41033.0,
+      "n_E_agent": 7469.0,
+      "n_E_prs": 13856.0,
+      "H_E_aggregate": 0.8460063502535978,
+      "e_human_per_pr": 2.96138856812933,
+      "e_agent_per_pr": 0.5390444572748267
     },
     {
       "month": "2026-03",
-      "n_G_human_strict": 14630.0,
-      "n_G_agent": 2254.0,
-      "n_E_human": 49633.0,
-      "n_E_agent": 9139.0,
-      "n_E_prs": 16853.0,
-      "H_E_aggregate": 0.8445007826856327,
-      "e_human_per_pr": 2.9450542930042127,
-      "e_agent_per_pr": 0.5422773393461104
+      "n_G_human_strict": 13832.0,
+      "n_G_agent": 2227.0,
+      "n_E_human": 46570.0,
+      "n_E_agent": 11085.0,
+      "n_E_prs": 16238.0,
+      "H_E_aggregate": 0.807735669065996,
+      "e_human_per_pr": 2.867964034979677,
+      "e_agent_per_pr": 0.6826579628033009
     },
     {
       "month": "2026-04",
-      "n_G_human_strict": 14211.0,
-      "n_G_agent": 2416.0,
-      "n_E_human": 48358.0,
-      "n_E_agent": 8686.0,
-      "n_E_prs": 17046.0,
-      "H_E_aggregate": 0.8477315756258327,
-      "e_human_per_pr": 2.836911885486331,
-      "e_agent_per_pr": 0.5095623606711251
+      "n_G_human_strict": 13027.0,
+      "n_G_agent": 2376.0,
+      "n_E_human": 45323.0,
+      "n_E_agent": 10639.0,
+      "n_E_prs": 16448.0,
+      "H_E_aggregate": 0.809888853150352,
+      "e_human_per_pr": 2.7555325875486383,
+      "e_agent_per_pr": 0.6468263618677043
     },
     {
       "month": "2026-05",
-      "n_G_human_strict": 14206.0,
-      "n_G_agent": 2120.0,
-      "n_E_human": 45684.0,
-      "n_E_agent": 7831.0,
-      "n_E_prs": 15840.0,
-      "H_E_aggregate": 0.8536671961132393,
-      "e_human_per_pr": 2.8840909090909093,
-      "e_agent_per_pr": 0.4943813131313131
+      "n_G_human_strict": 12708.0,
+      "n_G_agent": 2082.0,
+      "n_E_human": 42929.0,
+      "n_E_agent": 9343.0,
+      "n_E_prs": 15352.0,
+      "H_E_aggregate": 0.8212618610345883,
+      "e_human_per_pr": 2.796313183949974,
+      "e_agent_per_pr": 0.6085852006253257
     },
     {
       "month": "2026-06",
-      "n_G_human_strict": 13975.0,
-      "n_G_agent": 2118.0,
-      "n_E_human": 45037.0,
-      "n_E_agent": 7021.0,
-      "n_E_prs": 15315.0,
-      "H_E_aggregate": 0.8651311998155903,
-      "e_human_per_pr": 2.9407117205354227,
-      "e_agent_per_pr": 0.45843943845902707
+      "n_G_human_strict": 12496.0,
+      "n_G_agent": 2093.0,
+      "n_E_human": 42295.0,
+      "n_E_agent": 9036.0,
+      "n_E_prs": 15193.0,
+      "H_E_aggregate": 0.8239660244296819,
+      "e_human_per_pr": 2.7838478246560916,
+      "e_agent_per_pr": 0.5947475811228855
     },
     {
       "month": "2026-07",
-      "n_G_human_strict": 15762.0,
-      "n_G_agent": 2547.0,
-      "n_E_human": 47355.0,
-      "n_E_agent": 10711.0,
-      "n_E_prs": 16712.0,
-      "H_E_aggregate": 0.8155374918196535,
-      "e_human_per_pr": 2.8335926280516994,
-      "e_agent_per_pr": 0.6409167065581618
+      "n_G_human_strict": 13741.0,
+      "n_G_agent": 2623.0,
+      "n_E_human": 44802.0,
+      "n_E_agent": 12429.0,
+      "n_E_prs": 16559.0,
+      "H_E_aggregate": 0.7828274885988363,
+      "e_human_per_pr": 2.705598164140347,
+      "e_agent_per_pr": 0.7505888036717193
     },
     {
       "month": "2026-08",
-      "n_G_human_strict": 16516.0,
-      "n_G_agent": 1755.0,
-      "n_E_human": 45444.0,
-      "n_E_agent": 10853.0,
-      "n_E_prs": 16643.0,
-      "H_E_aggregate": 0.8072188571327069,
-      "e_human_per_pr": 2.7305173346151537,
-      "e_agent_per_pr": 0.6521059905065193
+      "n_G_human_strict": 14340.0,
+      "n_G_agent": 1823.0,
+      "n_E_human": 43225.0,
+      "n_E_agent": 12524.0,
+      "n_E_prs": 16404.0,
+      "H_E_aggregate": 0.775350230497408,
+      "e_human_per_pr": 2.63502804194099,
+      "e_agent_per_pr": 0.7634723238234576
     },
     {
       "month": "2026-09",
-      "n_G_human_strict": 10962.0,
-      "n_G_agent": 1392.0,
-      "n_E_human": 31028.0,
-      "n_E_agent": 6418.0,
-      "n_E_prs": 12024.0,
-      "H_E_aggregate": 0.8286065267318272,
-      "e_human_per_pr": 2.580505655355955,
-      "e_agent_per_pr": 0.5337658017298735
+      "n_G_human_strict": 9753.0,
+      "n_G_agent": 1422.0,
+      "n_E_human": 29466.0,
+      "n_E_agent": 7413.0,
+      "n_E_prs": 11688.0,
+      "H_E_aggregate": 0.7989912958594322,
+      "e_human_per_pr": 2.521047227926078,
+      "e_agent_per_pr": 0.6342402464065708
     }
   ],
   "models": {
@@ -505,125 +505,125 @@
       "x": [
         "A_prime"
       ],
-      "n_obs": 93885,
-      "n_modules": 9552,
+      "n_obs": 93546,
+      "n_modules": 9547,
       "n_repos": 38,
       "params": {
-        "A_prime": -0.14236423394475062
+        "A_prime": -0.1522820546050439
       },
       "se_module": {
-        "A_prime": 0.007095408445810093
+        "A_prime": 0.007151211987092057
       },
       "p_module": {
         "A_prime": 0.0
       },
       "se_repo": {
-        "A_prime": 0.03412056690766419
+        "A_prime": 0.033239469209097254
       },
       "p_repo": {
-        "A_prime": 3.017257456039424e-05
+        "A_prime": 4.626196336232624e-06
       },
-      "rsquared_within": 0.0678967808989428
+      "rsquared_within": 0.06882379022430907
     },
     "M1_log_human_E": {
       "y": "log_n_E_human",
       "x": [
         "A_prime"
       ],
-      "n_obs": 93885,
-      "n_modules": 9552,
+      "n_obs": 93546,
+      "n_modules": 9547,
       "n_repos": 38,
       "params": {
-        "A_prime": 0.10451732399706005
+        "A_prime": 0.07226033182873212
       },
       "se_module": {
-        "A_prime": 0.026146867516048302
+        "A_prime": 0.0253611027915007
       },
       "p_module": {
-        "A_prime": 6.411889879975874e-05
+        "A_prime": 0.004383194920288824
       },
       "se_repo": {
-        "A_prime": 0.052363085561714734
+        "A_prime": 0.06119784456436431
       },
       "p_repo": {
-        "A_prime": 0.04593587643617458
+        "A_prime": 0.23769905440328687
       },
-      "rsquared_within": -0.00025755489098888695
+      "rsquared_within": -0.0003934272539689587
     },
     "M2_log_agent_E": {
       "y": "log_n_E_agent",
       "x": [
         "A_prime"
       ],
-      "n_obs": 93885,
-      "n_modules": 9552,
+      "n_obs": 93546,
+      "n_modules": 9547,
       "n_repos": 38,
       "params": {
-        "A_prime": 0.624903430717668
+        "A_prime": 0.6316203091470943
       },
       "se_module": {
-        "A_prime": 0.03254076443461301
+        "A_prime": 0.03236265203920408
       },
       "p_module": {
         "A_prime": 0.0
       },
       "se_repo": {
-        "A_prime": 0.15114145960956904
+        "A_prime": 0.15031017766575192
       },
       "p_repo": {
-        "A_prime": 3.5597907906748105e-05
+        "A_prime": 2.6470829520341965e-05
       },
-      "rsquared_within": 0.07944145720339968
+      "rsquared_within": 0.07476759737219463
     },
     "M3_log_total_E": {
       "y": "log_n_E",
       "x": [
         "A_prime"
       ],
-      "n_obs": 93885,
-      "n_modules": 9552,
+      "n_obs": 93546,
+      "n_modules": 9547,
       "n_repos": 38,
       "params": {
-        "A_prime": 0.28803412328672606
+        "A_prime": 0.26887702516619294
       },
       "se_module": {
-        "A_prime": 0.02675969004676919
+        "A_prime": 0.026208031856328414
       },
       "p_module": {
         "A_prime": 0.0
       },
       "se_repo": {
-        "A_prime": 0.07684916669287206
+        "A_prime": 0.08188142445033078
       },
       "p_repo": {
-        "A_prime": 0.0001783372542469852
+        "A_prime": 0.0010248252173090666
       },
-      "rsquared_within": 0.0038874332757552477
+      "rsquared_within": 0.0034209636070808846
     },
     "M4_log_human_reviewers": {
       "y": "log_n_E_human_actors",
       "x": [
         "A_prime"
       ],
-      "n_obs": 93885,
-      "n_modules": 9552,
+      "n_obs": 93546,
+      "n_modules": 9547,
       "n_repos": 38,
       "params": {
-        "A_prime": 0.00030003162335856163
+        "A_prime": -0.01348826496926925
       },
       "se_module": {
-        "A_prime": 0.013499652593833487
+        "A_prime": 0.013457123389743609
       },
       "p_module": {
-        "A_prime": 0.9822684190191928
+        "A_prime": 0.31619478740188267
       },
       "se_repo": {
-        "A_prime": 0.019284065199990465
+        "A_prime": 0.024893587114401754
       },
       "p_repo": {
-        "A_prime": 0.9875866302227652
+        "A_prime": 0.5879322819821933
       },
-      "rsquared_within": -1.5996631490544644e-06
+      "rsquared_within": 0.00014250497751178148
     },
     "M5_log_human_E_ctrl": {
       "y": "log_n_E_human",
@@ -631,30 +631,30 @@
         "A_prime",
         "log_n_G_prs"
       ],
-      "n_obs": 93885,
-      "n_modules": 9552,
+      "n_obs": 93546,
+      "n_modules": 9547,
       "n_repos": 38,
       "params": {
-        "A_prime": 0.10324500998874803,
-        "log_n_G_prs": 1.0434077951901384
+        "A_prime": 0.06453512647472959,
+        "log_n_G_prs": 1.0509994103453462
       },
       "se_module": {
-        "A_prime": 0.020334927445716525,
-        "log_n_G_prs": 0.007256762413960414
+        "A_prime": 0.019570764896040288,
+        "log_n_G_prs": 0.006312015725590845
       },
       "p_module": {
-        "A_prime": 3.83799715564237e-07,
+        "A_prime": 0.0009758078403541148,
         "log_n_G_prs": 0.0
       },
       "se_repo": {
-        "A_prime": 0.04950324092100033,
-        "log_n_G_prs": 0.04308402641328823
+        "A_prime": 0.06230687906186327,
+        "log_n_G_prs": 0.04157143491221842
       },
       "p_repo": {
-        "A_prime": 0.03701594731805802,
+        "A_prime": 0.3003159572626848,
         "log_n_G_prs": 0.0
       },
-      "rsquared_within": 0.4014551177176663
+      "rsquared_within": 0.40176927420372277
     },
     "M6_log_agent_E_ctrl": {
       "y": "log_n_E_agent",
@@ -662,130 +662,130 @@
         "A_prime",
         "log_n_G_prs"
       ],
-      "n_obs": 93885,
-      "n_modules": 9552,
+      "n_obs": 93546,
+      "n_modules": 9547,
       "n_repos": 38,
       "params": {
-        "A_prime": 0.6247034905171505,
-        "log_n_G_prs": 0.16396829904142038
+        "A_prime": 0.6302589409527073,
+        "log_n_G_prs": 0.18521153859328934
       },
       "se_module": {
-        "A_prime": 0.031710186440283394,
-        "log_n_G_prs": 0.008631832337380713
+        "A_prime": 0.0313979589793874,
+        "log_n_G_prs": 0.00972476775447049
       },
       "p_module": {
         "A_prime": 0.0,
         "log_n_G_prs": 0.0
       },
       "se_repo": {
-        "A_prime": 0.15171879937986887,
-        "log_n_G_prs": 0.04720354641147304
+        "A_prime": 0.151138866759146,
+        "log_n_G_prs": 0.052834881182820044
       },
       "p_repo": {
-        "A_prime": 3.8335431755021077e-05,
-        "log_n_G_prs": 0.0005137000689379168
+        "A_prime": 3.0481764036860426e-05,
+        "log_n_G_prs": 0.00045602490481866376
       },
-      "rsquared_within": 0.1051076828129377
+      "rsquared_within": 0.10133034423692011
     },
     "M7_human_per_pr": {
       "y": "e_human_per_pr",
       "x": [
         "A_prime"
       ],
-      "n_obs": 93885,
-      "n_modules": 9552,
+      "n_obs": 93546,
+      "n_modules": 9547,
       "n_repos": 38,
       "params": {
-        "A_prime": 0.5567741489268734
+        "A_prime": 0.5089232007007464
       },
       "se_module": {
-        "A_prime": 0.09018565529180388
+        "A_prime": 0.08665808201759287
       },
       "p_module": {
-        "A_prime": 6.703666510787798e-10
+        "A_prime": 4.301740741396998e-09
       },
       "se_repo": {
-        "A_prime": 0.1359781288986461
+        "A_prime": 0.16089916274660931
       },
       "p_repo": {
-        "A_prime": 4.2331728012268144e-05
+        "A_prime": 0.0015621077149070572
       },
-      "rsquared_within": -0.0010170087815846163
+      "rsquared_within": -0.0011826424272580738
     },
     "M8_agent_per_pr": {
       "y": "e_agent_per_pr",
       "x": [
         "A_prime"
       ],
-      "n_obs": 93885,
-      "n_modules": 9552,
+      "n_obs": 93546,
+      "n_modules": 9547,
       "n_repos": 38,
       "params": {
-        "A_prime": 0.9536208744964874
+        "A_prime": 0.9762633593537856
       },
       "se_module": {
-        "A_prime": 0.05465958575075143
+        "A_prime": 0.05426805553590718
       },
       "p_module": {
         "A_prime": 0.0
       },
       "se_repo": {
-        "A_prime": 0.2464280016869402
+        "A_prime": 0.23097465899804687
       },
       "p_repo": {
-        "A_prime": 0.0001090178744627135
+        "A_prime": 2.37381086809485e-05
       },
-      "rsquared_within": 0.08376362879559773
+      "rsquared_within": 0.07847043295380363
     },
     "M9_log_human_E_ext": {
       "y": "log_n_E_human",
       "x": [
         "A_prime"
       ],
-      "n_obs": 103686,
-      "n_modules": 10193,
+      "n_obs": 103290,
+      "n_modules": 10187,
       "n_repos": 38,
       "params": {
-        "A_prime": 0.06674245091965146
+        "A_prime": 0.013012558003589416
       },
       "se_module": {
-        "A_prime": 0.027284726734784878
+        "A_prime": 0.026935547678367488
       },
       "p_module": {
-        "A_prime": 0.014441044215889987
+        "A_prime": 0.6290260045045266
       },
       "se_repo": {
-        "A_prime": 0.06411016168448165
+        "A_prime": 0.09236509275678094
       },
       "p_repo": {
-        "A_prime": 0.29785093152225905
+        "A_prime": 0.8879636467296121
       },
-      "rsquared_within": -0.00010802331542292265
+      "rsquared_within": -5.627613330205783e-05
     },
     "M10_log_agent_E_ext": {
       "y": "log_n_E_agent",
       "x": [
         "A_prime"
       ],
-      "n_obs": 103686,
-      "n_modules": 10193,
+      "n_obs": 103290,
+      "n_modules": 10187,
       "n_repos": 38,
       "params": {
-        "A_prime": 0.5736414739131829
+        "A_prime": 0.5659657442425527
       },
       "se_module": {
-        "A_prime": 0.03068598253309702
+        "A_prime": 0.030357124401585583
       },
       "p_module": {
         "A_prime": 0.0
       },
       "se_repo": {
-        "A_prime": 0.1411434290236456
+        "A_prime": 0.1413056496009511
       },
       "p_repo": {
-        "A_prime": 4.822755077760199e-05
+        "A_prime": 6.199760293257306e-05
       },
-      "rsquared_within": 0.07205904003755104
+      "rsquared_within": 0.06609259793597033
     }
   }
 }

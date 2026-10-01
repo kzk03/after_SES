@@ -1,20 +1,20 @@
 {
-  "n_prs": 20268,
+  "n_prs": 18535,
   "tol_lines": 3,
   "means": {
-    "file_overlap": 0.6342903501060996,
-    "line_overlap": 0.3778411617645123,
-    "human_human_overlap": 0.41493951286707514,
-    "ai_covered_by_human": 0.5265994572590311,
-    "human_covered_by_ai": 0.4814593288414751,
-    "ai_first_share": 0.7863194485178204
+    "file_overlap": 0.6408097902574992,
+    "line_overlap": 0.40034074387101565,
+    "human_human_overlap": 0.47082744446012287,
+    "ai_covered_by_human": 0.5169836106718326,
+    "human_covered_by_ai": 0.5386598231540172,
+    "ai_first_share": 0.8819652306783656
   },
   "paired_vs_human_human": {
-    "n": 12847,
-    "mean_diff": -0.12131633276197432,
-    "t": -33.23243988897491,
-    "p": 2.163166687288767e-232,
-    "ai_human": 0.2936231801051008,
-    "human_human": 0.41493951286707514
+    "n": 11152,
+    "mean_diff": -0.17753617323149323,
+    "t": -42.13131933415341,
+    "p": 0.0,
+    "ai_human": 0.2932912712286297,
+    "human_human": 0.47082744446012287
   }
 }

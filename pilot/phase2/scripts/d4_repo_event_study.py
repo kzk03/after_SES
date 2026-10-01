@@ -37,8 +37,11 @@ LEAD_LAG = 3
 REF = -1
 
 
-def detect_adoption(df: pd.DataFrame) -> tuple[dict[str, str], list[str], list[str]]:
-    """リポジトリごとの AI レビュー導入月を検出する。
+def detect_adoption_share(df: pd.DataFrame) -> tuple[dict[str, str], list[str], list[str]]:
+    """【旧定義・頑健性用】AI レビュー比率(= 1 - H_E)の段差で導入月を検出する。
+
+    ⚠ 比率は 1 - H_E そのものなので、H_E を被説明変数にすると循環する(2026-09-27 査読 R1)。
+    主定義は detect_adoption_presence に移した。
 
     returns: (adoption {repo: month}, never_treated, always_treated)
     """
@@ -71,6 +74,58 @@ def detect_adoption(df: pd.DataFrame) -> tuple[dict[str, str], list[str], list[s
             never.append(repo)
         # 上記どちらでもない(中途半端に上下する)リポジトリは処置群にも対照群にも入れない
     return adoption, never, always
+
+
+# ---- 主定義(2026-09-27 以降): AI ボットの出現と定着だけで決める ----
+ADOPTION_RULE = "presence"   # "presence"(主)/ "share"(旧定義)
+N_BOT = 10          # 「AI レビューが出ている」とみなす月あたり件数
+N_CTRL = 5          # 対照群は N_CTRL 件の基準でも一度も定着しなかったリポジトリに限る
+PERSIST_WIN = 6     # 定着の判定窓(後続月数)
+PERSIST_NEED = 5    # 窓のうち何ヶ月で N 件以上必要か
+
+
+def _bot_adoption(df: pd.DataFrame, n: int) -> dict[str, str | None]:
+    """月 t に AI レビューが n 件以上あり、続く PERSIST_WIN ヶ月のうち PERSIST_NEED ヶ月以上で
+    n 件以上ある最初の t。後続が6ヶ月無い場合は後続月の 5/6 以上(最低2ヶ月)で判定する。
+    人間のレビュー量を一切使わないので、H_E を被説明変数にしても循環しない。"""
+    import numpy as np
+    by = df.groupby(["repo", "month"])["n_E_agent"].sum()
+    out: dict[str, str | None] = {}
+    for repo, s in by.groupby(level=0):
+        s = s.droplevel(0).sort_index()
+        full = pd.period_range(s.index.min(), s.index.max(), freq="M").astype(str)
+        s = s.reindex(full, fill_value=0.0)
+        v = s.to_numpy()
+        found = None
+        for i in range(len(v)):
+            if v[i] < n:
+                continue
+            f = v[i + 1:i + 1 + PERSIST_WIN]
+            if len(f) < 2:
+                continue
+            if (f >= n).sum() >= int(np.ceil(len(f) * PERSIST_NEED / PERSIST_WIN)):
+                found = s.index[i]
+                break
+        out[repo] = found
+    return out
+
+
+def detect_adoption_presence(df: pd.DataFrame) -> tuple[dict[str, str], list[str], list[str]]:
+    """returns: (adoption {repo: month}, never_treated, excluded)"""
+    a = _bot_adoption(df, N_BOT)
+    ctrl = _bot_adoption(df, min(N_BOT, N_CTRL))
+    first = df.groupby("repo")["month"].min()
+    treated = {r: m for r, m in a.items() if m is not None and m > first[r]}
+    never = sorted(r for r, m in ctrl.items() if m is None)
+    excluded = sorted(set(a) - set(treated) - set(never))
+    return treated, never, excluded
+
+
+def detect_adoption(df: pd.DataFrame) -> tuple[dict[str, str], list[str], list[str]]:
+    """主定義で導入月を返す。3番目の戻り値は除外リポジトリ(旧定義では always-treated)。"""
+    if ADOPTION_RULE == "share":
+        return detect_adoption_share(df)
+    return detect_adoption_presence(df)
 
 
 def build_balanced(df: pd.DataFrame) -> pd.DataFrame:
@@ -136,7 +191,7 @@ def main() -> None:
     for r, m in sorted(adoption.items(), key=lambda kv: kv[1]):
         print(f"  {m}  {r}")
     print(f"never-treated ({len(never)}): {', '.join(sorted(never))}")
-    print(f"always-treated (除外, {len(always)}): {', '.join(sorted(always))}")
+    print(f"除外(always-treated / 判定不能, {len(always)}): {', '.join(sorted(always))}")
     ambiguous = set(df["repo"]) - set(adoption) - set(never) - set(always)
     print(f"判定不能 (除外, {len(ambiguous)}): {', '.join(sorted(ambiguous))}")
 
@@ -170,6 +225,9 @@ def main() -> None:
         cols.append(name)
 
     bal["log_n_E_human"] = np.log1p(bal["n_E_human"])
+    # 作成者本人を除いた人間の評価(独立な審査)。主指標(2026-09-27)
+    bal["log_n_E_human_nonauthor"] = np.log1p(bal["n_E_human_nonauthor"])
+    bal["log_n_E_human_nonauthor_actors"] = np.log1p(bal["n_E_human_nonauthor_actors"])
     bal["log_n_E_agent"] = np.log1p(bal["n_E_agent"])
     bal["log_n_E"] = np.log1p(bal["n_E"])
     bal["log_n_E_human_actors"] = np.log1p(bal["n_E_human_actors"])
@@ -180,7 +238,9 @@ def main() -> None:
     bal["is_active"] = (bal["n_E"] + bal["n_G"] > 0).astype(float)
 
     out: dict = {
-        "spec": {"jump": JUMP, "level": LEVEL, "window": WIN, "lead_lag": LEAD_LAG},
+        "spec": {"rule": ADOPTION_RULE, "n_bot": N_BOT, "n_ctrl": N_CTRL,
+                 "persist": f"{PERSIST_NEED}/{PERSIST_WIN}", "lead_lag": LEAD_LAG,
+                 "old_rule": {"jump": JUMP, "level": LEVEL, "window": WIN}},
         "adoption": adoption,
         "never_treated": never,
         "always_treated_excluded": always,
@@ -194,7 +254,9 @@ def main() -> None:
     for y in [
         "log_n_E_agent",      # first stage
         "e_agent_per_pr",     # first stage(PRあたり)
-        "log_n_E_human",      # ★人間のレビュー量は減るか
+        "log_n_E_human_nonauthor",         # ★主指標: 作成者を除いた人間のレビュー量は減るか
+        "log_n_E_human_nonauthor_actors",
+        "log_n_E_human",      # 作成者の返信を含む(旧主指標)
         "log_n_E_human_actors",
         "e_human_per_pr",     # ★PRあたりの人間レビューは減るか
         "H_E",

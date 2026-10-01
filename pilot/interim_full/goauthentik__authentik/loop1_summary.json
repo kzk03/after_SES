@@ -3,8 +3,8 @@
   "n_prs_scanned": 17439,
   "n_unique_actors": 747,
   "category_counts": {
-    "human": 738,
-    "legacy_bot": 6,
+    "human": 734,
+    "legacy_bot": 10,
     "agent": 3
   },
   "trailer_pattern_hits": {

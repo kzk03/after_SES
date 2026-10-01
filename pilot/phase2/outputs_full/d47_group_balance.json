@@ -1,0 +1,43 @@
+{
+ "window": [
+  "2023-01",
+  "2024-09"
+ ],
+ "first_adoption": "2024-10",
+ "groups": {
+  "treated": {
+   "n_repos": 17,
+   "nonauthor_median": 619.381,
+   "agent_median": 0.0,
+   "prs_median": 277.4286,
+   "modules_median": 32.9048,
+   "author_share_median": 0.2772,
+   "months_median": 21.0,
+   "growth_2023_to_2024_median": 0.1803,
+   "nonauthor_mean": 721.4197,
+   "agent_mean": 0.6359,
+   "prs_mean": 324.2835,
+   "modules_mean": 74.0057,
+   "author_share_mean": 0.2816,
+   "months_mean": 20.8235,
+   "growth_2023_to_2024_mean": 0.4212
+  },
+  "never_treated": {
+   "n_repos": 14,
+   "nonauthor_median": 424.4286,
+   "agent_median": 0.0,
+   "prs_median": 157.8095,
+   "modules_median": 30.5714,
+   "author_share_median": 0.2421,
+   "months_median": 21.0,
+   "growth_2023_to_2024_median": 0.0439,
+   "nonauthor_mean": 439.2304,
+   "agent_mean": 0.0,
+   "prs_mean": 175.4077,
+   "modules_mean": 40.5077,
+   "author_share_mean": 0.2458,
+   "months_mean": 20.9286,
+   "growth_2023_to_2024_mean": 0.1504
+  }
+ }
+}

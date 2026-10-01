@@ -38,6 +38,24 @@ agent:
     # --- OpenAI Codex ---
     - chatgpt-codex-connector    # 実データでは PR作成(author)としては未検出。レビューコメント(involves)で多数関与(home-assistant 186件, grafana 689件)
     - openai-codex
+    # --- 商用 AI コードレビューサービス(2026-09-23 追加、D31 の分類監査で発見) ---
+    # AIDev の6エージェントには含まれないが、実データでレビューを出している。
+    # 追加前はすべて human に算入されていた(計 7,294件)。
+    # いずれも APPROVED は 0件で、判断率は agent 全体を 0.27% → 0.25% に下げる。
+    - ellipsis-dev               # SigNoz で 4,741件。APPROVED 0
+    - sourcery-ai                # presto で 2,079件。CHANGES_REQUESTED 3件のみ
+    - sourceryai                 # 同一サービスの別表記(login "SourceryAI")。正規化後は小文字で照合される
+    - coderabbitai               # SigNoz/hyperswitch/home-assistant/gradle/Megatron-LM で計 413件
+    - greptile-apps              # Megatron-LM で 28件
+    - graphite-app               # llvm-project で 28件(Graphite の AI レビュー)
+    - qodoai-agent               # grafana で 1件
+    - openhands-agent
+    # --- 2026-09-27 追加(査読会議 R2 の指摘。名前に bot を含まないため 9/24 の監査で漏れた) ---
+    - gemini-code-assist         # Google Gemini Code Assist。ray で 8,872件、envoy で 278件のレビュー
+    - sentry                     # Sentry の AI コードレビュー(Seer)。getsentry/sentry で 8,239件
+    - sentry-warden              # Sentry の AI レビュー系アカウント。1,475件
+    - seer-by-sentry             # Sentry Seer。754件、PR 作成 282件
+    - anthropic-code-agent       # ceph で 25件
   trailer_patterns:
     # commit / PR body の "Co-authored-by:" trailer に現れる識別子(正規表現、大文字小文字を無視)
     - "Co-authored-by:\\s*Copilot"
@@ -65,5 +83,70 @@ legacy_bot:
     # --- elastic/kibana 固有(参考。今回の対象外だがLoop0調査で観測) ---
     - elastic-renovate-prod
     - kibanamachine
+    # ------------------------------------------------------------------
+    # 2026-09-23 追加(D31 の分類監査)。
+    # GraphQL の author.login は GitHub App でも "[bot]" を返さないため、
+    # 下の patterns(".*\\[bot\\]$")では捕まらず human に落ちていたアカウント。
+    # 実データの actors を走査し、login と活動パターン(PR作成0件など)で目視確認した。
+    # ⚠ 名前に "bot" を含むだけの実在の人間が居る(jakobbotsch 885件, codeboten 779件,
+    #   botengyao 425件, RoboTux, IceBotYT, fronzbot, Acrobot, bors-ltd 等)。
+    #   正規表現での一括判定は絶対にしないこと。必ず個別に確認してから足す。
+    # --- レビューを出していた CI / 自動化ボット ---
+    - ciliumbot                   # cilium。レビュー 5,510件、人間PRの初承認 2,300件と最大
+    - robot-vibe-db               # ydb。レビュー 4,276件
+    - paddlepaddle-bot            # Paddle。レビュー 1,519件
+    - pytorchbot                  # pytorch。レビュー 756件、初承認 755件
+    - bluetoothbot                # home-assistant。レビュー 307件
+    - espressif-bot               # arduino-esp32。レビュー 184件
+    - hs-qualibot                 # hyperswitch。レビュー 160件
+    - esphbot                     # home-assistant。レビュー 62件
+    - zigpy-review-bot            # home-assistant。レビュー 32件
+    - svcnvidia-nemo-ci           # Megatron-LM
+    - svcnemo-autobot             # Megatron-LM
+    - dangerbotoss                # DefinitelyTyped(Danger)
+    - semgrep-app                 # authentik(静的解析)
+    - prestodb-ci                 # presto
+    - opentelemetrybot            # opentelemetry-collector-contrib
+    - devops-ci-bot
+    - mihubot
+    - paddle-xpu-bot
+    # --- マージキュー。レビューを出さないので actors に現れず unknown に落ちていた ---
+    - trunk-io                    # cockroachdb。人間作成PRの 8.97% をマージ(2,354件)
+    # --- 2026-09-27 追加(査読会議 R2 の指摘。マージ・ポリシー系ボット) ---
+    - craig                       # cockroachdb の bors 系マージボット。13,699件
+    - istio-testing               # istio のマージの 99.9%。10,557件
+    - typescript-bot              # DefinitelyTyped
+    - dotnet-policy-service       # dotnet のポリシー/マージボット
+    - backstage-goalie            # backstage
+    - azure-sdk                   # dotnet/docs の Azure SDK 自動化アカウント。PR 作成 1,451件(2026-09-27 B3 の指摘)
+    - typescript-automation       # DefinitelyTyped。268件
+    - github-merge-queue          # GitHub 純正。10件
+    # --- その他の CI / backport / release ボット ---
+    - ydbot
+    - llvmbot
+    - backportbot
+    - backportbot-nextcloud
+    - cilium-renovate
+    - cilium-release-bot
+    - cockroach-teamcity
+    - grafanabot
+    - dotnet-bot
+    - bot-gradle
+    - bot-teamcity
+    - getsentry-bot
+    - gcp-cherry-pick-bot
+    - google-llvm-bazel-bot
+    - forking-google-bazel-bot
+    - authentik-automation
+    - robot-piglet
+    - pytorchmergebot
+    - pytorchupdatebot
+    - tgstation-ci
+    - tgstation-server-ci
+    - snyk-bot
+    - deepsource-autofix
+    - transifex-integration
   patterns:
     - ".*\\[bot\\]$"   # 上記accountsに一致しない "xxx[bot]" 形式のアカウントは、Loop1の目視検証で個別に agent/legacy_bot を判定する
+    # ⚠ このパターンは GraphQL 由来の login(サフィックス無し)には効かない。
+    #   App を足すときは上の accounts に小文字で書くこと(classify は normalize_login 後に照合する)。

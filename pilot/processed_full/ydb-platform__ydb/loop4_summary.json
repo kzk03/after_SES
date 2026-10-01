@@ -1,21 +1,21 @@
 {
   "repo": "ydb-platform/ydb",
-  "n_modules_with_events": 16,
+  "n_modules_with_events": 15,
   "n_months": 43,
-  "n_panel_rows": 284,
+  "n_panel_rows": 281,
   "valid_cell_ratio": {
     "H_I": 0.0,
-    "H_G": 0.7359154929577465,
-    "H_E": 0.6408450704225352
+    "H_G": 0.6690391459074733,
+    "H_E": 0.6476868327402135
   },
   "A_summary": {
-    "mean": 0.0018872052055716943,
-    "std": 0.010304200883215101,
-    "n_non_null": 276
+    "mean": 0.0064062181431578345,
+    "std": 0.06271654711638476,
+    "n_non_null": 271
   },
   "A_prime_summary(trailer込み感度分析)": {
-    "mean": 0.04387177518755227,
-    "std": 0.14844342257950502,
-    "n_non_null": 276
+    "mean": 0.05553086440159879,
+    "std": 0.16694485881038754,
+    "n_non_null": 271
   }
 }

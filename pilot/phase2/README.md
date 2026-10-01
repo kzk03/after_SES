@@ -51,7 +51,30 @@ phase1 の3つの結論を訂正した。詳細は FINDINGS.md §1, §5, §6。
 | D17 | `d17_asymmetry.py` | **生成と評価の非対称性の直接検定** → 非対称性は確認できず |
 | D18 | `d18_redundancy.py` | AI レビューは冗長な重ね掛けか、空白の補完か |
 | D19 | `d19_prediction_decay_full.py` | **SES研究との接続**。AI 参入前に学習した継続予測モデルは劣化するか(全期間データ必須) |
+| D20 | `d20_collect_review_bodies.py` | レビュー本文と指摘位置の収集(D21 の入力) |
+| D21 | `d21_comment_overlap.py` | AI と人間は同じ箇所を指摘しているか(冗長性の直接証拠) |
+| D22 | `d22_collect_thread_status.py` | レビュースレッドの解決状態の収集(D23 の入力) |
+| D23 | `d23_thread_resolution.py` | AI の指摘は人間の指摘と同じように処理されているか |
+| D24 | `d24_approval_substitution.py` | **承認の代替。判断の回路は機械に開かれているか** |
+| D25 | `d25_habituation.py` | 個人内で審査は甘くなっているか(Habituation at the Gate との対決) |
+| D26 | `d26_triage_model.py` | 実務価値。「読むべき AI コメント」を予測できるか |
+| D27 | `d27_behavior_shift.py` | AI はどこから進出し、人間の振る舞いはどう変わったか |
+| D28 | `d28_ai_role_shift.py` | **AI 自身の役割の変遷**(判断するのは `claude` だけ) |
+| D29 | `d29_collect_merged_by.py` | `mergedBy` の収集(D30 の入力) |
+| D30 | `d30_merge_authority.py` | **マージ実行権限。実行は委譲されるが判断は委譲されない** |
+| D31 | `d31_classification_audit.py` | **アクター分類の妥当性監査**。human に混ざった機械を login で洗い出す |
 | — | `collect_full_history.py` / `run_collect_full.sh` / `retry_failed_collect.sh` / `run_pipeline_full.sh` | 2023-01〜の収集と、収集完了を待って全分析を回すパイプライン |
+
+⚠ `run_pipeline_full.sh` が回すのは D1〜D18 まで。**D19 と D21〜D31 は別途手で回す**
+(D20/D22/D29 は収集なので、生データが変わらない限り再実行不要)。
+依存は D21←D20、D23←D22、D30/D31←D24、D24←`actors.parquet`。
+
+### アクター分類について(2026-09-23)
+
+`pilot/config/agent_identifiers.yaml` の分類には取りこぼしがあった。**GraphQL の `author.login` は
+GitHub App でも `[bot]` を返さない**ため、正規表現 `.*\[bot\]$` では捕まらない。
+App を足すときは `accounts` に**小文字で**書く(`classify` は `normalize_login` 後に照合する)。
+経緯と影響は `reports/FINDINGS_FULL.md` §1.17、再現は D31 を参照。
 
 依存: D7/D10/D13/D18 は D5 の出力が必要。D6/D7/D8/D10/D14/D15/D18 は D4 の処置定義関数を、
 D17 は D16 の処置定義関数を import する。

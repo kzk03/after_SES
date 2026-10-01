@@ -1,96 +1,96 @@
 {
-  "n_reviews": 1658057,
+  "n_reviews": 1644388,
   "n_repos": 39,
   "descriptive": [
     {
       "category": "human",
       "state": "COMMENTED",
-      "n": 896674,
-      "commit_1d": 0.44150940029486746,
-      "commit_7d": 0.5995133125305295,
-      "any_after": 0.7608707289382763,
-      "mean_commits_after": 3.8174163631375504
+      "n": 871855,
+      "commit_1d": 0.43922326533655254,
+      "commit_7d": 0.5978666177288655,
+      "any_after": 0.7612619070831732,
+      "mean_commits_after": 3.8143980363707266
     },
     {
       "category": "human",
       "state": "APPROVED",
-      "n": 601476,
-      "commit_1d": 0.19856985149864667,
-      "commit_7d": 0.2624344113480837,
-      "any_after": 0.3020951791925197,
-      "mean_commits_after": 0.7863223137747807
+      "n": 588859,
+      "commit_1d": 0.19981863230416788,
+      "commit_7d": 0.2634671457853238,
+      "any_after": 0.3034869128263302,
+      "mean_commits_after": 0.7962024865035603
     },
     {
       "category": "agent",
       "state": "COMMENTED",
-      "n": 87292,
-      "commit_1d": 0.4919580259359391,
-      "commit_7d": 0.6043280025661,
-      "any_after": 0.6913119186179718,
-      "mean_commits_after": 3.5601200568207854
+      "n": 111210,
+      "commit_1d": 0.49868716842010613,
+      "commit_7d": 0.6162755147918353,
+      "any_after": 0.704136318676378,
+      "mean_commits_after": 3.642577106375326
     },
     {
       "category": "human",
       "state": "CHANGES_REQUESTED",
-      "n": 50612,
-      "commit_1d": 0.4479767644036987,
-      "commit_7d": 0.6221251877025211,
-      "any_after": 0.7961155457203826,
-      "mean_commits_after": 3.5853157353987197
+      "n": 50461,
+      "commit_1d": 0.4473950179346426,
+      "commit_7d": 0.6219060264362577,
+      "any_after": 0.7961395929529735,
+      "mean_commits_after": 3.5820931016032183
     },
     {
       "category": "human",
       "state": "DISMISSED",
-      "n": 21690,
-      "commit_1d": 0.520746887966805,
-      "commit_7d": 0.718349469801752,
-      "any_after": 0.8521899492853849,
-      "mean_commits_after": 3.1659751037344397
+      "n": 21667,
+      "commit_1d": 0.5211150597683113,
+      "commit_7d": 0.7188812479808003,
+      "any_after": 0.852217658189874,
+      "mean_commits_after": 3.1682743342410116
     },
     {
       "category": "agent",
       "state": "APPROVED",
-      "n": 293,
-      "commit_1d": 0.2627986348122867,
-      "commit_7d": 0.447098976109215,
-      "any_after": 0.6996587030716723,
-      "mean_commits_after": 4.109215017064846
+      "n": 297,
+      "commit_1d": 0.265993265993266,
+      "commit_7d": 0.4511784511784512,
+      "any_after": 0.7037037037037037,
+      "mean_commits_after": 4.074074074074074
     }
   ],
   "lpm_controls": {
     "params": {
-      "const": 0.6373527305171566,
-      "is_agent": -0.03900795229862399,
-      "log_days_since": -0.07687743602590018,
-      "log_review_idx": 0.009421771112223674,
-      "log_pr_lines": 0.011551409110251647
+      "const": 0.6380737814833335,
+      "is_agent": -0.03218695601306828,
+      "log_days_since": -0.07698906879048223,
+      "log_review_idx": 0.009046231309952432,
+      "log_pr_lines": 0.011594909112389223
     },
     "pvalues": {
-      "const": 1.1096659840200412e-69,
-      "is_agent": 0.28384178637611535,
-      "log_days_since": 1.0235642695804868e-58,
-      "log_review_idx": 0.04544730961896359,
-      "log_pr_lines": 0.05325787677794073
+      "const": 5.89458242556714e-67,
+      "is_agent": 0.3339343452276099,
+      "log_days_since": 6.098793582158752e-59,
+      "log_review_idx": 0.05221854833930017,
+      "log_pr_lines": 0.05467678324431999
     },
-    "n": 983966
+    "n": 983065
   },
   "pr_fixed_effects": {
     "params": {
-      "is_agent": -0.007605626473606182,
-      "log_days_since": 0.06641623800231475,
-      "log_review_idx": -0.1637151472965631
+      "is_agent": -0.01256998498262852,
+      "log_days_since": 0.06966234506896657,
+      "log_review_idx": -0.16283143750025825
     },
     "pvalues": {
-      "is_agent": 0.4729850666052742,
+      "is_agent": 0.22952374032604128,
       "log_days_since": 0.0,
       "log_review_idx": 0.0
     },
-    "n": 175407,
-    "n_prs": 22513
+    "n": 190540,
+    "n_prs": 24045
   },
   "ai_only_prs": {
-    "n": 2934,
-    "share_of_reviewed_prs": 0.006351034261816733,
-    "merged_rate": 0.03749147920927062
+    "n": 5523,
+    "share_of_reviewed_prs": 0.01216621655557073,
+    "merged_rate": 0.10103204780010863
   }
 }

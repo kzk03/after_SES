@@ -3,9 +3,9 @@
   "n_prs_scanned": 7007,
   "n_unique_actors": 520,
   "category_counts": {
-    "human": 512,
-    "legacy_bot": 4,
-    "agent": 4
+    "human": 509,
+    "agent": 6,
+    "legacy_bot": 5
   },
   "trailer_pattern_hits": {
     "Co-authored-by:.*claude": 215,

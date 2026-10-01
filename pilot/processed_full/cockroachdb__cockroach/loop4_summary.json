@@ -2,20 +2,20 @@
   "repo": "cockroachdb/cockroach",
   "n_modules_with_events": 404,
   "n_months": 45,
-  "n_panel_rows": 5202,
+  "n_panel_rows": 5199,
   "valid_cell_ratio": {
     "H_I": 0.0,
-    "H_G": 0.4915417147251057,
-    "H_E": 0.6760861207227989
+    "H_G": 0.4900942488940181,
+    "H_E": 0.6764762454318138
   },
   "A_summary": {
     "mean": 0.0,
     "std": 0.0,
-    "n_non_null": 4890
+    "n_non_null": 4878
   },
   "A_prime_summary(trailer込み感度分析)": {
-    "mean": 0.05155161432109303,
-    "std": 0.19766047160675823,
-    "n_non_null": 4890
+    "mean": 0.049748278235691876,
+    "std": 0.19395959260211176,
+    "n_non_null": 4878
   }
 }

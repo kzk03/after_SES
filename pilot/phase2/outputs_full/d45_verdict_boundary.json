@@ -1,0 +1,4077 @@
+{
+  "n_prs_all": 949003,
+  "n_repos": 39,
+  "author_cat": {
+    "human": 847737,
+    "legacy_bot": 91514,
+    "none": 5702,
+    "agent": 4050
+  },
+  "agents": {
+    "copilot-pull-request-reviewer": {
+      "category": "agent",
+      "reviews": 78697,
+      "APPROVED": 48,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 78634,
+      "DISMISSED": 15,
+      "appr_on_human_pr": 48,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 41,
+      "n_repos_reviewing": 39,
+      "repos_approving": {
+        "home-assistant/core": 36,
+        "ydb-platform/ydb": 6,
+        "backstage/backstage": 3,
+        "prestodb/presto": 1,
+        "PaddlePaddle/Paddle": 1,
+        "open-telemetry/opentelemetry-collector-contrib": 1
+      },
+      "verdict_rate": 0.0006099343049925664,
+      "capability": "approves"
+    },
+    "cursor": {
+      "category": "agent",
+      "reviews": 30453,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 30453,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 5,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "gemini-code-assist": {
+      "category": "agent",
+      "reviews": 9150,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 9150,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 2,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "sentry": {
+      "category": "agent",
+      "reviews": 8239,
+      "APPROVED": 4,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 8235,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 4,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 3,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "getsentry/sentry": 4
+      },
+      "verdict_rate": 0.00048549581259861634,
+      "capability": "approves"
+    },
+    "ellipsis-dev": {
+      "category": "agent",
+      "reviews": 4741,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 4741,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "copilot-swe-agent": {
+      "category": "agent",
+      "reviews": 3980,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 3980,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 12,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "claude": {
+      "category": "agent",
+      "reviews": 2219,
+      "APPROVED": 257,
+      "CHANGES_REQUESTED": 6,
+      "COMMENTED": 1954,
+      "DISMISSED": 2,
+      "appr_on_human_pr": 255,
+      "appr_on_bot_pr": 2,
+      "cr_on_human_pr": 6,
+      "first_appr_human_pr": 167,
+      "n_repos_reviewing": 3,
+      "repos_approving": {
+        "NVIDIA/Megatron-LM": 257
+      },
+      "verdict_rate": 0.11852185669220369,
+      "capability": "approves"
+    },
+    "sourcery-ai": {
+      "category": "agent",
+      "reviews": 2079,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 3,
+      "COMMENTED": 2060,
+      "DISMISSED": 16,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 3,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.001443001443001443,
+      "capability": "never_approves"
+    },
+    "chatgpt-codex-connector": {
+      "category": "agent",
+      "reviews": 1679,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 1679,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 11,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "sentry-warden": {
+      "category": "agent",
+      "reviews": 1475,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 1475,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "seer-by-sentry": {
+      "category": "agent",
+      "reviews": 754,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 754,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "coderabbitai": {
+      "category": "agent",
+      "reviews": 413,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 413,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 5,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "graphite-app": {
+      "category": "agent",
+      "reviews": 28,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 28,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "greptile-apps": {
+      "category": "agent",
+      "reviews": 28,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 28,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "anthropic-code-agent": {
+      "category": "agent",
+      "reviews": 25,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 25,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "devin-ai-integration": {
+      "category": "agent",
+      "reviews": 6,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 6,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "SourceryAI": {
+      "category": "agent",
+      "reviews": 4,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 4,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "QodoAI-Agent": {
+      "category": "agent",
+      "reviews": 1,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 1,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    }
+  },
+  "ci_bots_top": {
+    "github-actions": {
+      "category": "legacy_bot",
+      "reviews": 11160,
+      "APPROVED": 8153,
+      "CHANGES_REQUESTED": 60,
+      "COMMENTED": 2897,
+      "DISMISSED": 50,
+      "appr_on_human_pr": 49,
+      "appr_on_bot_pr": 8104,
+      "cr_on_human_pr": 60,
+      "first_appr_human_pr": 46,
+      "n_repos_reviewing": 9,
+      "repos_approving": {
+        "dotnet/docs": 4412,
+        "nextcloud/server": 3709,
+        "SigNoz/signoz": 31,
+        "NVIDIA/Megatron-LM": 1
+      },
+      "verdict_rate": 0.735931899641577,
+      "capability": "approves"
+    },
+    "dotnet-policy-service": {
+      "category": "legacy_bot",
+      "reviews": 6805,
+      "APPROVED": 6805,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 0,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 2,
+      "appr_on_bot_pr": 6803,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 2,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "dotnet/docs": 6805
+      },
+      "verdict_rate": 1.0,
+      "capability": "approves"
+    },
+    "home-assistant": {
+      "category": "legacy_bot",
+      "reviews": 5599,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 1845,
+      "COMMENTED": 0,
+      "DISMISSED": 3754,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 1840,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.3295231291302018,
+      "capability": "never_approves"
+    },
+    "ciliumbot": {
+      "category": "legacy_bot",
+      "reviews": 5510,
+      "APPROVED": 5508,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 0,
+      "DISMISSED": 2,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 5508,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "cilium/cilium": 5508
+      },
+      "verdict_rate": 0.9996370235934664,
+      "capability": "approves"
+    },
+    "robot-vibe-db": {
+      "category": "legacy_bot",
+      "reviews": 4276,
+      "APPROVED": 1,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 4275,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 1,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "ydb-platform/ydb": 1
+      },
+      "verdict_rate": 0.00023386342376052386,
+      "capability": "approves"
+    },
+    "PaddlePaddle-bot": {
+      "category": "legacy_bot",
+      "reviews": 1519,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 538,
+      "COMMENTED": 981,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 538,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.35418038183015144,
+      "capability": "never_approves"
+    },
+    "pytorchbot": {
+      "category": "legacy_bot",
+      "reviews": 756,
+      "APPROVED": 755,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 0,
+      "DISMISSED": 1,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 755,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "pytorch/pytorch": 755
+      },
+      "verdict_rate": 0.9986772486772487,
+      "capability": "approves"
+    },
+    "grafana-pr-approver": {
+      "category": "legacy_bot",
+      "reviews": 315,
+      "APPROVED": 314,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 0,
+      "DISMISSED": 1,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 314,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "grafana/grafana": 314
+      },
+      "verdict_rate": 0.9968253968253968,
+      "capability": "approves"
+    },
+    "bluetoothbot": {
+      "category": "legacy_bot",
+      "reviews": 307,
+      "APPROVED": 127,
+      "CHANGES_REQUESTED": 87,
+      "COMMENTED": 93,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 127,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 87,
+      "first_appr_human_pr": 64,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "home-assistant/core": 127
+      },
+      "verdict_rate": 0.6970684039087948,
+      "capability": "approves"
+    },
+    "espressif-bot": {
+      "category": "legacy_bot",
+      "reviews": 184,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 17,
+      "COMMENTED": 166,
+      "DISMISSED": 1,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 12,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.09239130434782608,
+      "capability": "never_approves"
+    },
+    "HS-QUALIBOT": {
+      "category": "legacy_bot",
+      "reviews": 160,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 160,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "esphbot": {
+      "category": "legacy_bot",
+      "reviews": 62,
+      "APPROVED": 36,
+      "CHANGES_REQUESTED": 10,
+      "COMMENTED": 16,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 36,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 10,
+      "first_appr_human_pr": 14,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "home-assistant/core": 36
+      },
+      "verdict_rate": 0.7419354838709677,
+      "capability": "approves"
+    },
+    "zigpy-review-bot": {
+      "category": "legacy_bot",
+      "reviews": 32,
+      "APPROVED": 3,
+      "CHANGES_REQUESTED": 1,
+      "COMMENTED": 28,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 3,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 1,
+      "first_appr_human_pr": 2,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "home-assistant/core": 3
+      },
+      "verdict_rate": 0.125,
+      "capability": "approves"
+    },
+    "svcnvidia-nemo-ci": {
+      "category": "legacy_bot",
+      "reviews": 14,
+      "APPROVED": 7,
+      "CHANGES_REQUESTED": 4,
+      "COMMENTED": 0,
+      "DISMISSED": 3,
+      "appr_on_human_pr": 4,
+      "appr_on_bot_pr": 3,
+      "cr_on_human_pr": 4,
+      "first_appr_human_pr": 2,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "NVIDIA/Megatron-LM": 7
+      },
+      "verdict_rate": 0.7857142857142857,
+      "capability": "approves"
+    },
+    "DangerBotOSS": {
+      "category": "legacy_bot",
+      "reviews": 8,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 8,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "prestodb-ci": {
+      "category": "legacy_bot",
+      "reviews": 6,
+      "APPROVED": 2,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 4,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 2,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "prestodb/presto": 2
+      },
+      "verdict_rate": 0.3333333333333333,
+      "capability": "approves"
+    },
+    "grafanabot": {
+      "category": "legacy_bot",
+      "reviews": 3,
+      "APPROVED": 3,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 0,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 3,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 3,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "grafana/grafana": 3
+      },
+      "verdict_rate": 1.0,
+      "capability": "approves"
+    },
+    "ydbot": {
+      "category": "legacy_bot",
+      "reviews": 3,
+      "APPROVED": 1,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 0,
+      "DISMISSED": 2,
+      "appr_on_human_pr": 1,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 1,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "ydb-platform/ydb": 1
+      },
+      "verdict_rate": 0.3333333333333333,
+      "capability": "approves"
+    },
+    "opentelemetrybot": {
+      "category": "legacy_bot",
+      "reviews": 3,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 3,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "semgrep-app": {
+      "category": "legacy_bot",
+      "reviews": 3,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 3,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "bot-gradle": {
+      "category": "legacy_bot",
+      "reviews": 3,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 3,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "MihuBot": {
+      "category": "legacy_bot",
+      "reviews": 2,
+      "APPROVED": 1,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 1,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 1,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 1,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "dotnet/runtime": 1
+      },
+      "verdict_rate": 0.5,
+      "capability": "approves"
+    },
+    "svcnemo-autobot": {
+      "category": "legacy_bot",
+      "reviews": 2,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 2,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {},
+      "verdict_rate": 0.0,
+      "capability": "never_approves"
+    },
+    "paddle-xpu-bot": {
+      "category": "legacy_bot",
+      "reviews": 1,
+      "APPROVED": 1,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 0,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 1,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 1,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "PaddlePaddle/Paddle": 1
+      },
+      "verdict_rate": 1.0,
+      "capability": "approves"
+    },
+    "pytorchupdatebot": {
+      "category": "legacy_bot",
+      "reviews": 1,
+      "APPROVED": 1,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 0,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 0,
+      "appr_on_bot_pr": 1,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 0,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "pytorch/pytorch": 1
+      },
+      "verdict_rate": 1.0,
+      "capability": "approves"
+    },
+    "devops-ci-bot": {
+      "category": "legacy_bot",
+      "reviews": 1,
+      "APPROVED": 1,
+      "CHANGES_REQUESTED": 0,
+      "COMMENTED": 0,
+      "DISMISSED": 0,
+      "appr_on_human_pr": 1,
+      "appr_on_bot_pr": 0,
+      "cr_on_human_pr": 0,
+      "first_appr_human_pr": 1,
+      "n_repos_reviewing": 1,
+      "repos_approving": {
+        "cilium/cilium": 1
+      },
+      "verdict_rate": 1.0,
+      "capability": "approves"
+    }
+  },
+  "agents_total": {
+    "reviews": 143971,
+    "APPROVED": 309,
+    "CHANGES_REQUESTED": 9,
+    "appr_on_human_pr": 307,
+    "appr_on_bot_pr": 2,
+    "first_appr_human_pr": 211,
+    "n_accounts": 18,
+    "n_accounts_approving": 3
+  },
+  "agents_capable_total": {
+    "reviews": 89155,
+    "APPROVED": 309,
+    "CHANGES_REQUESTED": 6,
+    "appr_on_human_pr": 307,
+    "appr_on_bot_pr": 2,
+    "first_appr_human_pr": 211,
+    "n_accounts": 3,
+    "n_accounts_approving": 3
+  },
+  "agents_never_total": {
+    "reviews": 54816,
+    "APPROVED": 0,
+    "CHANGES_REQUESTED": 3,
+    "appr_on_human_pr": 0,
+    "appr_on_bot_pr": 0,
+    "first_appr_human_pr": 0,
+    "n_accounts": 15,
+    "n_accounts_approving": 0
+  },
+  "ci_bots_total": {
+    "reviews": 36735,
+    "APPROVED": 21719,
+    "CHANGES_REQUESTED": 2562,
+    "appr_on_human_pr": 230,
+    "appr_on_bot_pr": 21489,
+    "first_appr_human_pr": 137,
+    "n_accounts": 26,
+    "n_accounts_approving": 17
+  },
+  "exceptions_all": {
+    "n_human_authored": 847737,
+    "merge_rate_all": 0.7458067773377828,
+    "n_with_any_approval": 635086,
+    "first_approver_cat": {
+      "human": 634738,
+      "agent": 211,
+      "legacy_bot": 137
+    },
+    "machine_first": {
+      "machine (AI+CI)": {
+        "first_approver": 348,
+        "share_of_approved": 0.0005479572845252454,
+        "human_also_approved": 279,
+        "no_human_approval": 69,
+        "no_human_approval_merged": 23,
+        "no_human_approval_merge_rate": 0.3333333333333333,
+        "median_lines": 135.5,
+        "median_files": 3.0,
+        "by_login": {
+          "claude": 167,
+          "bluetoothbot": 64,
+          "github-actions": 46,
+          "copilot-pull-request-reviewer": 41,
+          "esphbot": 14,
+          "grafanabot": 3,
+          "sentry": 3,
+          "zigpy-review-bot": 2,
+          "dotnet-policy-service": 2,
+          "svcnvidia-nemo-ci": 2,
+          "MihuBot": 1,
+          "paddle-xpu-bot": 1,
+          "ydbot": 1,
+          "devops-ci-bot": 1
+        },
+        "by_repo": {
+          "NVIDIA/Megatron-LM": 170,
+          "home-assistant/core": 111,
+          "SigNoz/signoz": 31,
+          "nextcloud/server": 14,
+          "ydb-platform/ydb": 5,
+          "grafana/grafana": 3,
+          "backstage/backstage": 3,
+          "getsentry/sentry": 3,
+          "dotnet/docs": 2,
+          "PaddlePaddle/Paddle": 2,
+          "dotnet/runtime": 1,
+          "prestodb/presto": 1,
+          "open-telemetry/opentelemetry-collector-contrib": 1,
+          "cilium/cilium": 1
+        },
+        "no_human_by_repo_merged": {
+          "NVIDIA/Megatron-LM": [
+            34,
+            5
+          ],
+          "SigNoz/signoz": [
+            5,
+            5
+          ],
+          "dotnet/docs": [
+            2,
+            2
+          ],
+          "grafana/grafana": [
+            3,
+            3
+          ],
+          "home-assistant/core": [
+            22,
+            7
+          ],
+          "open-telemetry/opentelemetry-collector-contrib": [
+            1,
+            0
+          ],
+          "ydb-platform/ydb": [
+            2,
+            1
+          ]
+        }
+      },
+      "AI agent": {
+        "first_approver": 211,
+        "share_of_approved": 0.00033223846849088156,
+        "human_also_approved": 174,
+        "no_human_approval": 37,
+        "no_human_approval_merged": 5,
+        "no_human_approval_merge_rate": 0.13513513513513514,
+        "median_lines": 184.0,
+        "median_files": 3.0,
+        "by_login": {
+          "claude": 167,
+          "copilot-pull-request-reviewer": 41,
+          "sentry": 3
+        },
+        "by_repo": {
+          "NVIDIA/Megatron-LM": 167,
+          "home-assistant/core": 31,
+          "ydb-platform/ydb": 4,
+          "backstage/backstage": 3,
+          "getsentry/sentry": 3,
+          "prestodb/presto": 1,
+          "PaddlePaddle/Paddle": 1,
+          "open-telemetry/opentelemetry-collector-contrib": 1
+        },
+        "no_human_by_repo_merged": {
+          "NVIDIA/Megatron-LM": [
+            31,
+            5
+          ],
+          "home-assistant/core": [
+            4,
+            0
+          ],
+          "open-telemetry/opentelemetry-collector-contrib": [
+            1,
+            0
+          ],
+          "ydb-platform/ydb": [
+            1,
+            0
+          ]
+        }
+      },
+      "CI bot": {
+        "first_approver": 137,
+        "share_of_approved": 0.00021571881603436386,
+        "human_also_approved": 105,
+        "no_human_approval": 32,
+        "no_human_approval_merged": 18,
+        "no_human_approval_merge_rate": 0.5625,
+        "median_lines": 55.0,
+        "median_files": 2.0,
+        "by_login": {
+          "bluetoothbot": 64,
+          "github-actions": 46,
+          "esphbot": 14,
+          "grafanabot": 3,
+          "zigpy-review-bot": 2,
+          "dotnet-policy-service": 2,
+          "svcnvidia-nemo-ci": 2,
+          "MihuBot": 1,
+          "paddle-xpu-bot": 1,
+          "ydbot": 1,
+          "devops-ci-bot": 1
+        },
+        "by_repo": {
+          "home-assistant/core": 80,
+          "SigNoz/signoz": 31,
+          "nextcloud/server": 14,
+          "grafana/grafana": 3,
+          "NVIDIA/Megatron-LM": 3,
+          "dotnet/docs": 2,
+          "dotnet/runtime": 1,
+          "PaddlePaddle/Paddle": 1,
+          "ydb-platform/ydb": 1,
+          "cilium/cilium": 1
+        },
+        "no_human_by_repo_merged": {
+          "NVIDIA/Megatron-LM": [
+            3,
+            0
+          ],
+          "SigNoz/signoz": [
+            5,
+            5
+          ],
+          "dotnet/docs": [
+            2,
+            2
+          ],
+          "grafana/grafana": [
+            3,
+            3
+          ],
+          "home-assistant/core": [
+            18,
+            7
+          ],
+          "ydb-platform/ydb": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "human_first_median_lines": 42.0,
+    "human_first_median_files": 2.0,
+    "conditional": {
+      "no_approval_at_all": {
+        "n": 212651,
+        "merged": 68185,
+        "merge_rate": 0.32064274327419107
+      },
+      "no_approval_at_all_excl_pytorch": {
+        "n": 190661,
+        "merged": 68121,
+        "merge_rate": 0.3572885907448298
+      },
+      "ai_approved_no_human": {
+        "n": 37,
+        "merged": 5,
+        "merge_rate": 0.13513513513513514
+      },
+      "ai_only_approval": {
+        "n": 37,
+        "merged": 5,
+        "merge_rate": 0.13513513513513514
+      },
+      "ci_approved_no_human": {
+        "n": 32,
+        "merged": 18,
+        "merge_rate": 0.5625
+      },
+      "human_approved": {
+        "n": 635017,
+        "merged": 564040,
+        "merge_rate": 0.8882281891665892
+      },
+      "any_ai_approval": {
+        "n": 265,
+        "merged": 216,
+        "merge_rate": 0.8150943396226416
+      }
+    },
+    "ai_approved_no_human_by_repo": {
+      "NVIDIA/Megatron-LM": [
+        31,
+        5
+      ],
+      "home-assistant/core": [
+        4,
+        0
+      ],
+      "open-telemetry/opentelemetry-collector-contrib": [
+        1,
+        0
+      ],
+      "ydb-platform/ydb": [
+        1,
+        0
+      ]
+    },
+    "no_approval_same_repos": {
+      "n": 18372,
+      "merged": 1759,
+      "merge_rate": 0.09574352275201393
+    },
+    "no_approval_by_repo_for_ai_repos": {
+      "NVIDIA/Megatron-LM": {
+        "n": 2209,
+        "merged": 229,
+        "merge_rate": 0.10366681756450882
+      },
+      "home-assistant/core": {
+        "n": 8116,
+        "merged": 716,
+        "merge_rate": 0.08822079842286841
+      },
+      "open-telemetry/opentelemetry-collector-contrib": {
+        "n": 2659,
+        "merged": 245,
+        "merge_rate": 0.09213990221887927
+      },
+      "ydb-platform/ydb": {
+        "n": 5388,
+        "merged": 569,
+        "merge_rate": 0.10560504825538233
+      }
+    },
+    "reviews_capped_share": 0.008897806749027116,
+    "machine_first_no_human_top_authors": {
+      "home-assistant/core:RaHehl": 8,
+      "SigNoz/signoz:palashgdev": 5,
+      "NVIDIA/Megatron-LM:HollowMan6": 4,
+      "NVIDIA/Megatron-LM:tdene": 4,
+      "NVIDIA/Megatron-LM:ko3n1g": 4,
+      "grafana/grafana:zerok": 3,
+      "home-assistant/core:bdraco": 3,
+      "NVIDIA/Megatron-LM:Phlip79": 3,
+      "NVIDIA/Megatron-LM:Wohox": 2,
+      "home-assistant/core:Acrobot": 1
+    }
+  },
+  "exceptions_module_matched": {
+    "n_human_authored": 503796,
+    "merge_rate_all": 0.7651986121366585,
+    "n_with_any_approval": 380185,
+    "first_approver_cat": {
+      "human": 379863,
+      "agent": 201,
+      "legacy_bot": 121
+    },
+    "machine_first": {
+      "machine (AI+CI)": {
+        "first_approver": 322,
+        "share_of_approved": 0.0008469560871680892,
+        "human_also_approved": 257,
+        "no_human_approval": 65,
+        "no_human_approval_merged": 21,
+        "no_human_approval_merge_rate": 0.3230769230769231,
+        "median_lines": 144.0,
+        "median_files": 3.0,
+        "by_login": {
+          "claude": 167,
+          "bluetoothbot": 63,
+          "github-actions": 34,
+          "copilot-pull-request-reviewer": 31,
+          "esphbot": 14,
+          "grafanabot": 3,
+          "sentry": 3,
+          "zigpy-review-bot": 2,
+          "svcnvidia-nemo-ci": 2,
+          "dotnet-policy-service": 1,
+          "ydbot": 1,
+          "devops-ci-bot": 1
+        },
+        "by_repo": {
+          "NVIDIA/Megatron-LM": 170,
+          "home-assistant/core": 105,
+          "SigNoz/signoz": 19,
+          "nextcloud/server": 14,
+          "grafana/grafana": 3,
+          "backstage/backstage": 3,
+          "getsentry/sentry": 3,
+          "dotnet/docs": 1,
+          "prestodb/presto": 1,
+          "ydb-platform/ydb": 1,
+          "open-telemetry/opentelemetry-collector-contrib": 1,
+          "cilium/cilium": 1
+        },
+        "no_human_by_repo_merged": {
+          "NVIDIA/Megatron-LM": [
+            34,
+            5
+          ],
+          "SigNoz/signoz": [
+            4,
+            4
+          ],
+          "dotnet/docs": [
+            1,
+            1
+          ],
+          "grafana/grafana": [
+            3,
+            3
+          ],
+          "home-assistant/core": [
+            21,
+            7
+          ],
+          "open-telemetry/opentelemetry-collector-contrib": [
+            1,
+            0
+          ],
+          "ydb-platform/ydb": [
+            1,
+            1
+          ]
+        }
+      },
+      "AI agent": {
+        "first_approver": 201,
+        "share_of_approved": 0.0005286899798782171,
+        "human_also_approved": 165,
+        "no_human_approval": 36,
+        "no_human_approval_merged": 5,
+        "no_human_approval_merge_rate": 0.1388888888888889,
+        "median_lines": 186.0,
+        "median_files": 3.0,
+        "by_login": {
+          "claude": 167,
+          "copilot-pull-request-reviewer": 31,
+          "sentry": 3
+        },
+        "by_repo": {
+          "NVIDIA/Megatron-LM": 167,
+          "home-assistant/core": 26,
+          "backstage/backstage": 3,
+          "getsentry/sentry": 3,
+          "prestodb/presto": 1,
+          "open-telemetry/opentelemetry-collector-contrib": 1
+        },
+        "no_human_by_repo_merged": {
+          "NVIDIA/Megatron-LM": [
+            31,
+            5
+          ],
+          "home-assistant/core": [
+            4,
+            0
+          ],
+          "open-telemetry/opentelemetry-collector-contrib": [
+            1,
+            0
+          ]
+        }
+      },
+      "CI bot": {
+        "first_approver": 121,
+        "share_of_approved": 0.000318266107289872,
+        "human_also_approved": 92,
+        "no_human_approval": 29,
+        "no_human_approval_merged": 16,
+        "no_human_approval_merge_rate": 0.5517241379310345,
+        "median_lines": 86.0,
+        "median_files": 2.0,
+        "by_login": {
+          "bluetoothbot": 63,
+          "github-actions": 34,
+          "esphbot": 14,
+          "grafanabot": 3,
+          "zigpy-review-bot": 2,
+          "svcnvidia-nemo-ci": 2,
+          "dotnet-policy-service": 1,
+          "ydbot": 1,
+          "devops-ci-bot": 1
+        },
+        "by_repo": {
+          "home-assistant/core": 79,
+          "SigNoz/signoz": 19,
+          "nextcloud/server": 14,
+          "grafana/grafana": 3,
+          "NVIDIA/Megatron-LM": 3,
+          "dotnet/docs": 1,
+          "ydb-platform/ydb": 1,
+          "cilium/cilium": 1
+        },
+        "no_human_by_repo_merged": {
+          "NVIDIA/Megatron-LM": [
+            3,
+            0
+          ],
+          "SigNoz/signoz": [
+            4,
+            4
+          ],
+          "dotnet/docs": [
+            1,
+            1
+          ],
+          "grafana/grafana": [
+            3,
+            3
+          ],
+          "home-assistant/core": [
+            17,
+            7
+          ],
+          "ydb-platform/ydb": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "human_first_median_lines": 47.0,
+    "human_first_median_files": 3.0,
+    "conditional": {
+      "no_approval_at_all": {
+        "n": 123611,
+        "merged": 39353,
+        "merge_rate": 0.3183616344823681
+      },
+      "no_approval_at_all_excl_pytorch": {
+        "n": 114417,
+        "merged": 39324,
+        "merge_rate": 0.34369018589894856
+      },
+      "ai_approved_no_human": {
+        "n": 36,
+        "merged": 5,
+        "merge_rate": 0.1388888888888889
+      },
+      "ai_only_approval": {
+        "n": 36,
+        "merged": 5,
+        "merge_rate": 0.1388888888888889
+      },
+      "ci_approved_no_human": {
+        "n": 29,
+        "merged": 16,
+        "merge_rate": 0.5517241379310345
+      },
+      "human_approved": {
+        "n": 380120,
+        "merged": 346130,
+        "merge_rate": 0.9105808691992002
+      },
+      "any_ai_approval": {
+        "n": 253,
+        "merged": 205,
+        "merge_rate": 0.8102766798418972
+      }
+    },
+    "ai_approved_no_human_by_repo": {
+      "NVIDIA/Megatron-LM": [
+        31,
+        5
+      ],
+      "home-assistant/core": [
+        4,
+        0
+      ],
+      "open-telemetry/opentelemetry-collector-contrib": [
+        1,
+        0
+      ]
+    },
+    "no_approval_same_repos": {
+      "n": 11255,
+      "merged": 1101,
+      "merge_rate": 0.09782318969346956
+    },
+    "no_approval_by_repo_for_ai_repos": {
+      "NVIDIA/Megatron-LM": {
+        "n": 1960,
+        "merged": 201,
+        "merge_rate": 0.10255102040816326
+      },
+      "home-assistant/core": {
+        "n": 6805,
+        "merged": 671,
+        "merge_rate": 0.09860396767083027
+      },
+      "open-telemetry/opentelemetry-collector-contrib": {
+        "n": 2490,
+        "merged": 229,
+        "merge_rate": 0.09196787148594378
+      }
+    },
+    "reviews_capped_share": 0.009857164407815863,
+    "machine_first_no_human_top_authors": {
+      "home-assistant/core:RaHehl": 7,
+      "SigNoz/signoz:palashgdev": 4,
+      "NVIDIA/Megatron-LM:HollowMan6": 4,
+      "NVIDIA/Megatron-LM:tdene": 4,
+      "NVIDIA/Megatron-LM:ko3n1g": 4,
+      "home-assistant/core:bdraco": 3,
+      "NVIDIA/Megatron-LM:Phlip79": 3,
+      "grafana/grafana:zerok": 3,
+      "NVIDIA/Megatron-LM:Wohox": 2,
+      "home-assistant/core:Acrobot": 1
+    }
+  },
+  "corrected_extra_machine": [
+    "azure-sdk"
+  ],
+  "exceptions_all_corrected": {
+    "n_human_authored": 847737,
+    "merge_rate_all": 0.7458067773377828,
+    "n_with_any_approval": 635086,
+    "first_approver_cat": {
+      "human": 634738,
+      "agent": 211,
+      "legacy_bot": 137
+    },
+    "machine_first": {
+      "machine (AI+CI)": {
+        "first_approver": 348,
+        "share_of_approved": 0.0005479572845252454,
+        "human_also_approved": 279,
+        "no_human_approval": 69,
+        "no_human_approval_merged": 23,
+        "no_human_approval_merge_rate": 0.3333333333333333,
+        "median_lines": 135.5,
+        "median_files": 3.0,
+        "by_login": {
+          "claude": 167,
+          "bluetoothbot": 64,
+          "github-actions": 46,
+          "copilot-pull-request-reviewer": 41,
+          "esphbot": 14,
+          "grafanabot": 3,
+          "sentry": 3,
+          "zigpy-review-bot": 2,
+          "dotnet-policy-service": 2,
+          "svcnvidia-nemo-ci": 2,
+          "MihuBot": 1,
+          "paddle-xpu-bot": 1,
+          "ydbot": 1,
+          "devops-ci-bot": 1
+        },
+        "by_repo": {
+          "NVIDIA/Megatron-LM": 170,
+          "home-assistant/core": 111,
+          "SigNoz/signoz": 31,
+          "nextcloud/server": 14,
+          "ydb-platform/ydb": 5,
+          "grafana/grafana": 3,
+          "backstage/backstage": 3,
+          "getsentry/sentry": 3,
+          "dotnet/docs": 2,
+          "PaddlePaddle/Paddle": 2,
+          "dotnet/runtime": 1,
+          "prestodb/presto": 1,
+          "open-telemetry/opentelemetry-collector-contrib": 1,
+          "cilium/cilium": 1
+        },
+        "no_human_by_repo_merged": {
+          "NVIDIA/Megatron-LM": [
+            34,
+            5
+          ],
+          "SigNoz/signoz": [
+            5,
+            5
+          ],
+          "dotnet/docs": [
+            2,
+            2
+          ],
+          "grafana/grafana": [
+            3,
+            3
+          ],
+          "home-assistant/core": [
+            22,
+            7
+          ],
+          "open-telemetry/opentelemetry-collector-contrib": [
+            1,
+            0
+          ],
+          "ydb-platform/ydb": [
+            2,
+            1
+          ]
+        }
+      },
+      "AI agent": {
+        "first_approver": 211,
+        "share_of_approved": 0.00033223846849088156,
+        "human_also_approved": 174,
+        "no_human_approval": 37,
+        "no_human_approval_merged": 5,
+        "no_human_approval_merge_rate": 0.13513513513513514,
+        "median_lines": 184.0,
+        "median_files": 3.0,
+        "by_login": {
+          "claude": 167,
+          "copilot-pull-request-reviewer": 41,
+          "sentry": 3
+        },
+        "by_repo": {
+          "NVIDIA/Megatron-LM": 167,
+          "home-assistant/core": 31,
+          "ydb-platform/ydb": 4,
+          "backstage/backstage": 3,
+          "getsentry/sentry": 3,
+          "prestodb/presto": 1,
+          "PaddlePaddle/Paddle": 1,
+          "open-telemetry/opentelemetry-collector-contrib": 1
+        },
+        "no_human_by_repo_merged": {
+          "NVIDIA/Megatron-LM": [
+            31,
+            5
+          ],
+          "home-assistant/core": [
+            4,
+            0
+          ],
+          "open-telemetry/opentelemetry-collector-contrib": [
+            1,
+            0
+          ],
+          "ydb-platform/ydb": [
+            1,
+            0
+          ]
+        }
+      },
+      "CI bot": {
+        "first_approver": 137,
+        "share_of_approved": 0.00021571881603436386,
+        "human_also_approved": 105,
+        "no_human_approval": 32,
+        "no_human_approval_merged": 18,
+        "no_human_approval_merge_rate": 0.5625,
+        "median_lines": 55.0,
+        "median_files": 2.0,
+        "by_login": {
+          "bluetoothbot": 64,
+          "github-actions": 46,
+          "esphbot": 14,
+          "grafanabot": 3,
+          "zigpy-review-bot": 2,
+          "dotnet-policy-service": 2,
+          "svcnvidia-nemo-ci": 2,
+          "MihuBot": 1,
+          "paddle-xpu-bot": 1,
+          "ydbot": 1,
+          "devops-ci-bot": 1
+        },
+        "by_repo": {
+          "home-assistant/core": 80,
+          "SigNoz/signoz": 31,
+          "nextcloud/server": 14,
+          "grafana/grafana": 3,
+          "NVIDIA/Megatron-LM": 3,
+          "dotnet/docs": 2,
+          "dotnet/runtime": 1,
+          "PaddlePaddle/Paddle": 1,
+          "ydb-platform/ydb": 1,
+          "cilium/cilium": 1
+        },
+        "no_human_by_repo_merged": {
+          "NVIDIA/Megatron-LM": [
+            3,
+            0
+          ],
+          "SigNoz/signoz": [
+            5,
+            5
+          ],
+          "dotnet/docs": [
+            2,
+            2
+          ],
+          "grafana/grafana": [
+            3,
+            3
+          ],
+          "home-assistant/core": [
+            18,
+            7
+          ],
+          "ydb-platform/ydb": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "human_first_median_lines": 42.0,
+    "human_first_median_files": 2.0,
+    "conditional": {
+      "no_approval_at_all": {
+        "n": 212651,
+        "merged": 68185,
+        "merge_rate": 0.32064274327419107
+      },
+      "no_approval_at_all_excl_pytorch": {
+        "n": 190661,
+        "merged": 68121,
+        "merge_rate": 0.3572885907448298
+      },
+      "ai_approved_no_human": {
+        "n": 37,
+        "merged": 5,
+        "merge_rate": 0.13513513513513514
+      },
+      "ai_only_approval": {
+        "n": 37,
+        "merged": 5,
+        "merge_rate": 0.13513513513513514
+      },
+      "ci_approved_no_human": {
+        "n": 32,
+        "merged": 18,
+        "merge_rate": 0.5625
+      },
+      "human_approved": {
+        "n": 635017,
+        "merged": 564040,
+        "merge_rate": 0.8882281891665892
+      },
+      "any_ai_approval": {
+        "n": 265,
+        "merged": 216,
+        "merge_rate": 0.8150943396226416
+      }
+    },
+    "ai_approved_no_human_by_repo": {
+      "NVIDIA/Megatron-LM": [
+        31,
+        5
+      ],
+      "home-assistant/core": [
+        4,
+        0
+      ],
+      "open-telemetry/opentelemetry-collector-contrib": [
+        1,
+        0
+      ],
+      "ydb-platform/ydb": [
+        1,
+        0
+      ]
+    },
+    "no_approval_same_repos": {
+      "n": 18372,
+      "merged": 1759,
+      "merge_rate": 0.09574352275201393
+    },
+    "no_approval_by_repo_for_ai_repos": {
+      "NVIDIA/Megatron-LM": {
+        "n": 2209,
+        "merged": 229,
+        "merge_rate": 0.10366681756450882
+      },
+      "home-assistant/core": {
+        "n": 8116,
+        "merged": 716,
+        "merge_rate": 0.08822079842286841
+      },
+      "open-telemetry/opentelemetry-collector-contrib": {
+        "n": 2659,
+        "merged": 245,
+        "merge_rate": 0.09213990221887927
+      },
+      "ydb-platform/ydb": {
+        "n": 5388,
+        "merged": 569,
+        "merge_rate": 0.10560504825538233
+      }
+    },
+    "reviews_capped_share": 0.008897806749027116,
+    "machine_first_no_human_top_authors": {
+      "home-assistant/core:RaHehl": 8,
+      "SigNoz/signoz:palashgdev": 5,
+      "NVIDIA/Megatron-LM:HollowMan6": 4,
+      "NVIDIA/Megatron-LM:tdene": 4,
+      "NVIDIA/Megatron-LM:ko3n1g": 4,
+      "grafana/grafana:zerok": 3,
+      "home-assistant/core:bdraco": 3,
+      "NVIDIA/Megatron-LM:Phlip79": 3,
+      "NVIDIA/Megatron-LM:Wohox": 2,
+      "home-assistant/core:Acrobot": 1
+    }
+  },
+  "exceptions_module_matched_corrected": {
+    "n_human_authored": 503796,
+    "merge_rate_all": 0.7651986121366585,
+    "n_with_any_approval": 380185,
+    "first_approver_cat": {
+      "human": 379863,
+      "agent": 201,
+      "legacy_bot": 121
+    },
+    "machine_first": {
+      "machine (AI+CI)": {
+        "first_approver": 322,
+        "share_of_approved": 0.0008469560871680892,
+        "human_also_approved": 257,
+        "no_human_approval": 65,
+        "no_human_approval_merged": 21,
+        "no_human_approval_merge_rate": 0.3230769230769231,
+        "median_lines": 144.0,
+        "median_files": 3.0,
+        "by_login": {
+          "claude": 167,
+          "bluetoothbot": 63,
+          "github-actions": 34,
+          "copilot-pull-request-reviewer": 31,
+          "esphbot": 14,
+          "grafanabot": 3,
+          "sentry": 3,
+          "zigpy-review-bot": 2,
+          "svcnvidia-nemo-ci": 2,
+          "dotnet-policy-service": 1,
+          "ydbot": 1,
+          "devops-ci-bot": 1
+        },
+        "by_repo": {
+          "NVIDIA/Megatron-LM": 170,
+          "home-assistant/core": 105,
+          "SigNoz/signoz": 19,
+          "nextcloud/server": 14,
+          "grafana/grafana": 3,
+          "backstage/backstage": 3,
+          "getsentry/sentry": 3,
+          "dotnet/docs": 1,
+          "prestodb/presto": 1,
+          "ydb-platform/ydb": 1,
+          "open-telemetry/opentelemetry-collector-contrib": 1,
+          "cilium/cilium": 1
+        },
+        "no_human_by_repo_merged": {
+          "NVIDIA/Megatron-LM": [
+            34,
+            5
+          ],
+          "SigNoz/signoz": [
+            4,
+            4
+          ],
+          "dotnet/docs": [
+            1,
+            1
+          ],
+          "grafana/grafana": [
+            3,
+            3
+          ],
+          "home-assistant/core": [
+            21,
+            7
+          ],
+          "open-telemetry/opentelemetry-collector-contrib": [
+            1,
+            0
+          ],
+          "ydb-platform/ydb": [
+            1,
+            1
+          ]
+        }
+      },
+      "AI agent": {
+        "first_approver": 201,
+        "share_of_approved": 0.0005286899798782171,
+        "human_also_approved": 165,
+        "no_human_approval": 36,
+        "no_human_approval_merged": 5,
+        "no_human_approval_merge_rate": 0.1388888888888889,
+        "median_lines": 186.0,
+        "median_files": 3.0,
+        "by_login": {
+          "claude": 167,
+          "copilot-pull-request-reviewer": 31,
+          "sentry": 3
+        },
+        "by_repo": {
+          "NVIDIA/Megatron-LM": 167,
+          "home-assistant/core": 26,
+          "backstage/backstage": 3,
+          "getsentry/sentry": 3,
+          "prestodb/presto": 1,
+          "open-telemetry/opentelemetry-collector-contrib": 1
+        },
+        "no_human_by_repo_merged": {
+          "NVIDIA/Megatron-LM": [
+            31,
+            5
+          ],
+          "home-assistant/core": [
+            4,
+            0
+          ],
+          "open-telemetry/opentelemetry-collector-contrib": [
+            1,
+            0
+          ]
+        }
+      },
+      "CI bot": {
+        "first_approver": 121,
+        "share_of_approved": 0.000318266107289872,
+        "human_also_approved": 92,
+        "no_human_approval": 29,
+        "no_human_approval_merged": 16,
+        "no_human_approval_merge_rate": 0.5517241379310345,
+        "median_lines": 86.0,
+        "median_files": 2.0,
+        "by_login": {
+          "bluetoothbot": 63,
+          "github-actions": 34,
+          "esphbot": 14,
+          "grafanabot": 3,
+          "zigpy-review-bot": 2,
+          "svcnvidia-nemo-ci": 2,
+          "dotnet-policy-service": 1,
+          "ydbot": 1,
+          "devops-ci-bot": 1
+        },
+        "by_repo": {
+          "home-assistant/core": 79,
+          "SigNoz/signoz": 19,
+          "nextcloud/server": 14,
+          "grafana/grafana": 3,
+          "NVIDIA/Megatron-LM": 3,
+          "dotnet/docs": 1,
+          "ydb-platform/ydb": 1,
+          "cilium/cilium": 1
+        },
+        "no_human_by_repo_merged": {
+          "NVIDIA/Megatron-LM": [
+            3,
+            0
+          ],
+          "SigNoz/signoz": [
+            4,
+            4
+          ],
+          "dotnet/docs": [
+            1,
+            1
+          ],
+          "grafana/grafana": [
+            3,
+            3
+          ],
+          "home-assistant/core": [
+            17,
+            7
+          ],
+          "ydb-platform/ydb": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "human_first_median_lines": 47.0,
+    "human_first_median_files": 3.0,
+    "conditional": {
+      "no_approval_at_all": {
+        "n": 123611,
+        "merged": 39353,
+        "merge_rate": 0.3183616344823681
+      },
+      "no_approval_at_all_excl_pytorch": {
+        "n": 114417,
+        "merged": 39324,
+        "merge_rate": 0.34369018589894856
+      },
+      "ai_approved_no_human": {
+        "n": 36,
+        "merged": 5,
+        "merge_rate": 0.1388888888888889
+      },
+      "ai_only_approval": {
+        "n": 36,
+        "merged": 5,
+        "merge_rate": 0.1388888888888889
+      },
+      "ci_approved_no_human": {
+        "n": 29,
+        "merged": 16,
+        "merge_rate": 0.5517241379310345
+      },
+      "human_approved": {
+        "n": 380120,
+        "merged": 346130,
+        "merge_rate": 0.9105808691992002
+      },
+      "any_ai_approval": {
+        "n": 253,
+        "merged": 205,
+        "merge_rate": 0.8102766798418972
+      }
+    },
+    "ai_approved_no_human_by_repo": {
+      "NVIDIA/Megatron-LM": [
+        31,
+        5
+      ],
+      "home-assistant/core": [
+        4,
+        0
+      ],
+      "open-telemetry/opentelemetry-collector-contrib": [
+        1,
+        0
+      ]
+    },
+    "no_approval_same_repos": {
+      "n": 11255,
+      "merged": 1101,
+      "merge_rate": 0.09782318969346956
+    },
+    "no_approval_by_repo_for_ai_repos": {
+      "NVIDIA/Megatron-LM": {
+        "n": 1960,
+        "merged": 201,
+        "merge_rate": 0.10255102040816326
+      },
+      "home-assistant/core": {
+        "n": 6805,
+        "merged": 671,
+        "merge_rate": 0.09860396767083027
+      },
+      "open-telemetry/opentelemetry-collector-contrib": {
+        "n": 2490,
+        "merged": 229,
+        "merge_rate": 0.09196787148594378
+      }
+    },
+    "reviews_capped_share": 0.009857164407815863,
+    "machine_first_no_human_top_authors": {
+      "home-assistant/core:RaHehl": 7,
+      "SigNoz/signoz:palashgdev": 4,
+      "NVIDIA/Megatron-LM:HollowMan6": 4,
+      "NVIDIA/Megatron-LM:tdene": 4,
+      "NVIDIA/Megatron-LM:ko3n1g": 4,
+      "home-assistant/core:bdraco": 3,
+      "NVIDIA/Megatron-LM:Phlip79": 3,
+      "grafana/grafana:zerok": 3,
+      "NVIDIA/Megatron-LM:Wohox": 2,
+      "home-assistant/core:Acrobot": 1
+    }
+  },
+  "merge_module_matched_corrected": {
+    "merged_by_coverage": 0.9999974059931933,
+    "n_merged_human_authored_all": 385504,
+    "no_approved_share_all_merged_by_repo": {
+      "DefinitelyTyped/DefinitelyTyped": {
+        "merged": 6699,
+        "no_approved_share": 0.07657859381997313
+      },
+      "NVIDIA/Megatron-LM": {
+        "merged": 2750,
+        "no_approved_share": 0.0730909090909091
+      },
+      "PaddlePaddle/Paddle": {
+        "merged": 1969,
+        "no_approved_share": 0.0045708481462671405
+      },
+      "SigNoz/signoz": {
+        "merged": 3555,
+        "no_approved_share": 0.055414908579465544
+      },
+      "apache/airflow": {
+        "merged": 11952,
+        "no_approved_share": 0.046268406961178045
+      },
+      "backstage/backstage": {
+        "merged": 7055,
+        "no_approved_share": 0.0222537207654146
+      },
+      "ceph/ceph": {
+        "merged": 13459,
+        "no_approved_share": 0.011367857938925627
+      },
+      "cilium/cilium": {
+        "merged": 11800,
+        "no_approved_share": 0.010169491525423728
+      },
+      "cockroachdb/cockroach": {
+        "merged": 25946,
+        "no_approved_share": 0.0017729129730979726
+      },
+      "dotnet/docs": {
+        "merged": 4767,
+        "no_approved_share": 0.032305433186490456
+      },
+      "dotnet/runtime": {
+        "merged": 8619,
+        "no_approved_share": 0.029585798816568046
+      },
+      "elastic/elasticsearch": {
+        "merged": 108,
+        "no_approved_share": 0.5370370370370371
+      },
+      "envoyproxy/envoy": {
+        "merged": 7186,
+        "no_approved_share": 0.04717506262176454
+      },
+      "espressif/arduino-esp32": {
+        "merged": 1751,
+        "no_approved_share": 0.23814962878355225
+      },
+      "flipperdevices/flipperzero-firmware": {
+        "merged": 1015,
+        "no_approved_share": 0.05714285714285714
+      },
+      "getsentry/sentry": {
+        "merged": 44083,
+        "no_approved_share": 0.003629517047387882
+      },
+      "ghostty-org/ghostty": {
+        "merged": 2643,
+        "no_approved_share": 0.6772606886114264
+      },
+      "goauthentik/authentik": {
+        "merged": 5082,
+        "no_approved_share": 0.27371113734750097
+      },
+      "godotengine/godot": {
+        "merged": 15498,
+        "no_approved_share": 0.0156794425087108
+      },
+      "gradle/gradle": {
+        "merged": 5305,
+        "no_approved_share": 0.26107445805843543
+      },
+      "grafana/grafana": {
+        "merged": 29335,
+        "no_approved_share": 0.012612919720470428
+      },
+      "hashicorp/vault": {
+        "merged": 6800,
+        "no_approved_share": 0.013088235294117647
+      },
+      "home-assistant/core": {
+        "merged": 45918,
+        "no_approved_share": 0.014613005792935233
+      },
+      "istio/istio": {
+        "merged": 5168,
+        "no_approved_share": 0.006578947368421052
+      },
+      "jekyll/jekyll": {
+        "merged": 148,
+        "no_approved_share": 0.2905405405405405
+      },
+      "juspay/hyperswitch": {
+        "merged": 6810,
+        "no_approved_share": 0.02041116005873715
+      },
+      "llvm/llvm-project": {
+        "merged": 7763,
+        "no_approved_share": 0.05745201597320623
+      },
+      "nextcloud/server": {
+        "merged": 8823,
+        "no_approved_share": 0.05735010767312705
+      },
+      "open-telemetry/opentelemetry-collector-contrib": {
+        "merged": 11083,
+        "no_approved_share": 0.020662275557159614
+      },
+      "php/php-src": {
+        "merged": 3167,
+        "no_approved_share": 0.20239974739501104
+      },
+      "prestodb/presto": {
+        "merged": 4383,
+        "no_approved_share": 0.028747433264887063
+      },
+      "python/cpython": {
+        "merged": 20929,
+        "no_approved_share": 0.43203210855750396
+      },
+      "pytorch/pytorch": {
+        "merged": 407,
+        "no_approved_share": 0.07125307125307126
+      },
+      "ray-project/ray": {
+        "merged": 14627,
+        "no_approved_share": 0.04327613317836877
+      },
+      "reactos/reactos": {
+        "merged": 2145,
+        "no_approved_share": 0.20279720279720279
+      },
+      "swiftlang/swift": {
+        "merged": 18909,
+        "no_approved_share": 0.30435242477127294
+      },
+      "termux/termux-packages": {
+        "merged": 8180,
+        "no_approved_share": 0.8172371638141809
+      },
+      "tgstation/tgstation": {
+        "merged": 7544,
+        "no_approved_share": 0.6727200424178155
+      },
+      "ydb-platform/ydb": {
+        "merged": 2123,
+        "no_approved_share": 0.0970325011775789
+      }
+    },
+    "n_merged_human_authored": 385503,
+    "merger_cat": {
+      "human": 357491,
+      "legacy_bot": 27903,
+      "none": 69,
+      "unknown": 40
+    },
+    "machine_merges": 27903,
+    "machine_merge_share": 0.07238075968280402,
+    "machine_merge_with_human_appr": 27489,
+    "machine_merge_with_human_appr_share": 0.9851628857112138,
+    "machine_merge_with_human_appr_before_merge_share": 0.9851628857112138,
+    "fully_machine": 414,
+    "fully_machine_share_of_merged": 0.0010739216037229282,
+    "fully_machine_by_repo": {
+      "gradle/gradle": 343,
+      "cockroachdb/cockroach": 33,
+      "istio/istio": 29,
+      "DefinitelyTyped/DefinitelyTyped": 7,
+      "dotnet/docs": 1,
+      "ydb-platform/ydb": 1
+    },
+    "fully_machine_any_approval": 0,
+    "fully_machine_zero_reviews": 286,
+    "by_merger_login": {
+      "craig": {
+        "n": 13659,
+        "repos": [
+          "cockroachdb/cockroach"
+        ],
+        "with_human_appr": 0.9980232813529542,
+        "no_human_appr": 27
+      },
+      "typescript-bot": {
+        "n": 5213,
+        "repos": [
+          "DefinitelyTyped/DefinitelyTyped"
+        ],
+        "with_human_appr": 0.9986572031459812,
+        "no_human_appr": 7
+      },
+      "istio-testing": {
+        "n": 5160,
+        "repos": [
+          "istio/istio"
+        ],
+        "with_human_appr": 0.9943798449612403,
+        "no_human_appr": 29
+      },
+      "trunk-io": {
+        "n": 2318,
+        "repos": [
+          "cockroachdb/cockroach"
+        ],
+        "with_human_appr": 0.997411561691113,
+        "no_human_appr": 6
+      },
+      "bot-gradle": {
+        "n": 1214,
+        "repos": [
+          "gradle/gradle"
+        ],
+        "with_human_appr": 0.7215815485996705,
+        "no_human_appr": 338
+      },
+      "typescript-automation": {
+        "n": 268,
+        "repos": [
+          "DefinitelyTyped/DefinitelyTyped"
+        ],
+        "with_human_appr": 1.0,
+        "no_human_appr": 0
+      },
+      "github-actions": {
+        "n": 58,
+        "repos": [
+          "cockroachdb/cockroach",
+          "nextcloud/server"
+        ],
+        "with_human_appr": 1.0,
+        "no_human_appr": 0
+      },
+      "github-merge-queue": {
+        "n": 10,
+        "repos": [
+          "gradle/gradle"
+        ],
+        "with_human_appr": 0.5,
+        "no_human_appr": 5
+      },
+      "ydbot": {
+        "n": 2,
+        "repos": [
+          "ydb-platform/ydb"
+        ],
+        "with_human_appr": 0.5,
+        "no_human_appr": 1
+      },
+      "dotnet-policy-service": {
+        "n": 1,
+        "repos": [
+          "dotnet/docs"
+        ],
+        "with_human_appr": 0.0,
+        "no_human_appr": 1
+      }
+    },
+    "machine_merges_all_authors": 51361,
+    "per_repo": [
+      {
+        "repo": "termux/termux-packages",
+        "merged": 8180,
+        "no_approved_share": 0.8172371638141809,
+        "no_human_approved_share": 0.8172371638141809,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "ghostty-org/ghostty",
+        "merged": 2643,
+        "no_approved_share": 0.6772606886114264,
+        "no_human_approved_share": 0.6772606886114264,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "tgstation/tgstation",
+        "merged": 7544,
+        "no_approved_share": 0.6727200424178155,
+        "no_human_approved_share": 0.6727200424178155,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "elastic/elasticsearch",
+        "merged": 108,
+        "no_approved_share": 0.5370370370370371,
+        "no_human_approved_share": 0.5370370370370371,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "python/cpython",
+        "merged": 20929,
+        "no_approved_share": 0.43203210855750396,
+        "no_human_approved_share": 0.43203210855750396,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "swiftlang/swift",
+        "merged": 18909,
+        "no_approved_share": 0.30435242477127294,
+        "no_human_approved_share": 0.30435242477127294,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "jekyll/jekyll",
+        "merged": 148,
+        "no_approved_share": 0.2905405405405405,
+        "no_human_approved_share": 0.2905405405405405,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "goauthentik/authentik",
+        "merged": 5082,
+        "no_approved_share": 0.27371113734750097,
+        "no_human_approved_share": 0.27371113734750097,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "gradle/gradle",
+        "merged": 5305,
+        "no_approved_share": 0.26107445805843543,
+        "no_human_approved_share": 0.26107445805843543,
+        "machine_merge_share": 0.2307257304429783
+      },
+      {
+        "repo": "espressif/arduino-esp32",
+        "merged": 1751,
+        "no_approved_share": 0.23814962878355225,
+        "no_human_approved_share": 0.23814962878355225,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "reactos/reactos",
+        "merged": 2145,
+        "no_approved_share": 0.20279720279720279,
+        "no_human_approved_share": 0.20279720279720279,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "php/php-src",
+        "merged": 3167,
+        "no_approved_share": 0.20239974739501104,
+        "no_human_approved_share": 0.20239974739501104,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "ydb-platform/ydb",
+        "merged": 2123,
+        "no_approved_share": 0.0970325011775789,
+        "no_human_approved_share": 0.09750353273669336,
+        "machine_merge_share": 0.0009420631182289214
+      },
+      {
+        "repo": "DefinitelyTyped/DefinitelyTyped",
+        "merged": 6699,
+        "no_approved_share": 0.07657859381997313,
+        "no_human_approved_share": 0.07657859381997313,
+        "machine_merge_share": 0.8181818181818182
+      },
+      {
+        "repo": "NVIDIA/Megatron-LM",
+        "merged": 2749,
+        "no_approved_share": 0.07311749727173518,
+        "no_human_approved_share": 0.07493634048744999,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "pytorch/pytorch",
+        "merged": 407,
+        "no_approved_share": 0.07125307125307126,
+        "no_human_approved_share": 0.07125307125307126,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "llvm/llvm-project",
+        "merged": 7763,
+        "no_approved_share": 0.05745201597320623,
+        "no_human_approved_share": 0.05745201597320623,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "nextcloud/server",
+        "merged": 8823,
+        "no_approved_share": 0.05735010767312705,
+        "no_human_approved_share": 0.05735010767312705,
+        "machine_merge_share": 0.0017001020061203672
+      },
+      {
+        "repo": "flipperdevices/flipperzero-firmware",
+        "merged": 1015,
+        "no_approved_share": 0.05714285714285714,
+        "no_human_approved_share": 0.05714285714285714,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "SigNoz/signoz",
+        "merged": 3555,
+        "no_approved_share": 0.055414908579465544,
+        "no_human_approved_share": 0.056540084388185655,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "envoyproxy/envoy",
+        "merged": 7186,
+        "no_approved_share": 0.04717506262176454,
+        "no_human_approved_share": 0.04717506262176454,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "apache/airflow",
+        "merged": 11952,
+        "no_approved_share": 0.046268406961178045,
+        "no_human_approved_share": 0.046268406961178045,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "ray-project/ray",
+        "merged": 14627,
+        "no_approved_share": 0.04327613317836877,
+        "no_human_approved_share": 0.04327613317836877,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "dotnet/docs",
+        "merged": 4767,
+        "no_approved_share": 0.032305433186490456,
+        "no_human_approved_share": 0.03251520872666247,
+        "machine_merge_share": 0.00020977554017201594
+      },
+      {
+        "repo": "dotnet/runtime",
+        "merged": 8619,
+        "no_approved_share": 0.029585798816568046,
+        "no_human_approved_share": 0.029585798816568046,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "prestodb/presto",
+        "merged": 4383,
+        "no_approved_share": 0.028747433264887063,
+        "no_human_approved_share": 0.028747433264887063,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "backstage/backstage",
+        "merged": 7055,
+        "no_approved_share": 0.0222537207654146,
+        "no_human_approved_share": 0.0222537207654146,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "open-telemetry/opentelemetry-collector-contrib",
+        "merged": 11083,
+        "no_approved_share": 0.020662275557159614,
+        "no_human_approved_share": 0.020662275557159614,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "juspay/hyperswitch",
+        "merged": 6810,
+        "no_approved_share": 0.02041116005873715,
+        "no_human_approved_share": 0.02041116005873715,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "godotengine/godot",
+        "merged": 15498,
+        "no_approved_share": 0.0156794425087108,
+        "no_human_approved_share": 0.0156794425087108,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "home-assistant/core",
+        "merged": 45918,
+        "no_approved_share": 0.014613005792935233,
+        "no_human_approved_share": 0.01476545145694499,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "hashicorp/vault",
+        "merged": 6800,
+        "no_approved_share": 0.013088235294117647,
+        "no_human_approved_share": 0.013088235294117647,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "grafana/grafana",
+        "merged": 29335,
+        "no_approved_share": 0.012612919720470428,
+        "no_human_approved_share": 0.01271518663712289,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "ceph/ceph",
+        "merged": 13459,
+        "no_approved_share": 0.011367857938925627,
+        "no_human_approved_share": 0.011367857938925627,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "cilium/cilium",
+        "merged": 11800,
+        "no_approved_share": 0.010169491525423728,
+        "no_human_approved_share": 0.010169491525423728,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "istio/istio",
+        "merged": 5168,
+        "no_approved_share": 0.006578947368421052,
+        "no_human_approved_share": 0.006578947368421052,
+        "machine_merge_share": 0.9984520123839009
+      },
+      {
+        "repo": "PaddlePaddle/Paddle",
+        "merged": 1969,
+        "no_approved_share": 0.0045708481462671405,
+        "no_human_approved_share": 0.0045708481462671405,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "getsentry/sentry",
+        "merged": 44083,
+        "no_approved_share": 0.003629517047387882,
+        "no_human_approved_share": 0.003629517047387882,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "cockroachdb/cockroach",
+        "merged": 25946,
+        "no_approved_share": 0.0017729129730979726,
+        "no_human_approved_share": 0.0017729129730979726,
+        "machine_merge_share": 0.6174362136745548
+      }
+    ],
+    "flag_repos": {
+      "pytorch/pytorch": {
+        "repo": "pytorch/pytorch",
+        "merged": 407,
+        "no_approved_share": 0.07125307125307126,
+        "no_human_approved_share": 0.07125307125307126,
+        "machine_merge_share": 0.0
+      },
+      "istio/istio": {
+        "repo": "istio/istio",
+        "merged": 5168,
+        "no_approved_share": 0.006578947368421052,
+        "no_human_approved_share": 0.006578947368421052,
+        "machine_merge_share": 0.9984520123839009
+      },
+      "cockroachdb/cockroach": {
+        "repo": "cockroachdb/cockroach",
+        "merged": 25946,
+        "no_approved_share": 0.0017729129730979726,
+        "no_human_approved_share": 0.0017729129730979726,
+        "machine_merge_share": 0.6174362136745548
+      }
+    },
+    "pytorch_note": {
+      "human_prs": 30362,
+      "merged_state": 407
+    },
+    "unlisted_merger_candidates": []
+  },
+  "merge_all": {
+    "merged_by_coverage": 0.6097338386202883,
+    "n_merged_human_authored_all": 632248,
+    "no_approved_share_all_merged_by_repo": {
+      "DefinitelyTyped/DefinitelyTyped": {
+        "merged": 7903,
+        "no_approved_share": 0.08389219283816272
+      },
+      "NVIDIA/Megatron-LM": {
+        "merged": 2893,
+        "no_approved_share": 0.07915658486000691
+      },
+      "PaddlePaddle/Paddle": {
+        "merged": 19781,
+        "no_approved_share": 0.003589302866386937
+      },
+      "SigNoz/signoz": {
+        "merged": 5242,
+        "no_approved_share": 0.047310186951545215
+      },
+      "apache/airflow": {
+        "merged": 23719,
+        "no_approved_share": 0.02976516716556347
+      },
+      "backstage/backstage": {
+        "merged": 8115,
+        "no_approved_share": 0.021072088724584104
+      },
+      "ceph/ceph": {
+        "merged": 17022,
+        "no_approved_share": 0.010927035600986958
+      },
+      "cilium/cilium": {
+        "merged": 12772,
+        "no_approved_share": 0.010021922956467273
+      },
+      "cockroachdb/cockroach": {
+        "merged": 32821,
+        "no_approved_share": 0.0016148197800188904
+      },
+      "dotnet/docs": {
+        "merged": 5341,
+        "no_approved_share": 0.03014416775884666
+      },
+      "dotnet/runtime": {
+        "merged": 22978,
+        "no_approved_share": 0.020802506745582733
+      },
+      "elastic/elasticsearch": {
+        "merged": 542,
+        "no_approved_share": 0.39114391143911437
+      },
+      "envoyproxy/envoy": {
+        "merged": 11543,
+        "no_approved_share": 0.041756908949146666
+      },
+      "espressif/arduino-esp32": {
+        "merged": 1815,
+        "no_approved_share": 0.2413223140495868
+      },
+      "flipperdevices/flipperzero-firmware": {
+        "merged": 1139,
+        "no_approved_share": 0.050921861281826165
+      },
+      "getsentry/sentry": {
+        "merged": 60045,
+        "no_approved_share": 0.0035306853193438257
+      },
+      "ghostty-org/ghostty": {
+        "merged": 4386,
+        "no_approved_share": 0.6876424988600092
+      },
+      "goauthentik/authentik": {
+        "merged": 6660,
+        "no_approved_share": 0.2518018018018018
+      },
+      "godotengine/godot": {
+        "merged": 18177,
+        "no_approved_share": 0.014743907135390878
+      },
+      "gradle/gradle": {
+        "merged": 7289,
+        "no_approved_share": 0.2608039511592811
+      },
+      "grafana/grafana": {
+        "merged": 35039,
+        "no_approved_share": 0.013813179599874426
+      },
+      "hashicorp/vault": {
+        "merged": 9870,
+        "no_approved_share": 0.01165146909827761
+      },
+      "home-assistant/core": {
+        "merged": 49109,
+        "no_approved_share": 0.014579812254372925
+      },
+      "istio/istio": {
+        "merged": 5456,
+        "no_approved_share": 0.006414956011730206
+      },
+      "jekyll/jekyll": {
+        "merged": 152,
+        "no_approved_share": 0.2894736842105263
+      },
+      "juspay/hyperswitch": {
+        "merged": 7514,
+        "no_approved_share": 0.01943039659302635
+      },
+      "llvm/llvm-project": {
+        "merged": 100164,
+        "no_approved_share": 0.11922447186613953
+      },
+      "nextcloud/server": {
+        "merged": 9467,
+        "no_approved_share": 0.054610753142494986
+      },
+      "open-telemetry/opentelemetry-collector-contrib": {
+        "merged": 11767,
+        "no_approved_share": 0.02082093991671624
+      },
+      "php/php-src": {
+        "merged": 4308,
+        "no_approved_share": 0.2010213556174559
+      },
+      "prestodb/presto": {
+        "merged": 4975,
+        "no_approved_share": 0.02592964824120603
+      },
+      "python/cpython": {
+        "merged": 32004,
+        "no_approved_share": 0.4684101987251594
+      },
+      "pytorch/pytorch": {
+        "merged": 782,
+        "no_approved_share": 0.08184143222506395
+      },
+      "ray-project/ray": {
+        "merged": 17225,
+        "no_approved_share": 0.04179970972423803
+      },
+      "reactos/reactos": {
+        "merged": 3642,
+        "no_approved_share": 0.24217462932454695
+      },
+      "swiftlang/swift": {
+        "merged": 20935,
+        "no_approved_share": 0.31550035825173156
+      },
+      "termux/termux-packages": {
+        "merged": 8463,
+        "no_approved_share": 0.8172043010752689
+      },
+      "tgstation/tgstation": {
+        "merged": 15037,
+        "no_approved_share": 0.72095497772162
+      },
+      "ydb-platform/ydb": {
+        "merged": 26156,
+        "no_approved_share": 0.021754090839577918
+      }
+    },
+    "n_merged_human_authored": 385503,
+    "merger_cat": {
+      "human": 357491,
+      "legacy_bot": 27903,
+      "none": 69,
+      "unknown": 40
+    },
+    "machine_merges": 27903,
+    "machine_merge_share": 0.07238075968280402,
+    "machine_merge_with_human_appr": 27489,
+    "machine_merge_with_human_appr_share": 0.9851628857112138,
+    "machine_merge_with_human_appr_before_merge_share": 0.9851628857112138,
+    "fully_machine": 414,
+    "fully_machine_share_of_merged": 0.0010739216037229282,
+    "fully_machine_by_repo": {
+      "gradle/gradle": 343,
+      "cockroachdb/cockroach": 33,
+      "istio/istio": 29,
+      "DefinitelyTyped/DefinitelyTyped": 7,
+      "dotnet/docs": 1,
+      "ydb-platform/ydb": 1
+    },
+    "fully_machine_any_approval": 0,
+    "fully_machine_zero_reviews": 286,
+    "by_merger_login": {
+      "craig": {
+        "n": 13659,
+        "repos": [
+          "cockroachdb/cockroach"
+        ],
+        "with_human_appr": 0.9980232813529542,
+        "no_human_appr": 27
+      },
+      "typescript-bot": {
+        "n": 5213,
+        "repos": [
+          "DefinitelyTyped/DefinitelyTyped"
+        ],
+        "with_human_appr": 0.9986572031459812,
+        "no_human_appr": 7
+      },
+      "istio-testing": {
+        "n": 5160,
+        "repos": [
+          "istio/istio"
+        ],
+        "with_human_appr": 0.9943798449612403,
+        "no_human_appr": 29
+      },
+      "trunk-io": {
+        "n": 2318,
+        "repos": [
+          "cockroachdb/cockroach"
+        ],
+        "with_human_appr": 0.997411561691113,
+        "no_human_appr": 6
+      },
+      "bot-gradle": {
+        "n": 1214,
+        "repos": [
+          "gradle/gradle"
+        ],
+        "with_human_appr": 0.7215815485996705,
+        "no_human_appr": 338
+      },
+      "typescript-automation": {
+        "n": 268,
+        "repos": [
+          "DefinitelyTyped/DefinitelyTyped"
+        ],
+        "with_human_appr": 1.0,
+        "no_human_appr": 0
+      },
+      "github-actions": {
+        "n": 58,
+        "repos": [
+          "cockroachdb/cockroach",
+          "nextcloud/server"
+        ],
+        "with_human_appr": 1.0,
+        "no_human_appr": 0
+      },
+      "github-merge-queue": {
+        "n": 10,
+        "repos": [
+          "gradle/gradle"
+        ],
+        "with_human_appr": 0.5,
+        "no_human_appr": 5
+      },
+      "ydbot": {
+        "n": 2,
+        "repos": [
+          "ydb-platform/ydb"
+        ],
+        "with_human_appr": 0.5,
+        "no_human_appr": 1
+      },
+      "dotnet-policy-service": {
+        "n": 1,
+        "repos": [
+          "dotnet/docs"
+        ],
+        "with_human_appr": 0.0,
+        "no_human_appr": 1
+      }
+    },
+    "machine_merges_all_authors": 51361,
+    "per_repo": [
+      {
+        "repo": "termux/termux-packages",
+        "merged": 8180,
+        "no_approved_share": 0.8172371638141809,
+        "no_human_approved_share": 0.8172371638141809,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "ghostty-org/ghostty",
+        "merged": 2643,
+        "no_approved_share": 0.6772606886114264,
+        "no_human_approved_share": 0.6772606886114264,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "tgstation/tgstation",
+        "merged": 7544,
+        "no_approved_share": 0.6727200424178155,
+        "no_human_approved_share": 0.6727200424178155,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "elastic/elasticsearch",
+        "merged": 108,
+        "no_approved_share": 0.5370370370370371,
+        "no_human_approved_share": 0.5370370370370371,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "python/cpython",
+        "merged": 20929,
+        "no_approved_share": 0.43203210855750396,
+        "no_human_approved_share": 0.43203210855750396,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "swiftlang/swift",
+        "merged": 18909,
+        "no_approved_share": 0.30435242477127294,
+        "no_human_approved_share": 0.30435242477127294,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "jekyll/jekyll",
+        "merged": 148,
+        "no_approved_share": 0.2905405405405405,
+        "no_human_approved_share": 0.2905405405405405,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "goauthentik/authentik",
+        "merged": 5082,
+        "no_approved_share": 0.27371113734750097,
+        "no_human_approved_share": 0.27371113734750097,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "gradle/gradle",
+        "merged": 5305,
+        "no_approved_share": 0.26107445805843543,
+        "no_human_approved_share": 0.26107445805843543,
+        "machine_merge_share": 0.2307257304429783
+      },
+      {
+        "repo": "espressif/arduino-esp32",
+        "merged": 1751,
+        "no_approved_share": 0.23814962878355225,
+        "no_human_approved_share": 0.23814962878355225,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "reactos/reactos",
+        "merged": 2145,
+        "no_approved_share": 0.20279720279720279,
+        "no_human_approved_share": 0.20279720279720279,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "php/php-src",
+        "merged": 3167,
+        "no_approved_share": 0.20239974739501104,
+        "no_human_approved_share": 0.20239974739501104,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "ydb-platform/ydb",
+        "merged": 2123,
+        "no_approved_share": 0.0970325011775789,
+        "no_human_approved_share": 0.09750353273669336,
+        "machine_merge_share": 0.0009420631182289214
+      },
+      {
+        "repo": "DefinitelyTyped/DefinitelyTyped",
+        "merged": 6699,
+        "no_approved_share": 0.07657859381997313,
+        "no_human_approved_share": 0.07657859381997313,
+        "machine_merge_share": 0.8181818181818182
+      },
+      {
+        "repo": "NVIDIA/Megatron-LM",
+        "merged": 2749,
+        "no_approved_share": 0.07311749727173518,
+        "no_human_approved_share": 0.07493634048744999,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "pytorch/pytorch",
+        "merged": 407,
+        "no_approved_share": 0.07125307125307126,
+        "no_human_approved_share": 0.07125307125307126,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "llvm/llvm-project",
+        "merged": 7763,
+        "no_approved_share": 0.05745201597320623,
+        "no_human_approved_share": 0.05745201597320623,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "nextcloud/server",
+        "merged": 8823,
+        "no_approved_share": 0.05735010767312705,
+        "no_human_approved_share": 0.05735010767312705,
+        "machine_merge_share": 0.0017001020061203672
+      },
+      {
+        "repo": "flipperdevices/flipperzero-firmware",
+        "merged": 1015,
+        "no_approved_share": 0.05714285714285714,
+        "no_human_approved_share": 0.05714285714285714,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "SigNoz/signoz",
+        "merged": 3555,
+        "no_approved_share": 0.055414908579465544,
+        "no_human_approved_share": 0.056540084388185655,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "envoyproxy/envoy",
+        "merged": 7186,
+        "no_approved_share": 0.04717506262176454,
+        "no_human_approved_share": 0.04717506262176454,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "apache/airflow",
+        "merged": 11952,
+        "no_approved_share": 0.046268406961178045,
+        "no_human_approved_share": 0.046268406961178045,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "ray-project/ray",
+        "merged": 14627,
+        "no_approved_share": 0.04327613317836877,
+        "no_human_approved_share": 0.04327613317836877,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "dotnet/docs",
+        "merged": 4767,
+        "no_approved_share": 0.032305433186490456,
+        "no_human_approved_share": 0.03251520872666247,
+        "machine_merge_share": 0.00020977554017201594
+      },
+      {
+        "repo": "dotnet/runtime",
+        "merged": 8619,
+        "no_approved_share": 0.029585798816568046,
+        "no_human_approved_share": 0.029585798816568046,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "prestodb/presto",
+        "merged": 4383,
+        "no_approved_share": 0.028747433264887063,
+        "no_human_approved_share": 0.028747433264887063,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "backstage/backstage",
+        "merged": 7055,
+        "no_approved_share": 0.0222537207654146,
+        "no_human_approved_share": 0.0222537207654146,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "open-telemetry/opentelemetry-collector-contrib",
+        "merged": 11083,
+        "no_approved_share": 0.020662275557159614,
+        "no_human_approved_share": 0.020662275557159614,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "juspay/hyperswitch",
+        "merged": 6810,
+        "no_approved_share": 0.02041116005873715,
+        "no_human_approved_share": 0.02041116005873715,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "godotengine/godot",
+        "merged": 15498,
+        "no_approved_share": 0.0156794425087108,
+        "no_human_approved_share": 0.0156794425087108,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "home-assistant/core",
+        "merged": 45918,
+        "no_approved_share": 0.014613005792935233,
+        "no_human_approved_share": 0.01476545145694499,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "hashicorp/vault",
+        "merged": 6800,
+        "no_approved_share": 0.013088235294117647,
+        "no_human_approved_share": 0.013088235294117647,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "grafana/grafana",
+        "merged": 29335,
+        "no_approved_share": 0.012612919720470428,
+        "no_human_approved_share": 0.01271518663712289,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "ceph/ceph",
+        "merged": 13459,
+        "no_approved_share": 0.011367857938925627,
+        "no_human_approved_share": 0.011367857938925627,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "cilium/cilium",
+        "merged": 11800,
+        "no_approved_share": 0.010169491525423728,
+        "no_human_approved_share": 0.010169491525423728,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "istio/istio",
+        "merged": 5168,
+        "no_approved_share": 0.006578947368421052,
+        "no_human_approved_share": 0.006578947368421052,
+        "machine_merge_share": 0.9984520123839009
+      },
+      {
+        "repo": "PaddlePaddle/Paddle",
+        "merged": 1969,
+        "no_approved_share": 0.0045708481462671405,
+        "no_human_approved_share": 0.0045708481462671405,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "getsentry/sentry",
+        "merged": 44083,
+        "no_approved_share": 0.003629517047387882,
+        "no_human_approved_share": 0.003629517047387882,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "cockroachdb/cockroach",
+        "merged": 25946,
+        "no_approved_share": 0.0017729129730979726,
+        "no_human_approved_share": 0.0017729129730979726,
+        "machine_merge_share": 0.6174362136745548
+      }
+    ],
+    "flag_repos": {
+      "pytorch/pytorch": {
+        "repo": "pytorch/pytorch",
+        "merged": 407,
+        "no_approved_share": 0.07125307125307126,
+        "no_human_approved_share": 0.07125307125307126,
+        "machine_merge_share": 0.0
+      },
+      "istio/istio": {
+        "repo": "istio/istio",
+        "merged": 5168,
+        "no_approved_share": 0.006578947368421052,
+        "no_human_approved_share": 0.006578947368421052,
+        "machine_merge_share": 0.9984520123839009
+      },
+      "cockroachdb/cockroach": {
+        "repo": "cockroachdb/cockroach",
+        "merged": 25946,
+        "no_approved_share": 0.0017729129730979726,
+        "no_human_approved_share": 0.0017729129730979726,
+        "machine_merge_share": 0.6174362136745548
+      }
+    },
+    "pytorch_note": {
+      "human_prs": 73221,
+      "merged_state": 782
+    },
+    "unlisted_merger_candidates": []
+  },
+  "merge_module_matched": {
+    "merged_by_coverage": 0.9999974059931933,
+    "n_merged_human_authored_all": 385504,
+    "no_approved_share_all_merged_by_repo": {
+      "DefinitelyTyped/DefinitelyTyped": {
+        "merged": 6699,
+        "no_approved_share": 0.07657859381997313
+      },
+      "NVIDIA/Megatron-LM": {
+        "merged": 2750,
+        "no_approved_share": 0.0730909090909091
+      },
+      "PaddlePaddle/Paddle": {
+        "merged": 1969,
+        "no_approved_share": 0.0045708481462671405
+      },
+      "SigNoz/signoz": {
+        "merged": 3555,
+        "no_approved_share": 0.055414908579465544
+      },
+      "apache/airflow": {
+        "merged": 11952,
+        "no_approved_share": 0.046268406961178045
+      },
+      "backstage/backstage": {
+        "merged": 7055,
+        "no_approved_share": 0.0222537207654146
+      },
+      "ceph/ceph": {
+        "merged": 13459,
+        "no_approved_share": 0.011367857938925627
+      },
+      "cilium/cilium": {
+        "merged": 11800,
+        "no_approved_share": 0.010169491525423728
+      },
+      "cockroachdb/cockroach": {
+        "merged": 25946,
+        "no_approved_share": 0.0017729129730979726
+      },
+      "dotnet/docs": {
+        "merged": 4767,
+        "no_approved_share": 0.032305433186490456
+      },
+      "dotnet/runtime": {
+        "merged": 8619,
+        "no_approved_share": 0.029585798816568046
+      },
+      "elastic/elasticsearch": {
+        "merged": 108,
+        "no_approved_share": 0.5370370370370371
+      },
+      "envoyproxy/envoy": {
+        "merged": 7186,
+        "no_approved_share": 0.04717506262176454
+      },
+      "espressif/arduino-esp32": {
+        "merged": 1751,
+        "no_approved_share": 0.23814962878355225
+      },
+      "flipperdevices/flipperzero-firmware": {
+        "merged": 1015,
+        "no_approved_share": 0.05714285714285714
+      },
+      "getsentry/sentry": {
+        "merged": 44083,
+        "no_approved_share": 0.003629517047387882
+      },
+      "ghostty-org/ghostty": {
+        "merged": 2643,
+        "no_approved_share": 0.6772606886114264
+      },
+      "goauthentik/authentik": {
+        "merged": 5082,
+        "no_approved_share": 0.27371113734750097
+      },
+      "godotengine/godot": {
+        "merged": 15498,
+        "no_approved_share": 0.0156794425087108
+      },
+      "gradle/gradle": {
+        "merged": 5305,
+        "no_approved_share": 0.26107445805843543
+      },
+      "grafana/grafana": {
+        "merged": 29335,
+        "no_approved_share": 0.012612919720470428
+      },
+      "hashicorp/vault": {
+        "merged": 6800,
+        "no_approved_share": 0.013088235294117647
+      },
+      "home-assistant/core": {
+        "merged": 45918,
+        "no_approved_share": 0.014613005792935233
+      },
+      "istio/istio": {
+        "merged": 5168,
+        "no_approved_share": 0.006578947368421052
+      },
+      "jekyll/jekyll": {
+        "merged": 148,
+        "no_approved_share": 0.2905405405405405
+      },
+      "juspay/hyperswitch": {
+        "merged": 6810,
+        "no_approved_share": 0.02041116005873715
+      },
+      "llvm/llvm-project": {
+        "merged": 7763,
+        "no_approved_share": 0.05745201597320623
+      },
+      "nextcloud/server": {
+        "merged": 8823,
+        "no_approved_share": 0.05735010767312705
+      },
+      "open-telemetry/opentelemetry-collector-contrib": {
+        "merged": 11083,
+        "no_approved_share": 0.020662275557159614
+      },
+      "php/php-src": {
+        "merged": 3167,
+        "no_approved_share": 0.20239974739501104
+      },
+      "prestodb/presto": {
+        "merged": 4383,
+        "no_approved_share": 0.028747433264887063
+      },
+      "python/cpython": {
+        "merged": 20929,
+        "no_approved_share": 0.43203210855750396
+      },
+      "pytorch/pytorch": {
+        "merged": 407,
+        "no_approved_share": 0.07125307125307126
+      },
+      "ray-project/ray": {
+        "merged": 14627,
+        "no_approved_share": 0.04327613317836877
+      },
+      "reactos/reactos": {
+        "merged": 2145,
+        "no_approved_share": 0.20279720279720279
+      },
+      "swiftlang/swift": {
+        "merged": 18909,
+        "no_approved_share": 0.30435242477127294
+      },
+      "termux/termux-packages": {
+        "merged": 8180,
+        "no_approved_share": 0.8172371638141809
+      },
+      "tgstation/tgstation": {
+        "merged": 7544,
+        "no_approved_share": 0.6727200424178155
+      },
+      "ydb-platform/ydb": {
+        "merged": 2123,
+        "no_approved_share": 0.0970325011775789
+      }
+    },
+    "n_merged_human_authored": 385503,
+    "merger_cat": {
+      "human": 357491,
+      "legacy_bot": 27903,
+      "none": 69,
+      "unknown": 40
+    },
+    "machine_merges": 27903,
+    "machine_merge_share": 0.07238075968280402,
+    "machine_merge_with_human_appr": 27489,
+    "machine_merge_with_human_appr_share": 0.9851628857112138,
+    "machine_merge_with_human_appr_before_merge_share": 0.9851628857112138,
+    "fully_machine": 414,
+    "fully_machine_share_of_merged": 0.0010739216037229282,
+    "fully_machine_by_repo": {
+      "gradle/gradle": 343,
+      "cockroachdb/cockroach": 33,
+      "istio/istio": 29,
+      "DefinitelyTyped/DefinitelyTyped": 7,
+      "dotnet/docs": 1,
+      "ydb-platform/ydb": 1
+    },
+    "fully_machine_any_approval": 0,
+    "fully_machine_zero_reviews": 286,
+    "by_merger_login": {
+      "craig": {
+        "n": 13659,
+        "repos": [
+          "cockroachdb/cockroach"
+        ],
+        "with_human_appr": 0.9980232813529542,
+        "no_human_appr": 27
+      },
+      "typescript-bot": {
+        "n": 5213,
+        "repos": [
+          "DefinitelyTyped/DefinitelyTyped"
+        ],
+        "with_human_appr": 0.9986572031459812,
+        "no_human_appr": 7
+      },
+      "istio-testing": {
+        "n": 5160,
+        "repos": [
+          "istio/istio"
+        ],
+        "with_human_appr": 0.9943798449612403,
+        "no_human_appr": 29
+      },
+      "trunk-io": {
+        "n": 2318,
+        "repos": [
+          "cockroachdb/cockroach"
+        ],
+        "with_human_appr": 0.997411561691113,
+        "no_human_appr": 6
+      },
+      "bot-gradle": {
+        "n": 1214,
+        "repos": [
+          "gradle/gradle"
+        ],
+        "with_human_appr": 0.7215815485996705,
+        "no_human_appr": 338
+      },
+      "typescript-automation": {
+        "n": 268,
+        "repos": [
+          "DefinitelyTyped/DefinitelyTyped"
+        ],
+        "with_human_appr": 1.0,
+        "no_human_appr": 0
+      },
+      "github-actions": {
+        "n": 58,
+        "repos": [
+          "cockroachdb/cockroach",
+          "nextcloud/server"
+        ],
+        "with_human_appr": 1.0,
+        "no_human_appr": 0
+      },
+      "github-merge-queue": {
+        "n": 10,
+        "repos": [
+          "gradle/gradle"
+        ],
+        "with_human_appr": 0.5,
+        "no_human_appr": 5
+      },
+      "ydbot": {
+        "n": 2,
+        "repos": [
+          "ydb-platform/ydb"
+        ],
+        "with_human_appr": 0.5,
+        "no_human_appr": 1
+      },
+      "dotnet-policy-service": {
+        "n": 1,
+        "repos": [
+          "dotnet/docs"
+        ],
+        "with_human_appr": 0.0,
+        "no_human_appr": 1
+      }
+    },
+    "machine_merges_all_authors": 51361,
+    "per_repo": [
+      {
+        "repo": "termux/termux-packages",
+        "merged": 8180,
+        "no_approved_share": 0.8172371638141809,
+        "no_human_approved_share": 0.8172371638141809,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "ghostty-org/ghostty",
+        "merged": 2643,
+        "no_approved_share": 0.6772606886114264,
+        "no_human_approved_share": 0.6772606886114264,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "tgstation/tgstation",
+        "merged": 7544,
+        "no_approved_share": 0.6727200424178155,
+        "no_human_approved_share": 0.6727200424178155,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "elastic/elasticsearch",
+        "merged": 108,
+        "no_approved_share": 0.5370370370370371,
+        "no_human_approved_share": 0.5370370370370371,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "python/cpython",
+        "merged": 20929,
+        "no_approved_share": 0.43203210855750396,
+        "no_human_approved_share": 0.43203210855750396,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "swiftlang/swift",
+        "merged": 18909,
+        "no_approved_share": 0.30435242477127294,
+        "no_human_approved_share": 0.30435242477127294,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "jekyll/jekyll",
+        "merged": 148,
+        "no_approved_share": 0.2905405405405405,
+        "no_human_approved_share": 0.2905405405405405,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "goauthentik/authentik",
+        "merged": 5082,
+        "no_approved_share": 0.27371113734750097,
+        "no_human_approved_share": 0.27371113734750097,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "gradle/gradle",
+        "merged": 5305,
+        "no_approved_share": 0.26107445805843543,
+        "no_human_approved_share": 0.26107445805843543,
+        "machine_merge_share": 0.2307257304429783
+      },
+      {
+        "repo": "espressif/arduino-esp32",
+        "merged": 1751,
+        "no_approved_share": 0.23814962878355225,
+        "no_human_approved_share": 0.23814962878355225,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "reactos/reactos",
+        "merged": 2145,
+        "no_approved_share": 0.20279720279720279,
+        "no_human_approved_share": 0.20279720279720279,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "php/php-src",
+        "merged": 3167,
+        "no_approved_share": 0.20239974739501104,
+        "no_human_approved_share": 0.20239974739501104,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "ydb-platform/ydb",
+        "merged": 2123,
+        "no_approved_share": 0.0970325011775789,
+        "no_human_approved_share": 0.09750353273669336,
+        "machine_merge_share": 0.0009420631182289214
+      },
+      {
+        "repo": "DefinitelyTyped/DefinitelyTyped",
+        "merged": 6699,
+        "no_approved_share": 0.07657859381997313,
+        "no_human_approved_share": 0.07657859381997313,
+        "machine_merge_share": 0.8181818181818182
+      },
+      {
+        "repo": "NVIDIA/Megatron-LM",
+        "merged": 2749,
+        "no_approved_share": 0.07311749727173518,
+        "no_human_approved_share": 0.07493634048744999,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "pytorch/pytorch",
+        "merged": 407,
+        "no_approved_share": 0.07125307125307126,
+        "no_human_approved_share": 0.07125307125307126,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "llvm/llvm-project",
+        "merged": 7763,
+        "no_approved_share": 0.05745201597320623,
+        "no_human_approved_share": 0.05745201597320623,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "nextcloud/server",
+        "merged": 8823,
+        "no_approved_share": 0.05735010767312705,
+        "no_human_approved_share": 0.05735010767312705,
+        "machine_merge_share": 0.0017001020061203672
+      },
+      {
+        "repo": "flipperdevices/flipperzero-firmware",
+        "merged": 1015,
+        "no_approved_share": 0.05714285714285714,
+        "no_human_approved_share": 0.05714285714285714,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "SigNoz/signoz",
+        "merged": 3555,
+        "no_approved_share": 0.055414908579465544,
+        "no_human_approved_share": 0.056540084388185655,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "envoyproxy/envoy",
+        "merged": 7186,
+        "no_approved_share": 0.04717506262176454,
+        "no_human_approved_share": 0.04717506262176454,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "apache/airflow",
+        "merged": 11952,
+        "no_approved_share": 0.046268406961178045,
+        "no_human_approved_share": 0.046268406961178045,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "ray-project/ray",
+        "merged": 14627,
+        "no_approved_share": 0.04327613317836877,
+        "no_human_approved_share": 0.04327613317836877,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "dotnet/docs",
+        "merged": 4767,
+        "no_approved_share": 0.032305433186490456,
+        "no_human_approved_share": 0.03251520872666247,
+        "machine_merge_share": 0.00020977554017201594
+      },
+      {
+        "repo": "dotnet/runtime",
+        "merged": 8619,
+        "no_approved_share": 0.029585798816568046,
+        "no_human_approved_share": 0.029585798816568046,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "prestodb/presto",
+        "merged": 4383,
+        "no_approved_share": 0.028747433264887063,
+        "no_human_approved_share": 0.028747433264887063,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "backstage/backstage",
+        "merged": 7055,
+        "no_approved_share": 0.0222537207654146,
+        "no_human_approved_share": 0.0222537207654146,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "open-telemetry/opentelemetry-collector-contrib",
+        "merged": 11083,
+        "no_approved_share": 0.020662275557159614,
+        "no_human_approved_share": 0.020662275557159614,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "juspay/hyperswitch",
+        "merged": 6810,
+        "no_approved_share": 0.02041116005873715,
+        "no_human_approved_share": 0.02041116005873715,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "godotengine/godot",
+        "merged": 15498,
+        "no_approved_share": 0.0156794425087108,
+        "no_human_approved_share": 0.0156794425087108,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "home-assistant/core",
+        "merged": 45918,
+        "no_approved_share": 0.014613005792935233,
+        "no_human_approved_share": 0.01476545145694499,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "hashicorp/vault",
+        "merged": 6800,
+        "no_approved_share": 0.013088235294117647,
+        "no_human_approved_share": 0.013088235294117647,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "grafana/grafana",
+        "merged": 29335,
+        "no_approved_share": 0.012612919720470428,
+        "no_human_approved_share": 0.01271518663712289,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "ceph/ceph",
+        "merged": 13459,
+        "no_approved_share": 0.011367857938925627,
+        "no_human_approved_share": 0.011367857938925627,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "cilium/cilium",
+        "merged": 11800,
+        "no_approved_share": 0.010169491525423728,
+        "no_human_approved_share": 0.010169491525423728,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "istio/istio",
+        "merged": 5168,
+        "no_approved_share": 0.006578947368421052,
+        "no_human_approved_share": 0.006578947368421052,
+        "machine_merge_share": 0.9984520123839009
+      },
+      {
+        "repo": "PaddlePaddle/Paddle",
+        "merged": 1969,
+        "no_approved_share": 0.0045708481462671405,
+        "no_human_approved_share": 0.0045708481462671405,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "getsentry/sentry",
+        "merged": 44083,
+        "no_approved_share": 0.003629517047387882,
+        "no_human_approved_share": 0.003629517047387882,
+        "machine_merge_share": 0.0
+      },
+      {
+        "repo": "cockroachdb/cockroach",
+        "merged": 25946,
+        "no_approved_share": 0.0017729129730979726,
+        "no_human_approved_share": 0.0017729129730979726,
+        "machine_merge_share": 0.6174362136745548
+      }
+    ],
+    "flag_repos": {
+      "pytorch/pytorch": {
+        "repo": "pytorch/pytorch",
+        "merged": 407,
+        "no_approved_share": 0.07125307125307126,
+        "no_human_approved_share": 0.07125307125307126,
+        "machine_merge_share": 0.0
+      },
+      "istio/istio": {
+        "repo": "istio/istio",
+        "merged": 5168,
+        "no_approved_share": 0.006578947368421052,
+        "no_human_approved_share": 0.006578947368421052,
+        "machine_merge_share": 0.9984520123839009
+      },
+      "cockroachdb/cockroach": {
+        "repo": "cockroachdb/cockroach",
+        "merged": 25946,
+        "no_approved_share": 0.0017729129730979726,
+        "no_human_approved_share": 0.0017729129730979726,
+        "machine_merge_share": 0.6174362136745548
+      }
+    },
+    "pytorch_note": {
+      "human_prs": 30362,
+      "merged_state": 407
+    },
+    "unlisted_merger_candidates": []
+  },
+  "threads": {
+    "n_threads": 117896,
+    "who_resolves_all": {
+      "agent": {
+        "n_resolved": 55275,
+        "human": {
+          "n": 42990,
+          "share": 0.7777476255088195
+        },
+        "self": {
+          "n": 12035,
+          "share": 0.2177295341474446
+        },
+        "other_agent": {
+          "n": 219,
+          "share": 0.0039620081411126185
+        },
+        "ci_bot": {
+          "n": 31,
+          "share": 0.0005608322026232474
+        }
+      },
+      "human": {
+        "n_resolved": 27968,
+        "human": {
+          "n": 27949,
+          "share": 0.9993206521739131
+        },
+        "ci_bot": {
+          "n": 19,
+          "share": 0.0006793478260869565
+        }
+      }
+    },
+    "by_agent": {
+      "copilot-pull-request-reviewer": {
+        "n_resolved": 30391,
+        "human": 0.9930571550788062,
+        "other_agent": 0.006844131486295285,
+        "ci_bot": 9.871343489848969e-05,
+        "outdated_if_self": null,
+        "outdated_if_human": 0.613452617627568,
+        "repos_self": {}
+      },
+      "cursor": {
+        "n_resolved": 16117,
+        "self": 0.523422473164981,
+        "human": 0.4747781845256561,
+        "ci_bot": 0.001302972017124775,
+        "other_agent": 0.0004963702922380096,
+        "outdated_if_self": 0.5218112849691797,
+        "outdated_if_human": 0.39087820177731314,
+        "repos_self": {
+          "getsentry/sentry": 7550,
+          "ray-project/ray": 620,
+          "SigNoz/signoz": 266
+        }
+      },
+      "sentry": {
+        "n_resolved": 5274,
+        "self": 0.5434205536594615,
+        "human": 0.4550625711035267,
+        "ci_bot": 0.0009480470231323473,
+        "other_agent": 0.0005688282138794084,
+        "outdated_if_self": 0.4926727145847872,
+        "outdated_if_human": 0.32958333333333334,
+        "repos_self": {
+          "getsentry/sentry": 2866
+        }
+      },
+      "sentry-warden": {
+        "n_resolved": 969,
+        "self": 0.6676986584107327,
+        "human": 0.3302373581011352,
+        "ci_bot": 0.0020639834881320948,
+        "outdated_if_self": 0.5131375579598145,
+        "outdated_if_human": 0.475,
+        "repos_self": {
+          "getsentry/sentry": 647
+        }
+      },
+      "claude": {
+        "n_resolved": 861,
+        "human": 1.0,
+        "outdated_if_self": null,
+        "outdated_if_human": 0.5551684088269454,
+        "repos_self": {}
+      },
+      "gemini-code-assist": {
+        "n_resolved": 848,
+        "human": 1.0,
+        "outdated_if_self": null,
+        "outdated_if_human": 0.7523584905660378,
+        "repos_self": {}
+      },
+      "chatgpt-codex-connector": {
+        "n_resolved": 380,
+        "human": 1.0,
+        "outdated_if_self": null,
+        "outdated_if_human": 0.6236842105263158,
+        "repos_self": {}
+      },
+      "seer-by-sentry": {
+        "n_resolved": 297,
+        "human": 0.9393939393939394,
+        "self": 0.06060606060606061,
+        "outdated_if_self": 0.7222222222222222,
+        "outdated_if_human": 0.6236559139784946,
+        "repos_self": {
+          "getsentry/sentry": 18
+        }
+      },
+      "sourcery-ai": {
+        "n_resolved": 100,
+        "self": 0.67,
+        "human": 0.33,
+        "outdated_if_self": 0.5223880597014925,
+        "outdated_if_human": 0.5454545454545454,
+        "repos_self": {
+          "prestodb/presto": 67
+        }
+      },
+      "ellipsis-dev": {
+        "n_resolved": 25,
+        "human": 1.0,
+        "outdated_if_self": null,
+        "outdated_if_human": 0.72,
+        "repos_self": {}
+      },
+      "greptile-apps": {
+        "n_resolved": 9,
+        "human": 1.0,
+        "outdated_if_self": null,
+        "outdated_if_human": 0.5555555555555556,
+        "repos_self": {}
+      },
+      "coderabbitai": {
+        "n_resolved": 3,
+        "human": 1.0,
+        "outdated_if_self": null,
+        "outdated_if_human": 0.6666666666666666,
+        "repos_self": {}
+      },
+      "devin-ai-integration": {
+        "n_resolved": 1,
+        "self": 1.0,
+        "outdated_if_self": 0.0,
+        "outdated_if_human": null,
+        "repos_self": {
+          "getsentry/sentry": 1
+        }
+      }
+    },
+    "ai_threads_machine_closed": 12285,
+    "ai_threads_machine_closed_self_share": 0.9796499796499797,
+    "pr_fe_live_line": {
+      "resolved": {
+        "coef": 0.28253180245801784,
+        "se": 0.06116379576104635,
+        "p": 3.851011123036771e-06,
+        "n": 30993,
+        "n_prs": 5023,
+        "n_repos": 32,
+        "human_base": 0.43196134792979024,
+        "equivalence": {
+          "5%": {
+            "p_upper": 0.9999900561052949,
+            "p_lower": 3.306729855117612e-07
+          },
+          "10%": {
+            "p_upper": 0.9999544270880439,
+            "p_lower": 5.0337210983280986e-08
+          },
+          "20%": {
+            "p_upper": 0.999328878513267,
+            "p_lower": 8.110214071004223e-10
+          }
+        }
+      },
+      "human_resolved": {
+        "coef": 0.1129034826342301,
+        "se": 0.03631024767249226,
+        "p": 0.0018746076723263842,
+        "n": 30993,
+        "n_prs": 5023,
+        "n_repos": 32,
+        "human_base": 0.4317778729129717,
+        "equivalence": {
+          "5%": {
+            "p_upper": 0.9940457377432645,
+            "p_lower": 0.00010612213240609071
+          },
+          "10%": {
+            "p_upper": 0.9725884737310772,
+            "p_lower": 8.596111112529898e-06
+          },
+          "20%": {
+            "p_upper": 0.76765346024914,
+            "p_lower": 2.0362229230965087e-08
+          }
+        }
+      },
+      "human_or_self_fixed": {
+        "coef": 0.12064586273730632,
+        "se": 0.03291781136577646,
+        "p": 0.00024727740391278604,
+        "n": 30993,
+        "n_prs": 5023,
+        "n_repos": 32,
+        "human_base": 0.4317778729129717,
+        "equivalence": {
+          "5%": {
+            "p_upper": 0.9986904073935718,
+            "p_lower": 7.76950629211548e-06
+          },
+          "10%": {
+            "p_upper": 0.990698161225041,
+            "p_lower": 3.2330716844863613e-07
+          },
+          "20%": {
+            "p_upper": 0.8512232251768649,
+            "p_lower": 1.6034364562553625e-10
+          }
+        }
+      }
+    }
+  },
+  "trend": {
+    "months": [
+      {
+        "month": "2024-02",
+        "n": 193,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 0
+      },
+      {
+        "month": "2024-10",
+        "n": 193,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 1
+      },
+      {
+        "month": "2024-11",
+        "n": 283,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 2
+      },
+      {
+        "month": "2024-12",
+        "n": 291,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 3
+      },
+      {
+        "month": "2025-01",
+        "n": 462,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 4
+      },
+      {
+        "month": "2025-02",
+        "n": 472,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 5
+      },
+      {
+        "month": "2025-03",
+        "n": 1041,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 6
+      },
+      {
+        "month": "2025-04",
+        "n": 1153,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 7
+      },
+      {
+        "month": "2025-05",
+        "n": 1316,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 8
+      },
+      {
+        "month": "2025-06",
+        "n": 1967,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 9
+      },
+      {
+        "month": "2025-07",
+        "n": 4921,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 10
+      },
+      {
+        "month": "2025-08",
+        "n": 3928,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 11
+      },
+      {
+        "month": "2025-09",
+        "n": 4429,
+        "verdict": 0.0004515692029803567,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0004515692029803567,
+        "t": 12
+      },
+      {
+        "month": "2025-10",
+        "n": 5116,
+        "verdict": 0.00019546520719311962,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.00019546520719311962,
+        "t": 13
+      },
+      {
+        "month": "2025-11",
+        "n": 4787,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 14
+      },
+      {
+        "month": "2025-12",
+        "n": 5274,
+        "verdict": 0.0007584376185058779,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0007584376185058779,
+        "t": 15
+      },
+      {
+        "month": "2026-01",
+        "n": 6273,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 16
+      },
+      {
+        "month": "2026-02",
+        "n": 9967,
+        "verdict": 0.0,
+        "claude_share": 0.0,
+        "verdict_ex_claude": 0.0,
+        "t": 17
+      },
+      {
+        "month": "2026-03",
+        "n": 14207,
+        "verdict": 0.001266981065671852,
+        "claude_share": 0.017033856549588233,
+        "verdict_ex_claude": 0.0,
+        "t": 18
+      },
+      {
+        "month": "2026-04",
+        "n": 13628,
+        "verdict": 0.004989727032579982,
+        "claude_share": 0.02194012327560904,
+        "verdict_ex_claude": 0.0,
+        "t": 19
+      },
+      {
+        "month": "2026-05",
+        "n": 11630,
+        "verdict": 0.004729148753224419,
+        "claude_share": 0.021410146173688735,
+        "verdict_ex_claude": 0.0,
+        "t": 20
+      },
+      {
+        "month": "2026-06",
+        "n": 11342,
+        "verdict": 0.004408393581378946,
+        "claude_share": 0.018779756656674307,
+        "verdict_ex_claude": 0.0,
+        "t": 21
+      },
+      {
+        "month": "2026-07",
+        "n": 16112,
+        "verdict": 0.00391012909632572,
+        "claude_share": 0.013592353525322742,
+        "verdict_ex_claude": 0.0008808909582835211,
+        "t": 22
+      },
+      {
+        "month": "2026-08",
+        "n": 15481,
+        "verdict": 0.0033589561397842516,
+        "claude_share": 0.050190556165622374,
+        "verdict_ex_claude": 0.002312295973884657,
+        "t": 23
+      },
+      {
+        "month": "2026-09",
+        "n": 9417,
+        "verdict": 0.0005309546564723373,
+        "claude_share": 0.02336200488478284,
+        "verdict_ex_claude": 0.0,
+        "t": 24
+      }
+    ],
+    "slope_verdict": {
+      "slope": 0.000157639038708892,
+      "p": 0.00024172589520774564,
+      "n_months": 25
+    },
+    "slope_claude_share": {
+      "slope": 0.0012034205332452604,
+      "p": 6.82049032505488e-05,
+      "n_months": 25
+    },
+    "slope_verdict_ex_claude": {
+      "slope": 2.8242264121751683e-05,
+      "p": 0.040448897845407325,
+      "n_months": 25
+    },
+    "claude_reviews_by_repo": {
+      "NVIDIA/Megatron-LM": 2214,
+      "home-assistant/core": 3,
+      "SigNoz/signoz": 2
+    },
+    "claude_approvals_by_repo": {
+      "NVIDIA/Megatron-LM": 257
+    },
+    "claude_first_month": "2026-03"
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "n_human_authored_pr": 858427,
+  "n_with_approval": 637675,
+  "first_approver_by_existing_category": {
+    "human": 637327,
+    "legacy_bot": 137,
+    "agent": 211
+  },
+  "missing_ai_reviewers": {
+    "per_login": {
+      "ellipsis-dev": {
+        "reviews": 4741,
+        "approved": 0,
+        "changes_requested": 0,
+        "commented": 4741,
+        "first_approvals": 0
+      },
+      "QodoAI-Agent": {
+        "reviews": 1,
+        "approved": 0,
+        "changes_requested": 0,
+        "commented": 1,
+        "first_approvals": 0
+      },
+      "greptile-apps": {
+        "reviews": 28,
+        "approved": 0,
+        "changes_requested": 0,
+        "commented": 28,
+        "first_approvals": 0
+      },
+      "SourceryAI": {
+        "reviews": 4,
+        "approved": 0,
+        "changes_requested": 0,
+        "commented": 4,
+        "first_approvals": 0
+      },
+      "coderabbitai": {
+        "reviews": 413,
+        "approved": 0,
+        "changes_requested": 0,
+        "commented": 413,
+        "first_approvals": 0
+      },
+      "sourcery-ai": {
+        "reviews": 2079,
+        "approved": 0,
+        "changes_requested": 3,
+        "commented": 2060,
+        "first_approvals": 0
+      },
+      "graphite-app": {
+        "reviews": 28,
+        "approved": 0,
+        "changes_requested": 0,
+        "commented": 28,
+        "first_approvals": 0
+      }
+    },
+    "reviews": 7294,
+    "approved": 0,
+    "changes_requested": 3,
+    "judgment_rate": 0.0004112969564025226,
+    "first_approvals": 0,
+    "first_approver_share": 0.0
+  },
+  "known_agents": {
+    "per_login": {
+      "copilot-swe-agent": {
+        "reviews": 3980,
+        "approved": 0,
+        "changes_requested": 0,
+        "commented": 3980,
+        "first_approvals": 0
+      },
+      "copilot-pull-request-reviewer": {
+        "reviews": 78700,
+        "approved": 48,
+        "changes_requested": 0,
+        "commented": 78637,
+        "first_approvals": 41
+      },
+      "chatgpt-codex-connector": {
+        "reviews": 1679,
+        "approved": 0,
+        "changes_requested": 0,
+        "commented": 1679,
+        "first_approvals": 0
+      },
+      "claude": {
+        "reviews": 2219,
+        "approved": 257,
+        "changes_requested": 6,
+        "commented": 1954,
+        "first_approvals": 167
+      },
+      "devin-ai-integration": {
+        "reviews": 6,
+        "approved": 0,
+        "changes_requested": 0,
+        "commented": 6,
+        "first_approvals": 0
+      },
+      "cursor": {
+        "reviews": 30453,
+        "approved": 0,
+        "changes_requested": 0,
+        "commented": 30453,
+        "first_approvals": 0
+      }
+    },
+    "reviews": 117037,
+    "approved": 305,
+    "changes_requested": 6,
+    "judgment_rate": 0.002657279321923836,
+    "first_approvals": 208,
+    "first_approver_share": 0.0003261849688320853
+  },
+  "judgment_rate_if_merged": 0.002525516564654028,
+  "merge": {
+    "n_human_authored": 385503,
+    "machine_merged": 27903,
+    "machine_merged_share": 0.07238075968280402,
+    "machine_merged_with_human_approval": 27489,
+    "machine_merged_with_human_approval_share": 0.9851628857112138,
+    "fully_machine_closed": 414,
+    "fully_machine_closed_share": 0.0010739216037229282,
+    "by_merge_queue_login": {
+      "trunk-io": 2318,
+      "typescript-automation": 268,
+      "github-merge-queue": 10
+    }
+  }
+}
