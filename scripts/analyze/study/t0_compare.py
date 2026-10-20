@@ -52,9 +52,11 @@ else:
     _base_irl, _base_rf = "outputs/dynstartB_ep150/lstm_baseline", "outputs/dynstart_rf_1snap_s777"
 T0_CONFIG = [
     ("2022-01-01", f"{SWEEP}/20220101/irl/lstm_baseline", f"{SWEEP}/20220101/rf", "year"),
+    ("2022-07-01", f"{SWEEP}/20220701/irl/lstm_baseline", f"{SWEEP}/20220701/rf", "6mo"),
     ("2022-10-01", f"{SWEEP}/20221001/irl/lstm_baseline", f"{SWEEP}/20221001/rf", "3mo"),
     ("2023-01-01", _base_irl, _base_rf, "base"),
     ("2023-04-01", f"{SWEEP}/20230401/irl/lstm_baseline", f"{SWEEP}/20230401/rf", "3mo"),
+    ("2023-07-01", f"{SWEEP}/20230701/irl/lstm_baseline", f"{SWEEP}/20230701/rf", "6mo"),
     ("2024-01-01", f"{SWEEP}/20240101/irl/lstm_baseline", f"{SWEEP}/20240101/rf", "year"),
 ]
 

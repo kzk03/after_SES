@@ -89,11 +89,13 @@ TRAIN_FE=(3 6 9 12)
 # [並行実行] 処理する窓インデックスの部分集合(スペース区切り)。複数サーバで
 # 学習窓を分担する用途 (例: brain-1 で WINDOW_IDX="0 1"、brain-2 で "2 3")。
 # 抽出/学習/評価の3ループすべてがこの部分集合のみを処理する。既定は全窓。
-# 評価は ti ごとに ei>=ti を回す三角構造なので、窓集合の分割で全パターンを分担できる。
+# 評価は対角(ti==ei)のみなので、窓集合の分割でそのまま分担できる。
 WINDOW_IDX="${WINDOW_IDX:-0 1 2 3}"
 
-# [評価] EVAL_DIAGONAL_ONLY=1 で対角 (train窓==eval窓) のみ評価する。既定は全パターン(三角)。
-EVAL_DIAGONAL_ONLY="${EVAL_DIAGONAL_ONLY:-0}"
+# [評価] 対角 (train窓==eval窓) のみ評価する。論文は対角4パターンのみ掲載のため、
+# 非対角(三角)の評価は選択肢から外した（2026-10-06）。戻す場合は下の評価ループのコメントアウトを解除する。
+# EVAL_DIAGONAL_ONLY="${EVAL_DIAGONAL_ONLY:-0}"
+EVAL_DIAGONAL_ONLY=1
 
 # ── [SES 追加] horizon別「動的学習開始日」(②: 特徴量計測期間を全horizonで揃える) ──
 # 後方クリップ (month_end+FE<=train_end) で長horizonほど最新month_endが早まり、
@@ -325,11 +327,13 @@ for ti in $WINDOW_IDX; do
 
     # EVAL_DIAGONAL_ONLY=1: 対角 (train窓==eval窓) のみ評価。論文は対角4パターンのみ
     # 掲載のため、非対角(短期学習→長期評価)は不要。評価数を大幅削減できる。
-    if [ "$EVAL_DIAGONAL_ONLY" = "1" ]; then
-        eval_idx_list="$ti"
-    else
-        eval_idx_list=$(seq $ti 3)
-    fi
+    eval_idx_list="$ti"
+    # 非対角(三角)評価は選択肢から外した:
+    # if [ "$EVAL_DIAGONAL_ONLY" = "1" ]; then
+    #     eval_idx_list="$ti"
+    # else
+    #     eval_idx_list=$(seq $ti 3)
+    # fi
     for ei in $eval_idx_list; do
         eval_win="${TRAIN_WINDOWS[$ei]}"
         eval_fs="${TRAIN_FS[$ei]}"

@@ -29,20 +29,44 @@ T0="${1:?Usage: $0 <t0 YYYY-MM-DD> <irl|rf|verify|all> [gpu_id]}"
 MODE="${2:?Usage: $0 <t0> <irl|rf|verify|all> [gpu_id]}"
 GPU_ID="${3:-0}"
 
-# [align系列] ALIGN=1 で「buffer消去＋label tail 12統一」設計に切替える。
-#   train_end=t0, train_start=(t0-12)-FEATURE_STEPS, label tail=12, Phase B 無効。
-#   出力は別系列 outputs/t0_sweep_align/ に分離（現行 Phase B 系列を壊さない）。
-ALIGN="${ALIGN:-0}"
-FEATURE_STEPS="${FEATURE_STEPS:-24}"    # align時の feature 月次ステップ数 (24既定/36拡張可)
+# [align系列] 「buffer消去＋label tail 12統一」設計（ALIGN=1）は選択肢から外した（2026-10-06）。
+#   論文系列（Phase B: [訓練3年][buffer1年][評価1年]、outputs/t0_sweep/）のみで実行する。
+#   戻す場合は以下のコメントアウトを解除する。
+# ALIGN="${ALIGN:-0}"
+# FEATURE_STEPS="${FEATURE_STEPS:-24}"    # align時の feature 月次ステップ数 (24既定/36拡張可)
+ALIGN=0
+
+# [対象プロジェクト] PROJECT=main32(既定, OpenStack) / aosp32(AOSP)。
+#   aosp32 では AOSP 本実験(2026-07, outputs/aosp32/dynstartB_ep150)と同じ設定に切り替える:
+#   データ・raw_json・共変更グラフ(results_aosp)、DIR_PREFIX_PROJECT=1、COCHANGE_TOPK=100、COCHANGE_MIN_WEIGHT=2。
+#   出力は outputs/aosp32/t0_sweep/、軌跡キャッシュは aosp32_t0_<日付> に分離（OpenStack と混ざらない）。
+#   注意: AOSP のデータは 2020-01-01〜2025-01-01 なので t0 は 2024-01-01 まで。
+PROJECT="${PROJECT:-main32}"
+if [ "$PROJECT" = "aosp32" ]; then
+    export REVIEWS="data/combined_raw_aosp32.csv"
+    export RAW_JSON_LIST_FILE="data/combined_raw_aosp32.raw_json_list.txt"
+    export DIR_PREFIX_PROJECT=1 COCHANGE_TOPK=100 COCHANGE_MIN_WEIGHT=2
+    HUB_SCORES_CSV="${HUB_SCORES_CSV:-experiments/dependency_analysis/results_aosp/hub_scores_main32.csv}"
+    COCHANGE_NEIGHBORS_CSV="${COCHANGE_NEIGHBORS_CSV:-experiments/dependency_analysis/results_aosp/cochange_neighbors_main32.csv}"
+    DEFAULT_SWEEP_ROOT="outputs/aosp32/t0_sweep"
+    CACHE_PREFIX="aosp32_"
+elif [ "$PROJECT" = "main32" ]; then
+    export REVIEWS="data/combined_raw_main32.csv"
+    export RAW_JSON_LIST_FILE="data/combined_raw_main32.raw_json_list.txt"
+    DEFAULT_SWEEP_ROOT="outputs/t0_sweep"
+    CACHE_PREFIX=""
+else
+    echo "ERROR: PROJECT は main32|aosp32 (指定: $PROJECT)" >&2; exit 1
+fi
 
 VNAME="lstm_baseline"
-if [ "$ALIGN" = "1" ]; then
-    # 出力は step 数を明示した _fs<steps> に分離（fs24=旧 outputs/t0_sweep_align を
-    # 2026-07-02 にリネーム。系列間の上書き事故防止）。
-    SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep_align_fs${FEATURE_STEPS}}"
-else
-    SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep}"
-fi
+# if [ "$ALIGN" = "1" ]; then
+#     # 出力は step 数を明示した _fs<steps> に分離（fs24=旧 outputs/t0_sweep_align を
+#     # 2026-07-02 にリネーム。系列間の上書き事故防止）。
+#     SWEEP_ROOT="${SWEEP_ROOT:-outputs/t0_sweep_align_fs${FEATURE_STEPS}}"
+# else
+SWEEP_ROOT="${SWEEP_ROOT:-$DEFAULT_SWEEP_ROOT}"
+# fi
 T0TAG="${T0//-/}"                       # 2022-10-01 → 20221001
 IRL_OUTBASE="$SWEEP_ROOT/$T0TAG/irl"
 RF_OUTBASE="$SWEEP_ROOT/$T0TAG/rf"
@@ -51,33 +75,33 @@ HUB_SCORES_CSV="${HUB_SCORES_CSV:-experiments/dependency_analysis/results/hub_sc
 COCHANGE_NEIGHBORS_CSV="${COCHANGE_NEIGHBORS_CSV:-experiments/dependency_analysis/results/cochange_neighbors_main32.csv}"
 
 # t0 → 日付（dateutil）
-if [ "$ALIGN" = "1" ]; then
-    # align: train_end=t0, train_start=(t0-12)-FEATURE_STEPS（label tail 12 を別途確保）
-    read -r TRAIN_START TRAIN_END < <(uv run python -c "
-from datetime import date
-from dateutil.relativedelta import relativedelta
-t0 = date.fromisoformat('$T0')
-print((t0 - relativedelta(months=12 + $FEATURE_STEPS)).isoformat(), t0.isoformat())
-")
-    IRL_DYNAMIC_START=0
-    IRL_LABEL_TAIL=12
-    IRL_CACHE_TAG="t0align_${T0TAG}_s${FEATURE_STEPS}"
-else
-    # 従来 Phase B: [訓練3年][buffer1年][評価1年]
-    read -r TRAIN_START TRAIN_END < <(uv run python -c "
+# if [ "$ALIGN" = "1" ]; then
+#     # align: train_end=t0, train_start=(t0-12)-FEATURE_STEPS（label tail 12 を別途確保）
+#     read -r TRAIN_START TRAIN_END < <(uv run python -c "
+# from datetime import date
+# from dateutil.relativedelta import relativedelta
+# t0 = date.fromisoformat('$T0')
+# print((t0 - relativedelta(months=12 + $FEATURE_STEPS)).isoformat(), t0.isoformat())
+# ")
+#     IRL_DYNAMIC_START=0
+#     IRL_LABEL_TAIL=12
+#     IRL_CACHE_TAG="t0align_${T0TAG}_s${FEATURE_STEPS}"
+# else
+# 従来 Phase B: [訓練3年][buffer1年][評価1年]
+read -r TRAIN_START TRAIN_END < <(uv run python -c "
 from datetime import date
 from dateutil.relativedelta import relativedelta
 t0 = date.fromisoformat('$T0')
 print((t0 - relativedelta(months=48)).isoformat(), (t0 - relativedelta(months=12)).isoformat())
 ")
-    IRL_DYNAMIC_START=1
-    IRL_LABEL_TAIL=""
-    IRL_CACHE_TAG="t0_${T0TAG}"
-fi
+IRL_DYNAMIC_START=1
+IRL_LABEL_TAIL=""
+IRL_CACHE_TAG="${CACHE_PREFIX}t0_${T0TAG}"
+# fi
 EVAL_CUTOFF="$T0"
 
 echo "============================================================"
-echo "  [t0掃引] t0=$T0  mode=$MODE"
+echo "  [t0掃引] project=$PROJECT  t0=$T0  mode=$MODE"
 echo "  TRAIN_START=$TRAIN_START  TRAIN_END=$TRAIN_END  EVAL_CUTOFF=$EVAL_CUTOFF"
 echo "  IRL_OUTBASE=$IRL_OUTBASE"
 echo "  RF_OUTBASE =$RF_OUTBASE"
@@ -96,11 +120,11 @@ run_irl() {
 }
 
 run_rf() {
-    if [ "$ALIGN" = "1" ]; then
-        echo ">>> RF 再学習＋評価 (align: train_end=t0-12, train_start=t0-$((12 + FEATURE_STEPS)), tail12, seed777)"
-    else
-        echo ">>> RF 再学習＋評価 (1snap, 学習窓33ヶ月で IRL と等化, seed777)"
-    fi
+    # if [ "$ALIGN" = "1" ]; then
+    #     echo ">>> RF 再学習＋評価 (align: train_end=t0-12, train_start=t0-$((12 + FEATURE_STEPS)), tail12, seed777)"
+    # else
+    echo ">>> RF 再学習＋評価 (1snap, 学習窓33ヶ月で IRL と等化, seed777)"
+    # fi
     PREDICTION_TIME="$EVAL_CUTOFF" \
         BASE_TRAIN_START="$TRAIN_START" BASE_TRAIN_END="$TRAIN_END" \
         LABEL_TAIL_MONTHS="$IRL_LABEL_TAIL" \
@@ -115,6 +139,7 @@ run_verify() {
     echo ">>> B定義ラベルで headline 表を集計"
     mkdir -p "$SWEEP_ROOT/$T0TAG"
     uv run python scripts/analyze/study/verify_blabel_headline.py \
+        --data "$REVIEWS" --raw-json-list "$RAW_JSON_LIST_FILE" \
         --prediction-time "$EVAL_CUTOFF" \
         --irl-base "$IRL_OUTBASE/$VNAME" \
         --rf-base "$RF_OUTBASE" \
