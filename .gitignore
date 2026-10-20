@@ -58,3 +58,6 @@ pilot/phase2/logs/
 pilot/phase2/reports/
 # 論文原稿(ローカル管理)
 pilot/phase2/paper/
+
+# 論文誌原稿(git管理しない。手元のみ)
+@IPSJjournal2026_Hashimoto/
