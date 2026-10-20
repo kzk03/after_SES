@@ -21,8 +21,8 @@
 実験や作業の記録は、以下のObsidian Vaultに書き込む。
 
 
-Vaultパス: /Users/kazuki-h/Library/Mobile Documents/com~apple~CloudDocs/obsidian_brain
-研究テーマフォルダ: <Vault>/Projects/Research/レビュー継続予測/
+Vaultパス: /Users/kazuki-h/Library/Mobile Documents/iCloud~md~obsidian/Documents/obsidian_brain
+研究テーマフォルダ: <Vault>/Research/レビュー継続予測/
 
 
 書き込み先の使い分け
