@@ -44,3 +44,6 @@ scripts/analyze/study/supplement/
 
 # AI研究(生成と評価の分離)のパイロット作業。AIresearchブランチで管理
 pilot/
+
+# 論文誌原稿(jornalブランチでもgit管理しない)
+@IPSJjournal2026_Hashimoto/
